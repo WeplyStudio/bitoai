@@ -151,9 +151,11 @@ export function ChatPanel() {
   
   return (
     <div className="flex flex-col h-full">
-        <header className="hidden lg:flex items-center justify-between p-4 border-b">
-          <h2 className="text-lg font-semibold">AI Chat</h2>
-          <Button>+ Upgrade</Button>
+        <header className="hidden lg:flex items-center p-4 border-b">
+          <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
+            <h2 className="text-lg font-semibold">AI Chat</h2>
+            <Button>+ Upgrade</Button>
+          </div>
         </header>
 
         <div className="flex-1 overflow-hidden">
@@ -161,8 +163,10 @@ export function ChatPanel() {
         </div>
         
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
-            <ChatInput onSend={handleSend} isLoading={isLoading} />
-            <p className="text-xs text-muted-foreground text-center mt-2">Script may generate inaccurate information about people, places, or facts. Model: Script AI v1.3</p>
+            <div className="mx-auto max-w-4xl">
+              <ChatInput onSend={handleSend} isLoading={isLoading} />
+              <p className="text-xs text-muted-foreground text-center mt-2">Script may generate inaccurate information about people, places, or facts. Model: Script AI v1.3</p>
+            </div>
         </footer>
         <ChatFeedbackDialog
           isOpen={!!feedbackMessage}

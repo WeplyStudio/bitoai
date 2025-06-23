@@ -24,7 +24,7 @@ export function ChatMessages({ messages, isLoading, onFeedback }: ChatMessagesPr
 
   return (
     <ScrollArea className="h-full" viewportRef={scrollViewportRef}>
-      <div className="space-y-6 p-4 md:p-6">
+      <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
         {messages.map((message) => (
           <ChatMessage key={message.id} message={message} onFeedback={onFeedback} />
         ))}
