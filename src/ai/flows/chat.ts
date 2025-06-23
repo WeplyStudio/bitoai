@@ -56,7 +56,7 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   const responseText = response.text;
   let imageUrl: string | undefined;
 
-  const responseHistory = response.history();
+  const responseHistory = response.history;
   if (responseHistory) {
       for (let i = responseHistory.length - 1; i >= 0; i--) {
           const message = responseHistory[i];
