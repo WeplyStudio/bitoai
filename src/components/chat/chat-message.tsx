@@ -5,6 +5,8 @@ import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
 import type { Message } from './chat-panel';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface ChatMessageProps {
   message: Message;
@@ -35,7 +37,11 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
         "max-w-[80%] rounded-lg px-4 py-3",
         isModel ? 'bg-secondary' : 'bg-secondary'
       )}>
-        <div className="prose prose-sm max-w-none text-current whitespace-pre-wrap break-words" dangerouslySetInnerHTML={{ __html: message.content.replace(/\n/g, '<br />') }} />
+        <div className="prose prose-sm dark:prose-invert max-w-none break-words">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {message.content}
+          </ReactMarkdown>
+        </div>
       </div>
 
       {isModel && (
