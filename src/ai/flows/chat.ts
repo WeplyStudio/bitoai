@@ -71,14 +71,10 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
       break;
   }
 
-  const messagesWithSystem: MessageData[] = [
-    { role: 'system', content: [{ text: systemInstruction }] },
-    ...history,
-  ];
-
   const response = await ai.generate({
     model: ai.model,
-    messages: messagesWithSystem,
+    system: systemInstruction,
+    messages: history,
     config: {
       temperature: temperature,
     },
