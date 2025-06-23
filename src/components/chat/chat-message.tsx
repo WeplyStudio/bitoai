@@ -30,10 +30,7 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
         </Avatar>
       )}
 
-      <div className={cn(
-        "max-w-[90%] rounded-lg px-4 py-3 min-w-0 xl:max-w-2xl",
-        'bg-secondary'
-      )}>
+      <div className="max-w-2xl rounded-lg bg-secondary px-4 py-3">
         {message.content && (
           <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-x-auto">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
