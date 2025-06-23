@@ -11,9 +11,27 @@ interface ChatMessagesProps {
   messages: Message[];
   isLoading: boolean;
   onFeedback: (messageId: string) => void;
+  onRegenerate: (messageId: string) => void;
+  onStartEdit: (messageId: string, content: string) => void;
+  onCancelEdit: () => void;
+  onSaveEdit: (messageId: string, newContent: string) => void;
+  editingMessageId: string | null;
+  editedContent: string;
+  onEditedContentChange: (content: string) => void;
 }
 
-export function ChatMessages({ messages, isLoading, onFeedback }: ChatMessagesProps) {
+export function ChatMessages({ 
+    messages, 
+    isLoading, 
+    onFeedback,
+    onRegenerate,
+    onStartEdit,
+    onCancelEdit,
+    onSaveEdit,
+    editingMessageId,
+    editedContent,
+    onEditedContentChange
+}: ChatMessagesProps) {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -26,7 +44,18 @@ export function ChatMessages({ messages, isLoading, onFeedback }: ChatMessagesPr
     <ScrollArea className="h-full" viewportRef={scrollViewportRef}>
       <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
         {messages.map((message) => (
-          <ChatMessage key={message.id} message={message} onFeedback={onFeedback} />
+          <ChatMessage 
+            key={message.id} 
+            message={message} 
+            onFeedback={onFeedback}
+            onRegenerate={onRegenerate}
+            onStartEdit={onStartEdit}
+            onCancelEdit={onCancelEdit}
+            onSaveEdit={onSaveEdit}
+            isEditing={editingMessageId === message.id}
+            editedContent={editedContent}
+            onEditedContentChange={onEditedContentChange}
+          />
         ))}
         {isLoading && (
             <div className="flex items-start space-x-4">

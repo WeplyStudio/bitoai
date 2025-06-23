@@ -55,6 +55,9 @@ export function ChatPanel() {
   const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [aiMode, setAiMode] = useState('default');
   
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+  const [editedContent, setEditedContent] = useState('');
+
   const { activeProject, updateActiveProjectSummary } = useProjects();
 
   useEffect(() => {
@@ -65,7 +68,6 @@ export function ChatPanel() {
     };
   }, []);
 
-  // Load settings and messages on mount
   useEffect(() => {
     try {
       const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
@@ -89,7 +91,6 @@ export function ChatPanel() {
     setIsMounted(true);
   }, [activeProject, toast]);
 
-  // Handle AI mode changes from other tabs
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === AI_MODE_KEY && event.newValue) {
@@ -102,9 +103,8 @@ export function ChatPanel() {
     };
   }, []);
 
-  // Save messages to localStorage
   useEffect(() => {
-    if (isMounted && activeProject) {
+    if (isMounted && activeProject && !editingMessageId) {
       try {
         const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
         allHistories[activeProject.id] = messages;
@@ -113,7 +113,38 @@ export function ChatPanel() {
         console.error("Failed to save messages to localStorage", error);
       }
     }
-  }, [messages, activeProject, isMounted]);
+  }, [messages, activeProject, isMounted, editingMessageId]);
+
+  const callChatApi = useCallback(async (history: Message[]) => {
+    setIsLoading(true);
+    try {
+      const historyForApi = history.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
+      const response = await chat({
+        messages: historyForApi,
+        mode: aiMode as 'default' | 'creative' | 'professional',
+      });
+      
+      const newAiMessage: Message = { 
+        id: String(Date.now() + 1), 
+        role: response.role as 'model', 
+        content: response.content,
+        imageUrl: response.imageUrl,
+      };
+
+      setMessages([...history, newAiMessage]);
+
+    } catch (error) {
+      console.error('Error during chat:', error);
+      toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: 'Failed to get a response from Bito AI. Please try again.',
+      });
+      setMessages(history); 
+    } finally {
+      setIsLoading(false);
+    }
+  }, [aiMode, toast]);
 
   const handleSend = async (text: string, file?: File) => {
     if (isLoading || (!text.trim() && !file) || !activeProject) return;
@@ -121,7 +152,7 @@ export function ChatPanel() {
     let imageUrl: string | undefined = undefined;
     if (file) {
         try {
-            if (file.size > 4 * 1024 * 1024) { // 4MB limit for Gemini
+            if (file.size > 4 * 1024 * 1024) {
                 toast({
                     variant: 'destructive',
                     title: 'File too large',
@@ -149,35 +180,7 @@ export function ChatPanel() {
     };
     const updatedMessages = [...messages, newUserMessage];
     setMessages(updatedMessages);
-    setIsLoading(true);
-
-    try {
-      const historyForApi = updatedMessages.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
-      const response = await chat({
-        messages: historyForApi,
-        mode: aiMode as 'default' | 'creative' | 'professional',
-      });
-      
-      const newAiMessage: Message = { 
-        id: String(Date.now() + 1), 
-        role: response.role as 'model', 
-        content: response.content,
-        imageUrl: response.imageUrl,
-      };
-
-      const finalMessages = [...updatedMessages, newAiMessage];
-      setMessages(finalMessages);
-    } catch (error)      {
-        console.error('Error during chat:', error);
-        toast({
-            variant: 'destructive',
-            title: 'Error',
-            description: 'Failed to get a response from Bito AI. Please try again.',
-        });
-        setMessages(prev => prev.filter(m => m.id !== newUserMessage.id));
-    } finally {
-        setIsLoading(false);
-    }
+    await callChatApi(updatedMessages);
   };
 
   const handleFeedback = (messageId: string) => {
@@ -186,6 +189,41 @@ export function ChatPanel() {
       setFeedbackMessage(messageToReview);
     }
   };
+
+  const handleRegenerate = useCallback(async (messageId: string) => {
+    if (isLoading) return;
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1 || messages[messageIndex].role !== 'model') return;
+
+    const historyForRegen = messages.slice(0, messageIndex);
+    setMessages(historyForRegen);
+    await callChatApi(historyForRegen);
+  }, [messages, isLoading, callChatApi]);
+
+  const handleStartEdit = (messageId: string, content: string) => {
+    setEditingMessageId(messageId);
+    setEditedContent(content);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+    setEditedContent('');
+  };
+
+  const handleSaveEdit = useCallback(async (messageId: string, newContent: string) => {
+    if (isLoading) return;
+    const messageIndex = messages.findIndex(m => m.id === messageId);
+    if (messageIndex === -1) return;
+
+    const historyUpToEdit = messages.slice(0, messageIndex);
+    const updatedUserMessage = { ...messages[messageIndex], content: newContent };
+    
+    handleCancelEdit();
+
+    const newHistory = [...historyUpToEdit, updatedUserMessage];
+    setMessages(newHistory);
+    await callChatApi(newHistory);
+  }, [messages, isLoading, callChatApi]);
 
   const handleFeedbackSubmit = async (feedbackText: string) => {
     if (!feedbackMessage) return;
@@ -266,14 +304,27 @@ export function ChatPanel() {
         </header>
 
         <div className="flex-1 overflow-y-auto">
-            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={handleFeedback} />}
+            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : 
+            <ChatMessages 
+              messages={messages} 
+              isLoading={isLoading} 
+              onFeedback={handleFeedback}
+              onRegenerate={handleRegenerate}
+              onStartEdit={handleStartEdit}
+              onCancelEdit={handleCancelEdit}
+              onSaveEdit={handleSaveEdit}
+              editingMessageId={editingMessageId}
+              editedContent={editedContent}
+              onEditedContentChange={setEditedContent}
+            />
+          }
         </div>
         
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto max-w-4xl">
               <ChatInput 
                 onSend={handleSend} 
-                isLoading={isLoading || !activeProject} 
+                isLoading={isLoading || !activeProject || !!editingMessageId}
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}
