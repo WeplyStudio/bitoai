@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from 'react';
@@ -133,14 +134,14 @@ export function ChatPanel() {
                     {prompts.map((prompt, i) => {
                         const Icon = getIcon(prompt);
                         return (
-                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between text-left">
-                                <div className="flex items-center gap-3">
-                                    <div className="p-2 rounded-full bg-primary/5">
+                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
+                                <div className="flex items-start gap-3 mr-4">
+                                    <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
                                         <Icon className="w-5 h-5 text-primary" />
                                     </div>
-                                    <span className="font-medium">{prompt}</span>
+                                    <span className="font-medium whitespace-normal">{prompt}</span>
                                 </div>
-                                <Plus className="h-4 w-4 text-muted-foreground"/>
+                                <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1"/>
                             </Button>
                         );
                     })}
