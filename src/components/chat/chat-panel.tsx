@@ -4,27 +4,29 @@ import { useState, useEffect } from 'react';
 import { generateInitialPrompt } from '@/ai/flows/generate-initial-prompt';
 import { chat } from '@/ai/flows/chat';
 import type { ChatMessage } from '@/ai/schemas';
-import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
 import { useToast } from '@/hooks/use-toast';
 
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
-import { ChatFeedbackDialog } from './chat-feedback-dialog';
-import { Card, CardHeader, CardTitle, CardContent, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
-import { BitoIcon } from '@/components/icons';
+import { ScriptIcon } from '@/components/icons';
+import { FilePenLine, ImageIcon, UserRound, Code, Sparkles } from 'lucide-react';
 
 export interface Message extends ChatMessage {
   id: string;
+}
+
+const suggestionIcons = {
+    "Write copy": FilePenLine,
+    "Image generation": ImageIcon,
+    "Create avatar": UserRound,
+    "Write code": Code,
 }
 
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [initialPrompts, setInitialPrompts] = useState<string[]>([]);
-  const [isFeedbackDialogOpen, setIsFeedbackDialogOpen] = useState(false);
-  const [feedbackMessageId, setFeedbackMessageId] = useState<string | null>(null);
-  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -59,7 +61,7 @@ export function ChatPanel() {
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to get a response from Bito AI. Please try again.',
+        description: 'Failed to get a response from Script AI. Please try again.',
       });
       setMessages(prev => prev.filter(m => m.id !== newUserMessage.id));
     } finally {
@@ -67,77 +69,51 @@ export function ChatPanel() {
     }
   };
 
-  const handleOpenFeedbackDialog = (messageId: string) => {
-    setFeedbackMessageId(messageId);
-    setIsFeedbackDialogOpen(true);
-  };
-
-  const handleSubmitFeedback = async (feedback: string) => {
-    if (!feedbackMessageId) return;
-    
-    const messageIndex = messages.findIndex(m => m.id === feedbackMessageId);
-    if (messageIndex < 1) return;
-
-    const aiResponse = messages[messageIndex].content;
-    const originalPrompt = messages[messageIndex - 1].content;
-
-    setIsSubmittingFeedback(true);
-    try {
-        const { improvedResponse } = await incorporateFeedback({ originalPrompt, aiResponse, feedback });
-        setMessages(prev => {
-            const newMessages = [...prev];
-            newMessages[messageIndex].content = improvedResponse;
-            return newMessages;
-        });
-        toast({ title: 'Success', description: 'Feedback incorporated and response updated.' });
-    } catch (error) {
-        console.error('Error incorporating feedback:', error);
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not incorporate feedback.' });
-    } finally {
-        setIsSubmittingFeedback(false);
-        setIsFeedbackDialogOpen(false);
-        setFeedbackMessageId(null);
+  const WelcomeScreen = () => {
+    const prompts = initialPrompts.slice(0, 4);
+    const getIcon = (prompt: string) => {
+        const key = Object.keys(suggestionIcons).find(k => prompt.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
+        return key ? suggestionIcons[key] : Sparkles;
     }
-  };
-
-  const WelcomeScreen = () => (
-    <div className="flex flex-col items-center justify-center h-full text-center p-8">
-        <div className="p-3 rounded-full bg-secondary mb-4">
-            <BitoIcon className="w-12 h-12 text-primary" />
+    return (
+        <div className="flex flex-col items-center justify-center h-full text-center p-8">
+            <h1 className="text-4xl font-bold mb-2">Welcome to Script</h1>
+            <p className="text-muted-foreground mb-8">Get started by Script a task and Chat can do the rest. Not sure where to start?</p>
+            <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
+                {prompts.map((prompt, i) => {
+                    const Icon = getIcon(prompt);
+                    return (
+                        <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between">
+                            <div className="flex items-center gap-3 text-left">
+                                <div className="p-2 rounded-full bg-primary/5">
+                                    <Icon className="w-5 h-5 text-primary" />
+                                </div>
+                                <span className="font-medium">{prompt}</span>
+                            </div>
+                            <Plus className="h-4 w-4 text-muted-foreground"/>
+                        </Button>
+                    );
+                })}
+            </div>
         </div>
-        <h2 className="text-2xl font-bold mb-2">How can I help you today?</h2>
-        <div className="flex flex-wrap gap-2 mt-4 justify-center">
-            {initialPrompts.slice(0, 3).map((prompt, i) => (
-                <Button key={i} variant="outline" size="sm" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary">
-                    {prompt}
-                </Button>
-            ))}
-        </div>
-    </div>
-  );
+    );
+  }
   
   return (
-    <>
-      <Card className="w-full max-w-3xl h-[calc(100vh-4rem)] flex flex-col shadow-xl rounded-xl border-border bg-card">
-        <CardHeader className="flex-row items-center justify-between p-4 border-b">
-          <CardTitle className="text-lg font-semibold flex items-center gap-2">
-            <BitoIcon className="w-6 h-6 text-primary" />
-            Bito AI
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="flex-1 p-0 overflow-hidden">
-            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={handleOpenFeedbackDialog} />}
-        </CardContent>
-        <CardFooter className="p-4 border-t bg-card/80 backdrop-blur-sm">
+    <div className="flex flex-col h-full">
+        <header className="flex items-center justify-between p-4 border-b">
+          <h2 className="text-lg font-semibold">AI Chat</h2>
+          <Button>+ Upgrade</Button>
+        </header>
+
+        <div className="flex-1 overflow-hidden">
+            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={() => {}} />}
+        </div>
+        
+        <footer className="p-4 bg-background/80 backdrop-blur-sm">
             <ChatInput onSend={handleSend} isLoading={isLoading} />
-        </CardFooter>
-      </Card>
-      <ChatFeedbackDialog 
-        isOpen={isFeedbackDialogOpen}
-        onOpenChange={setIsFeedbackDialogOpen}
-        onSubmit={handleSubmitFeedback}
-        isSubmitting={isSubmittingFeedback}
-      />
-    </>
+            <p className="text-xs text-muted-foreground text-center mt-2">Script may generate inaccurate information about people, places, or facts. Model: Script AI v1.3</p>
+        </footer>
+    </div>
   );
 }

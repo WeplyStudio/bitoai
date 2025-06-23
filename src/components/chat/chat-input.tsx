@@ -2,8 +2,7 @@
 import { useState, useRef, type KeyboardEvent, useEffect } from 'react';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
-import { SendHorizonal } from 'lucide-react';
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+import { SendHorizonal, Paperclip, Mic, Sparkles } from 'lucide-react';
 
 interface ChatInputProps {
   onSend: (message: string) => void;
@@ -42,38 +41,43 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
   };
 
   return (
-    <form onSubmit={(e) => { e.preventDefault(); handleSendClick(); }} className="relative w-full">
-      <Textarea
-        ref={textareaRef}
-        value={text}
-        onChange={(e) => setText(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onInput={handleInput}
-        placeholder="Message Bito AI..."
-        rows={1}
-        className="pr-12 resize-none max-h-48 py-3 leading-6"
-        disabled={isLoading}
-      />
-      <div className="absolute bottom-2.5 right-3">
-        <TooltipProvider>
-            <Tooltip>
-                <TooltipTrigger asChild>
-                    <Button
-                        type="submit"
-                        size="icon"
-                        className='h-8 w-8'
-                        disabled={isLoading || !text.trim()}
-                    >
-                    <SendHorizonal className="h-4 w-4" />
-                    <span className="sr-only">Send</span>
-                    </Button>
-                </TooltipTrigger>
-                <TooltipContent>
-                    <p>Send message</p>
-                </TooltipContent>
-            </Tooltip>
-        </TooltipProvider>
-      </div>
+    <form onSubmit={(e) => { e.preventDefault(); handleSendClick(); }} className="w-full">
+        <div className="relative flex flex-col gap-2 rounded-lg border bg-background p-2 pr-14 min-h-[100px]">
+          <Textarea
+            ref={textareaRef}
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={handleKeyDown}
+            onInput={handleInput}
+            placeholder="Summarize the latest..."
+            rows={1}
+            className="pr-12 resize-none max-h-48 border-0 focus-visible:ring-0 shadow-none p-0"
+            disabled={isLoading}
+          />
+          <div className="flex items-center justify-between mt-auto">
+            <div className="flex items-center gap-1">
+                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
+                    <Paperclip className="h-4 w-4 mr-1" /> Attach
+                </Button>
+                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
+                    <Mic className="h-4 w-4 mr-1" /> Voice Message
+                </Button>
+                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
+                    <Sparkles className="h-4 w-4 mr-1" /> Browse Prompts
+                </Button>
+            </div>
+            <span className="text-xs text-muted-foreground">20/3,000</span>
+          </div>
+          <Button
+              type="submit"
+              size="icon"
+              className='h-8 w-8 absolute top-3 right-3 bg-accent hover:bg-accent/90'
+              disabled={isLoading || !text.trim()}
+          >
+            <SendHorizonal className="h-4 w-4" />
+            <span className="sr-only">Send</span>
+          </Button>
+        </div>
     </form>
   );
 }
