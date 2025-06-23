@@ -66,21 +66,15 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   const responseText = response.text;
   let imageUrl: string | undefined;
 
-  const responseHistory = response.history;
-  if (responseHistory) {
-      for (let i = responseHistory.length - 1; i >= 0; i--) {
-          const message = responseHistory[i];
-          if (message.role === 'tool') {
-              const toolResponsePart = message.content.find(
-                  (part) => part.toolResponse?.name === 'generateImageTool'
-              );
-              if (toolResponsePart && toolResponsePart.toolResponse) {
-                  const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
-                  imageUrl = output.imageUrl;
-                  break; 
-              }
-          }
-      }
+  if (response.history) {
+    const toolResponsePart = response.history
+      .flatMap(msg => msg.content)
+      .find(part => part.toolResponse?.name === 'generateImageTool');
+
+    if (toolResponsePart?.toolResponse) {
+      const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
+      imageUrl = output.imageUrl;
+    }
   }
   
   return {
