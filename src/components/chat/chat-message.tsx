@@ -32,7 +32,7 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
 
       <div className={cn(
         "max-w-[80%] rounded-lg px-4 py-3",
-        isModel ? 'bg-secondary' : 'bg-primary text-primary-foreground'
+        'bg-secondary'
       )}>
         <div className="prose prose-sm dark:prose-invert max-w-none break-words">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
