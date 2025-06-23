@@ -32,6 +32,11 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     };
   });
 
+  // Ensure the conversation history starts with a user message.
+  if (history.length > 0 && history[0].role === 'model') {
+    history.shift();
+  }
+
   let baseSystemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it. You have the ability to generate images. If the user asks for an image or describes something they want to see visually, use the generateImageTool.`;
   let temperature = 0.7;
 
