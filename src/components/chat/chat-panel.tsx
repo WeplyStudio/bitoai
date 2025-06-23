@@ -1,7 +1,8 @@
 
+
 "use client";
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { generateInitialPrompt } from '@/ai/flows/generate-initial-prompt';
 import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
@@ -36,6 +37,29 @@ export function ChatPanel() {
 
   const [feedbackMessage, setFeedbackMessage] = useState<Message | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+
+  const clearChat = useCallback(() => {
+    if (isMounted) {
+      setMessages([]);
+      try {
+        localStorage.removeItem(CHAT_HISTORY_KEY);
+      } catch (error) {
+        console.error("Failed to clear messages from localStorage", error);
+        toast({
+          variant: "destructive",
+          title: "Error",
+          description: "Could not clear chat history.",
+        });
+      }
+    }
+  }, [isMounted, toast]);
+
+  useEffect(() => {
+    window.addEventListener('clearChat', clearChat);
+    return () => {
+      window.removeEventListener('clearChat', clearChat);
+    };
+  }, [clearChat]);
 
   useEffect(() => {
     try {

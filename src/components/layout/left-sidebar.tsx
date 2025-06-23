@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScriptIcon } from '@/components/icons';
-import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare } from 'lucide-react';
+import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
@@ -43,6 +43,10 @@ export const LeftSidebarContent = () => {
         setMounted(true);
     }, []);
 
+    const handleNewChat = () => {
+        window.dispatchEvent(new Event('clearChat'));
+    };
+
     return (
         <>
             <div className="flex items-center gap-2 px-4 pt-4 pb-2">
@@ -50,11 +54,15 @@ export const LeftSidebarContent = () => {
                 <h1 className="text-xl font-bold">Script</h1>
             </div>
             
-            <div className="p-2">
+            <div className="p-2 space-y-2">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-9" />
                 </div>
+                 <Button variant="outline" className="w-full justify-start" onClick={handleNewChat}>
+                    <Plus className="mr-2 h-4 w-4" />
+                    New Chat
+                </Button>
             </div>
 
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
