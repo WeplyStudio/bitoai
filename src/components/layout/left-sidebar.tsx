@@ -96,19 +96,6 @@ export const LeftSidebarContent = () => {
                         </>
                     )}
                 </div>
-                <div className="flex items-center gap-3 p-2">
-                    <Avatar className="h-10 w-10">
-                        <AvatarImage src="https://placehold.co/40x40.png" alt="Emilia Caitlin" data-ai-hint="woman portrait" />
-                        <AvatarFallback>EC</AvatarFallback>
-                    </Avatar>
-                    <div className="flex-1">
-                        <p className="font-semibold text-sm">Emilia Caitlin</p>
-                        <p className="text-xs text-muted-foreground">hey@unspace.agency</p>
-                    </div>
-                    <Button variant="ghost" size="icon" className="h-8 w-8">
-                      <ChevronsUpDown className="h-4 w-4 text-muted-foreground" />
-                    </Button>
-                </div>
             </div>
         </>
     )
