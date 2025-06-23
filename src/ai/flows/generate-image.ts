@@ -18,14 +18,17 @@ export const generateImageTool = ai.defineTool(
     },
     async (input) => {
         const { media } = await ai.generate({
-            model: 'googleai/imagen-2',
+            model: 'googleai/gemini-2.0-flash-preview-image-generation',
             prompt: input.prompt,
+            config: {
+                responseModalities: ['TEXT', 'IMAGE'],
+            },
         });
 
-        if (!media || media.length === 0 || !media[0].url) {
+        if (!media || !media.url) {
             throw new Error('Image generation failed to return an image.');
         }
 
-        return { imageUrl: media[0].url };
+        return { imageUrl: media.url };
     }
 );
