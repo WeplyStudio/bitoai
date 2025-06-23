@@ -1,5 +1,3 @@
-
-
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
@@ -12,6 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
 import { ChatFeedbackDialog } from './chat-feedback-dialog';
+import { TemplateDialog } from './template-dialog';
 import { Button } from '@/components/ui/button';
 import { FilePenLine, ImageIcon, UserRound, Code, Sparkles, Plus } from 'lucide-react';
 
@@ -43,9 +42,19 @@ export function ChatPanel() {
   const [initialPrompts, setInitialPrompts] = useState<string[]>([]);
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
+  const [inputText, setInputText] = useState('');
 
   const [feedbackMessage, setFeedbackMessage] = useState<Message | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
+  const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
+
+  useEffect(() => {
+    const openDialog = () => setTemplateDialogOpen(true);
+    window.addEventListener('openTemplates', openDialog);
+    return () => {
+      window.removeEventListener('openTemplates', openDialog);
+    };
+  }, []);
 
   const clearChat = useCallback(() => {
     if (isMounted) {
@@ -264,7 +273,13 @@ export function ChatPanel() {
         
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto max-w-4xl">
-              <ChatInput onSend={handleSend} isLoading={isLoading} />
+              <ChatInput 
+                onSend={handleSend} 
+                isLoading={isLoading} 
+                value={inputText} 
+                onChange={setInputText}
+                onBrowsePrompts={() => setTemplateDialogOpen(true)}
+              />
               <p className="text-xs text-muted-foreground text-center mt-2">Bito AI may generate inaccurate information. Developed by JDev.</p>
             </div>
         </footer>
@@ -273,6 +288,14 @@ export function ChatPanel() {
           onOpenChange={(open) => !open && setFeedbackMessage(null)}
           onSubmit={handleFeedbackSubmit}
           isSubmitting={isSubmittingFeedback}
+        />
+        <TemplateDialog
+          isOpen={isTemplateDialogOpen}
+          onOpenChange={setTemplateDialogOpen}
+          onSelectTemplate={(prompt) => {
+            setInputText(prompt);
+            setTemplateDialogOpen(false);
+          }}
         />
     </div>
   );

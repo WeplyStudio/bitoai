@@ -7,29 +7,31 @@ import { SendHorizonal, Paperclip, Mic, Sparkles, X } from 'lucide-react';
 interface ChatInputProps {
   onSend: (message: string, file?: File) => void;
   isLoading: boolean;
+  value: string;
+  onChange: (value: string) => void;
+  onBrowsePrompts: () => void;
 }
 
-export function ChatInput({ onSend, isLoading }: ChatInputProps) {
-  const [text, setText] = useState('');
+export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts }: ChatInputProps) {
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleSendClick = () => {
-    if (text.trim() || file) {
-      onSend(text, file ?? undefined);
-      setText('');
+    if (value.trim() || file) {
+      onSend(value, file ?? undefined);
+      onChange('');
       setFile(null);
       setFilePreview(null);
     }
   };
 
   useEffect(() => {
-    if (!text && !filePreview && textareaRef.current) {
+    if (!value && !filePreview && textareaRef.current) {
         textareaRef.current.style.height = 'auto';
     }
-  }, [text, filePreview])
+  }, [value, filePreview])
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
     if (event.key === 'Enter' && !event.shiftKey) {
@@ -84,8 +86,8 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
           )}
           <Textarea
             ref={textareaRef}
-            value={text}
-            onChange={(e) => setText(e.target.value)}
+            value={value}
+            onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onInput={handleInput}
             placeholder="Describe the image or ask a question..."
@@ -103,17 +105,17 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
                     <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Voice Message</span>
                 </Button>
-                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
+                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground" onClick={onBrowsePrompts}>
                     <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Browse Prompts</span>
                 </Button>
             </div>
-            <span className="text-xs text-muted-foreground">{text.length}/3,000</span>
+            <span className="text-xs text-muted-foreground">{value.length}/3,000</span>
           </div>
           <Button
               type="submit"
               size="icon"
               className='h-8 w-8 absolute top-3 right-3 bg-accent hover:bg-accent/90'
-              disabled={isLoading || (!text.trim() && !file)}
+              disabled={isLoading || (!value.trim() && !file)}
           >
             <SendHorizonal className="h-4 w-4" />
             <span className="sr-only">Send</span>
