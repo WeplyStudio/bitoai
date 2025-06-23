@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { generateInitialPrompt } from '@/ai/flows/generate-initial-prompt';
 import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
 import { summarizeChat } from '@/ai/flows/summarize-chat';
@@ -20,7 +19,7 @@ export interface Message extends ChatMessage {
   id: string;
 }
 
-const suggestionIcons = {
+const suggestionIcons: { [key: string]: React.ElementType } = {
     "Write copy": FilePenLine,
     "Image generation": ImageIcon,
     "Create avatar": UserRound,
@@ -42,7 +41,12 @@ const toDataUri = (file: File): Promise<string> => {
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialPrompts, setInitialPrompts] = useState<string[]>([]);
+  const [initialPrompts, setInitialPrompts] = useState<string[]>([
+    'Write copy for a new marketing campaign',
+    'Image generation of a futuristic cityscape at night',
+    'Create an avatar for a fantasy character',
+    'Write code for a simple to-do list app in React',
+  ]);
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -111,24 +115,6 @@ export function ChatPanel() {
       }
     }
   }, [messages, activeProject, isMounted]);
-
-  // Fetch initial prompts for welcome screen
-  useEffect(() => {
-    const fetchInitialPrompts = async () => {
-      if (messages.length === 0) {
-        try {
-          const { prompts } = await generateInitialPrompt();
-          setInitialPrompts(prompts);
-        } catch (error) {
-          console.error('Failed to fetch initial prompts:', error);
-          toast({ variant: 'destructive', title: 'Error', description: 'Could not load initial prompts.' });
-        }
-      }
-    };
-    if (isMounted) {
-      fetchInitialPrompts();
-    }
-  }, [isMounted, messages.length, toast]);
 
   const handleSummarization = useCallback(async (currentMessages: Message[]) => {
       if (currentMessages.length > 4 && currentMessages.length % 5 === 0) { // Summarize every 5 messages after the 4th
@@ -261,8 +247,9 @@ export function ChatPanel() {
     const WelcomeScreen = () => {
         const prompts = initialPrompts.slice(0, 4);
         const getIcon = (prompt: string) => {
-            const key = Object.keys(suggestionIcons).find(k => prompt.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
-            return key ? suggestionIcons[key] : Sparkles;
+            const lowerCasePrompt = prompt.toLowerCase();
+            const key = Object.keys(suggestionIcons).find(k => lowerCasePrompt.includes(k.toLowerCase()));
+            return key ? suggestionIcons[key as keyof typeof suggestionIcons] : Sparkles;
         }
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">

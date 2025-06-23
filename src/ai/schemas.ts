@@ -27,12 +27,6 @@ export const IncorporateFeedbackOutputSchema = z.object({
 });
 export type IncorporateFeedbackOutput = z.infer<typeof IncorporateFeedbackOutputSchema>;
 
-// From generate-initial-prompt.ts
-export const InitialPromptOutputSchema = z.object({
-  prompts: z.array(z.string()).describe('An array of initial prompts to display to the user.'),
-});
-export type InitialPromptOutput = z.infer<typeof InitialPromptOutputSchema>;
-
 // From summarize-chat.ts
 export const SummarizeChatInputSchema = z.object({
   chatHistory: z.string().describe('The complete chat history to summarize.'),
