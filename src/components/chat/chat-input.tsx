@@ -54,8 +54,8 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             className="pr-12 resize-none max-h-48 border-0 focus-visible:ring-0 shadow-none p-0"
             disabled={isLoading}
           />
-          <div className="flex items-center justify-between mt-auto">
-            <div className="flex items-center gap-1">
+          <div className="flex items-center justify-between flex-wrap gap-y-2 mt-auto">
+            <div className="flex items-center gap-1 flex-wrap">
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
                     <Paperclip className="h-4 w-4 mr-1" /> Attach
                 </Button>
