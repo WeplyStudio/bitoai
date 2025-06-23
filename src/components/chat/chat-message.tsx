@@ -31,11 +31,11 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
       )}
 
       <div className={cn(
-        "max-w-[80%] rounded-lg px-4 py-3",
+        "max-w-2xl rounded-lg px-4 py-3 min-w-0",
         'bg-secondary'
       )}>
         {message.content && (
-          <div className="prose prose-sm dark:prose-invert max-w-none break-words [&_pre]:overflow-x-auto">
+          <div className="prose prose-sm dark:prose-invert max-w-none break-words">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>
