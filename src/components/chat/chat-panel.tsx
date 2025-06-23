@@ -10,7 +10,7 @@ import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
 import { Button } from '@/components/ui/button';
 import { ScriptIcon } from '@/components/icons';
-import { FilePenLine, ImageIcon, UserRound, Code, Sparkles } from 'lucide-react';
+import { FilePenLine, ImageIcon, UserRound, Code, Sparkles, Plus } from 'lucide-react';
 
 export interface Message extends ChatMessage {
   id: string;
