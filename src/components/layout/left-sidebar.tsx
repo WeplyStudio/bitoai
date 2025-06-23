@@ -2,20 +2,38 @@
 
 import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { ScriptIcon } from '@/components/icons';
 import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare } from 'lucide-react';
+import { cn } from "@/lib/utils";
 
-const NavItem = ({ icon: Icon, text, active = false, badge }: { icon: React.ElementType, text: string, active?: boolean, badge?: string }) => (
-  <Button variant={active ? "secondary" : "ghost"} className={`w-full justify-start ${active ? '' : 'text-muted-foreground hover:text-foreground'}`}>
-    <Icon className="mr-2 h-4 w-4" />
-    <span>{text}</span>
-    {badge && <Badge variant="secondary" className="ml-auto">{badge}</Badge>}
-  </Button>
-);
+const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
+  const pathname = usePathname();
+  const active = pathname === href;
+
+  return (
+    <Link href={href} passHref>
+      <Button variant={active ? "secondary" : "ghost"} className={cn("w-full justify-start", !active && "text-muted-foreground hover:text-foreground")}>
+        <Icon className="mr-2 h-4 w-4" />
+        <span>{text}</span>
+        {badge && <Badge variant="secondary" className="ml-auto">{badge}</Badge>}
+      </Button>
+    </Link>
+  );
+};
+
+const NavButton = ({ icon: Icon, text, badge }: { icon: React.ElementType, text: string, badge?: string }) => (
+    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground">
+      <Icon className="mr-2 h-4 w-4" />
+      <span>{text}</span>
+      {badge && <Badge variant="secondary" className="ml-auto">{badge}</Badge>}
+    </Button>
+  );
 
 export const LeftSidebarContent = () => {
     const { theme, setTheme } = useTheme();
@@ -40,16 +58,16 @@ export const LeftSidebarContent = () => {
             </div>
 
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
-                <NavItem icon={MessageSquare} text="AI Chat" active />
-                <NavItem icon={Folder} text="Projects" />
-                <NavItem icon={FileText} text="Templates" />
-                <NavItem icon={Users} text="Community" badge="NEW" />
-                <NavItem icon={Clock} text="History" />
+                <NavItem icon={MessageSquare} text="AI Chat" href="/" />
+                <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
+                <NavButton icon={Folder} text="Projects" />
+                <NavButton icon={FileText} text="Templates" />
+                <NavButton icon={Clock} text="History" />
             </div>
             
             <div className="space-y-2 p-2 border-t">
-                <NavItem icon={Settings} text="Settings & Help" />
-                <NavItem icon={HelpCircle} text="Help" />
+                <NavButton icon={Settings} text="Settings & Help" />
+                <NavButton icon={HelpCircle} text="Help" />
                 <div className="p-2 bg-muted rounded-lg flex items-center h-[56px]">
                     {mounted && (
                         <>
