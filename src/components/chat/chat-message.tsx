@@ -35,7 +35,7 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
         'bg-secondary'
       )}>
         {message.content && (
-          <div className="prose prose-sm dark:prose-invert max-w-none break-words">
+          <div className="prose prose-sm dark:prose-invert max-w-none break-words [&_pre]:overflow-x-auto">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>
