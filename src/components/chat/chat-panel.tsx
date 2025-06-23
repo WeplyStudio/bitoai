@@ -12,7 +12,6 @@ import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
 import { ChatFeedbackDialog } from './chat-feedback-dialog';
 import { Button } from '@/components/ui/button';
-import { ScriptIcon } from '@/components/icons';
 import { FilePenLine, ImageIcon, UserRound, Code, Sparkles, Plus } from 'lucide-react';
 
 export interface Message extends ChatMessage {
@@ -26,27 +25,65 @@ const suggestionIcons = {
     "Write code": Code,
 }
 
+const CHAT_HISTORY_KEY = 'script-ai-chat-history';
+
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [initialPrompts, setInitialPrompts] = useState<string[]>([]);
   const { toast } = useToast();
+  const [isMounted, setIsMounted] = useState(false);
 
   const [feedbackMessage, setFeedbackMessage] = useState<Message | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   useEffect(() => {
-    const fetchInitialPrompts = async () => {
+    // On component mount, try to load messages from localStorage.
+    try {
+      const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
+      if (savedMessages) {
+        setMessages(JSON.parse(savedMessages));
+      }
+    } catch (error) {
+      console.error("Failed to load messages from localStorage", error);
+      toast({
+        variant: "destructive",
+        title: "Error",
+        description: "Could not load chat history.",
+      });
+    }
+    setIsMounted(true);
+  }, [toast]);
+
+  useEffect(() => {
+    // When messages change, save them to localStorage.
+    // This effect should only run on the client after the component has mounted.
+    if (isMounted) {
       try {
-        const { prompts } = await generateInitialPrompt();
-        setInitialPrompts(prompts);
+        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
       } catch (error) {
-        console.error('Failed to fetch initial prompts:', error);
-        toast({ variant: 'destructive', title: 'Error', description: 'Could not load initial prompts.' });
+        console.error("Failed to save messages to localStorage", error);
+      }
+    }
+  }, [messages, isMounted]);
+
+  useEffect(() => {
+    const fetchInitialPrompts = async () => {
+      // Only fetch prompts if there's no existing chat history.
+      if (messages.length === 0) {
+        try {
+          const { prompts } = await generateInitialPrompt();
+          setInitialPrompts(prompts);
+        } catch (error) {
+          console.error('Failed to fetch initial prompts:', error);
+          toast({ variant: 'destructive', title: 'Error', description: 'Could not load initial prompts.' });
+        }
       }
     };
-    fetchInitialPrompts();
-  }, [toast]);
+    if (isMounted) {
+      fetchInitialPrompts();
+    }
+  }, [isMounted, messages.length, toast]);
   
   const handleSend = async (text: string) => {
     if (isLoading || !text.trim()) return;
@@ -159,7 +196,7 @@ export function ChatPanel() {
           </div>
         </header>
 
-        <div className="flex-1 overflow-hidden">
+        <div className="flex-1 overflow-y-auto">
             {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={handleFeedback} />}
         </div>
         
