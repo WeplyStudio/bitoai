@@ -4,13 +4,13 @@ import { useTheme } from "next-themes";
 import { useState, useEffect } from 'react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
 import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
+import { useProjects } from "@/contexts/ProjectProvider";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
@@ -38,13 +38,14 @@ const NavButton = ({ icon: Icon, text, badge, onClick }: { icon: React.ElementTy
 export const LeftSidebarContent = () => {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
+    const { createProject } = useProjects();
 
     useEffect(() => {
         setMounted(true);
     }, []);
 
-    const handleNewChat = () => {
-        window.dispatchEvent(new Event('clearChat'));
+    const handleNewProject = () => {
+        createProject();
     };
 
     const handleOpenTemplates = () => {
@@ -63,9 +64,9 @@ export const LeftSidebarContent = () => {
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
                     <Input placeholder="Search" className="pl-9" />
                 </div>
-                 <Button variant="outline" className="w-full justify-start" onClick={handleNewChat}>
+                 <Button variant="outline" className="w-full justify-start" onClick={handleNewProject}>
                     <Plus className="mr-2 h-4 w-4" />
-                    New Chat
+                    New Project
                 </Button>
             </div>
 

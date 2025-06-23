@@ -4,8 +4,10 @@ import { useState, useEffect, useCallback } from 'react';
 import { generateInitialPrompt } from '@/ai/flows/generate-initial-prompt';
 import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
+import { summarizeChat } from '@/ai/flows/summarize-chat';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
+import { useProjects } from '@/contexts/ProjectProvider';
 
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
@@ -25,7 +27,7 @@ const suggestionIcons = {
     "Write code": Code,
 }
 
-const CHAT_HISTORY_KEY = 'bito-ai-chat-history';
+const CHAT_HISTORY_KEY = 'bito-ai-chat-histories';
 const AI_MODE_KEY = 'bito-ai-mode';
 
 const toDataUri = (file: File): Promise<string> => {
@@ -49,6 +51,8 @@ export function ChatPanel() {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [aiMode, setAiMode] = useState('default');
+  
+  const { activeProject, updateActiveProjectSummary } = useProjects();
 
   useEffect(() => {
     const openDialog = () => setTemplateDialogOpen(true);
@@ -58,37 +62,19 @@ export function ChatPanel() {
     };
   }, []);
 
-  const clearChat = useCallback(() => {
-    if (isMounted) {
-      setMessages([]);
-      try {
-        localStorage.removeItem(CHAT_HISTORY_KEY);
-      } catch (error) {
-        console.error("Failed to clear messages from localStorage", error);
-        toast({
-          variant: "destructive",
-          title: "Error",
-          description: "Could not clear chat history.",
-        });
-      }
-    }
-  }, [isMounted, toast]);
-
-  useEffect(() => {
-    window.addEventListener('clearChat', clearChat);
-    return () => {
-      window.removeEventListener('clearChat', clearChat);
-    };
-  }, [clearChat]);
-
+  // Load settings and messages on mount
   useEffect(() => {
     try {
-      const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
-      if (savedMessages) {
-        setMessages(JSON.parse(savedMessages));
-      }
       const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
       setAiMode(savedMode);
+
+      if (activeProject) {
+        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
+        const projectHistory = allHistories[activeProject.id] || [];
+        setMessages(projectHistory);
+      } else {
+        setMessages([]);
+      }
     } catch (error) {
       console.error("Failed to load data from localStorage", error);
       toast({
@@ -98,8 +84,9 @@ export function ChatPanel() {
       });
     }
     setIsMounted(true);
-  }, [toast]);
+  }, [activeProject, toast]);
 
+  // Handle AI mode changes from other tabs
   useEffect(() => {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === AI_MODE_KEY && event.newValue) {
@@ -112,16 +99,20 @@ export function ChatPanel() {
     };
   }, []);
 
+  // Save messages to localStorage
   useEffect(() => {
-    if (isMounted) {
+    if (isMounted && activeProject) {
       try {
-        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
+        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
+        allHistories[activeProject.id] = messages;
+        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(allHistories));
       } catch (error) {
         console.error("Failed to save messages to localStorage", error);
       }
     }
-  }, [messages, isMounted]);
+  }, [messages, activeProject, isMounted]);
 
+  // Fetch initial prompts for welcome screen
   useEffect(() => {
     const fetchInitialPrompts = async () => {
       if (messages.length === 0) {
@@ -138,9 +129,25 @@ export function ChatPanel() {
       fetchInitialPrompts();
     }
   }, [isMounted, messages.length, toast]);
+
+  const handleSummarization = useCallback(async (currentMessages: Message[]) => {
+      if (currentMessages.length > 4 && currentMessages.length % 5 === 0) { // Summarize every 5 messages after the 4th
+        const historyString = currentMessages
+          .map(m => `${m.role === 'user' ? 'User' : 'Bito AI'}: ${m.content?.substring(0, 200)}`) // Truncate long content
+          .join('\n');
+        
+        try {
+          const { summary } = await summarizeChat({ chatHistory: historyString });
+          updateActiveProjectSummary(summary);
+        } catch (error) {
+            console.error("Failed to summarize chat:", error);
+            // Don't show a toast for this, as it's a background task
+        }
+      }
+  }, [updateActiveProjectSummary]);
   
   const handleSend = async (text: string, file?: File) => {
-    if (isLoading || (!text.trim() && !file)) return;
+    if (isLoading || (!text.trim() && !file) || !activeProject) return;
 
     let imageUrl: string | undefined = undefined;
     if (file) {
@@ -188,7 +195,11 @@ export function ChatPanel() {
         content: response.content,
         imageUrl: response.imageUrl,
       };
-      setMessages(prev => [...prev, newAiMessage]);
+
+      const finalMessages = [...updatedMessages, newAiMessage];
+      setMessages(finalMessages);
+      await handleSummarization(finalMessages);
+
     } catch (error)      {
         console.error('Error during chat:', error);
         toast({
@@ -281,7 +292,7 @@ export function ChatPanel() {
     <div className="flex flex-col flex-1 min-h-0">
         <header className="hidden lg:flex items-center p-4 border-b">
           <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
-            <h2 className="text-lg font-semibold">AI Chat</h2>
+            <h2 className="text-lg font-semibold">{activeProject?.name || 'AI Chat'}</h2>
             <Button>+ Upgrade</Button>
           </div>
         </header>
@@ -294,7 +305,7 @@ export function ChatPanel() {
             <div className="mx-auto max-w-4xl">
               <ChatInput 
                 onSend={handleSend} 
-                isLoading={isLoading} 
+                isLoading={isLoading || !activeProject} 
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}
