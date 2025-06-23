@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Users, Clock, Moon, Sun, MessageSquare, Plus } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 
@@ -76,7 +76,6 @@ export const LeftSidebarContent = () => {
                 <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
                 <NavItem icon={Folder} text="Projects" href="/projects" />
                 <NavButton icon={FileText} text="Templates" onClick={handleOpenTemplates} />
-                <NavButton icon={Clock} text="History" />
             </div>
             
             <div className="space-y-2 p-2 border-t">
