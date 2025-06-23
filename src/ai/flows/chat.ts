@@ -9,14 +9,16 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   // Limit the history to the last 10 messages to avoid exceeding the token limit.
   const recentMessages = input.messages.slice(-10);
 
-  const history: MessageData[] = recentMessages.map(msg => {
+  const history: MessageData[] = recentMessages.map((msg, index) => {
+    const isLastMessage = index === recentMessages.length - 1;
     const content: Part[] = [];
 
     if (msg.content) {
         content.push({ text: msg.content });
     }
 
-    if (msg.role === 'user' && msg.imageUrl) {
+    // Only include the image for the most recent user message to save tokens.
+    if (msg.role === 'user' && msg.imageUrl && isLastMessage) {
       content.push({ media: { url: msg.imageUrl } });
     }
     
