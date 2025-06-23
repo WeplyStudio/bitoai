@@ -33,7 +33,7 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     content: [{ text: msg.content }],
   }));
 
-  const systemInstruction = `You are Script AI, a helpful and friendly AI assistant. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful.`;
+  const systemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful.`;
 
   const messagesWithSystem: MessageData[] = [
     { role: 'system', content: [{ text: systemInstruction }] },

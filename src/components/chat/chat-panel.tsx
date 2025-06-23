@@ -26,7 +26,7 @@ const suggestionIcons = {
     "Write code": Code,
 }
 
-const CHAT_HISTORY_KEY = 'script-ai-chat-history';
+const CHAT_HISTORY_KEY = 'bito-ai-chat-history';
 
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -129,7 +129,7 @@ export function ChatPanel() {
         toast({
             variant: 'destructive',
             title: 'Error',
-            description: 'Failed to get a response from Script AI. Please try again.',
+            description: 'Failed to get a response from Bito AI. Please try again.',
         });
         setMessages(prev => prev.filter(m => m.id !== newUserMessage.id));
     } finally {
@@ -190,8 +190,8 @@ export function ChatPanel() {
         }
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome to Script</h1>
-                <p className="text-muted-foreground mb-8 max-w-md">Get started by Script a task and Chat can do the rest. Not sure where to start?</p>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome to Bito</h1>
+                <p className="text-muted-foreground mb-8 max-w-md">Get started by telling Bito a task and it can do the rest. Not sure where to start?</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
                     {prompts.map((prompt, i) => {
                         const Icon = getIcon(prompt);
@@ -228,7 +228,7 @@ export function ChatPanel() {
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto max-w-4xl">
               <ChatInput onSend={handleSend} isLoading={isLoading} />
-              <p className="text-xs text-muted-foreground text-center mt-2">Script may generate inaccurate information about people, places, or facts. Model: Script AI v1.3</p>
+              <p className="text-xs text-muted-foreground text-center mt-2">Bito AI may generate inaccurate information. Developed by JDev.</p>
             </div>
         </footer>
         <ChatFeedbackDialog

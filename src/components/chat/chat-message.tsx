@@ -1,6 +1,6 @@
 'use client';
 import { User, ThumbsUp, ThumbsDown } from 'lucide-react';
-import { ScriptIcon } from '@/components/icons';
+import { BitoIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -15,27 +15,24 @@ interface ChatMessageProps {
 
 export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
   const isModel = message.role === 'model';
+  const isUser = message.role === 'user';
 
   return (
-    <div className={cn('group flex items-start space-x-4')}>
-      <Avatar className="h-8 w-8 border">
-        {isModel ? (
+    <div className={cn(
+      'group flex items-start gap-4', 
+      isUser ? 'justify-end' : 'justify-start'
+    )}>
+      {isModel && (
+        <Avatar className="h-8 w-8 border flex-shrink-0">
           <AvatarFallback className='bg-primary text-primary-foreground'>
-            <ScriptIcon className="h-5 w-5" />
+            <BitoIcon className="h-5 w-5" />
           </AvatarFallback>
-        ) : (
-          <>
-            <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="woman portrait" />
-            <AvatarFallback>
-              <User className="h-5 w-5" />
-            </AvatarFallback>
-          </>
-        )}
-      </Avatar>
-      
+        </Avatar>
+      )}
+
       <div className={cn(
         "max-w-[80%] rounded-lg px-4 py-3",
-        isModel ? 'bg-secondary' : 'bg-secondary'
+        isModel ? 'bg-secondary' : 'bg-primary text-primary-foreground'
       )}>
         <div className="prose prose-sm dark:prose-invert max-w-none break-words">
           <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -58,6 +55,15 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
             <ThumbsDown className="h-4 w-4" />
           </Button>
         </div>
+      )}
+
+      {isUser && (
+        <Avatar className="h-8 w-8 border flex-shrink-0">
+          <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="woman portrait" />
+          <AvatarFallback>
+            <User className="h-5 w-5" />
+          </AvatarFallback>
+        </Avatar>
       )}
     </div>
   );

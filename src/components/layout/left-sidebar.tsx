@@ -8,7 +8,7 @@ import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { ScriptIcon } from '@/components/icons';
+import { BitoIcon } from '@/components/icons';
 import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 
@@ -50,8 +50,8 @@ export const LeftSidebarContent = () => {
     return (
         <>
             <div className="flex items-center gap-2 px-4 pt-4 pb-2">
-                <ScriptIcon className="w-8 h-8" />
-                <h1 className="text-xl font-bold">Script</h1>
+                <BitoIcon className="w-8 h-8" />
+                <h1 className="text-xl font-bold">Bito</h1>
             </div>
             
             <div className="p-2 space-y-2">

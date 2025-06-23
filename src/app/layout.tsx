@@ -4,8 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
-  title: 'Script AI',
-  description: 'An AI Chat application powered by Script AI.',
+  title: 'Bito AI',
+  description: 'An AI Chat application powered by Bito AI, developed by JDev.',
 };
 
 export default function RootLayout({

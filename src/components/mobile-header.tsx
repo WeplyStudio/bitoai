@@ -1,6 +1,6 @@
 'use client';
 
-import { ScriptIcon } from '@/components/icons';
+import { BitoIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { PanelLeft, PanelRight } from 'lucide-react';
@@ -30,8 +30,8 @@ export function MobileHeader({ leftSidebar, rightSidebar }: MobileHeaderProps) {
       </Sheet>
 
       <div className="flex items-center gap-2">
-        <ScriptIcon className="w-7 h-7" />
-        <h1 className="text-lg font-bold">Script</h1>
+        <BitoIcon className="w-7 h-7" />
+        <h1 className="text-lg font-bold">Bito</h1>
       </div>
 
       <Sheet>

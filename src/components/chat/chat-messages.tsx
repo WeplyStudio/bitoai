@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { ChatMessage } from './chat-message';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ScriptIcon } from '@/components/icons';
+import { BitoIcon } from '@/components/icons';
 import type { Message } from './chat-panel';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
@@ -32,7 +32,7 @@ export function ChatMessages({ messages, isLoading, onFeedback }: ChatMessagesPr
             <div className="flex items-start space-x-4">
                 <Avatar className="h-8 w-8 border">
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                        <ScriptIcon className="h-5 w-5" />
+                        <BitoIcon className="h-5 w-5" />
                     </AvatarFallback>
                 </Avatar>
                 <div className="space-y-2 flex-1 pt-1">
