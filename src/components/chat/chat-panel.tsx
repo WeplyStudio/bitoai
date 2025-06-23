@@ -38,7 +38,6 @@ export function ChatPanel() {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   useEffect(() => {
-    // On component mount, try to load messages from localStorage.
     try {
       const savedMessages = localStorage.getItem(CHAT_HISTORY_KEY);
       if (savedMessages) {
@@ -56,8 +55,6 @@ export function ChatPanel() {
   }, [toast]);
 
   useEffect(() => {
-    // When messages change, save them to localStorage.
-    // This effect should only run on the client after the component has mounted.
     if (isMounted) {
       try {
         localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(messages));
@@ -69,7 +66,6 @@ export function ChatPanel() {
 
   useEffect(() => {
     const fetchInitialPrompts = async () => {
-      // Only fetch prompts if there's no existing chat history.
       if (messages.length === 0) {
         try {
           const { prompts } = await generateInitialPrompt();
@@ -97,7 +93,12 @@ export function ChatPanel() {
       const historyForApi = updatedMessages.map(({ role, content }) => ({ role, content }));
       const response = await chat({ messages: historyForApi });
       
-      const newAiMessage: Message = { id: String(Date.now() + 1), role: response.role as 'model', content: response.content };
+      const newAiMessage: Message = { 
+        id: String(Date.now() + 1), 
+        role: response.role as 'model', 
+        content: response.content,
+        imageUrl: response.imageUrl,
+      };
       setMessages(prev => [...prev, newAiMessage]);
     } catch (error)      {
         console.error('Error during chat:', error);

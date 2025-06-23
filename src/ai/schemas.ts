@@ -4,6 +4,7 @@ import { z } from 'genkit';
 export const ChatMessageSchema = z.object({
   role: z.enum(['user', 'model', 'system']),
   content: z.string(),
+  imageUrl: z.string().optional().describe("URL of a generated image, if any."),
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
@@ -41,3 +42,14 @@ export const SummarizeChatOutputSchema = z.object({
   summary: z.string().describe('A concise summary of the chat history.'),
 });
 export type SummarizeChatOutput = z.infer<typeof SummarizeChatOutputSchema>;
+
+// From generate-image.ts
+export const GenerateImageInputSchema = z.object({
+  prompt: z.string().describe('The text prompt to generate an image from.'),
+});
+export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
+
+export const GenerateImageOutputSchema = z.object({
+  imageUrl: z.string().describe("The data URI of the generated image."),
+});
+export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
