@@ -35,12 +35,10 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
         'bg-secondary'
       )}>
         {message.content && (
-          <div className="overflow-x-auto">
-            <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {message.content}
-              </ReactMarkdown>
-            </div>
+          <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-x-auto">
+            <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              {message.content}
+            </ReactMarkdown>
           </div>
         )}
         {message.imageUrl && (
