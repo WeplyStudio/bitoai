@@ -3,7 +3,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
-import { summarizeChat } from '@/ai/flows/summarize-chat';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 import { useProjects } from '@/contexts/ProjectProvider';
@@ -116,22 +115,6 @@ export function ChatPanel() {
     }
   }, [messages, activeProject, isMounted]);
 
-  const handleSummarization = useCallback(async (currentMessages: Message[]) => {
-      if (currentMessages.length > 4 && currentMessages.length % 5 === 0) { // Summarize every 5 messages after the 4th
-        const historyString = currentMessages
-          .map(m => `${m.role === 'user' ? 'User' : 'Bito AI'}: ${m.content?.substring(0, 200)}`) // Truncate long content
-          .join('\n');
-        
-        try {
-          const { summary } = await summarizeChat({ chatHistory: historyString });
-          updateActiveProjectSummary(summary);
-        } catch (error) {
-            console.error("Failed to summarize chat:", error);
-            // Don't show a toast for this, as it's a background task
-        }
-      }
-  }, [updateActiveProjectSummary]);
-  
   const handleSend = async (text: string, file?: File) => {
     if (isLoading || (!text.trim() && !file) || !activeProject) return;
 
@@ -184,8 +167,6 @@ export function ChatPanel() {
 
       const finalMessages = [...updatedMessages, newAiMessage];
       setMessages(finalMessages);
-      await handleSummarization(finalMessages);
-
     } catch (error)      {
         console.error('Error during chat:', error);
         toast({
