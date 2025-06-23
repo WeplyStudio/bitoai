@@ -54,7 +54,22 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     };
   });
 
-  const systemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it.`;
+  let systemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it.`;
+  let temperature = 0.7;
+
+  switch (input.mode) {
+    case 'creative':
+      systemInstruction = `You are Bito AI, a highly creative and imaginative AI assistant developed by JDev. You excel at brainstorming, storytelling, and generating novel ideas. Your tone is enthusiastic and inspiring.`;
+      temperature = 1.0;
+      break;
+    case 'professional':
+      systemInstruction = `You are Bito AI, a formal and professional AI assistant developed by JDev. Your responses are concise, structured, and geared towards business and technical tasks. Maintain a formal tone.`;
+      temperature = 0.4;
+      break;
+    default: // 'default' mode
+      // Use the default values
+      break;
+  }
 
   const messagesWithSystem: MessageData[] = [
     { role: 'system', content: [{ text: systemInstruction }] },
@@ -65,7 +80,7 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     model: ai.model,
     messages: messagesWithSystem,
     config: {
-      temperature: 0.7,
+      temperature: temperature,
     },
   });
 

@@ -26,6 +26,7 @@ const suggestionIcons = {
 }
 
 const CHAT_HISTORY_KEY = 'bito-ai-chat-history';
+const AI_MODE_KEY = 'bito-ai-mode';
 
 const toDataUri = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -47,6 +48,7 @@ export function ChatPanel() {
   const [feedbackMessage, setFeedbackMessage] = useState<Message | null>(null);
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
+  const [aiMode, setAiMode] = useState('default');
 
   useEffect(() => {
     const openDialog = () => setTemplateDialogOpen(true);
@@ -85,16 +87,30 @@ export function ChatPanel() {
       if (savedMessages) {
         setMessages(JSON.parse(savedMessages));
       }
+      const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
+      setAiMode(savedMode);
     } catch (error) {
-      console.error("Failed to load messages from localStorage", error);
+      console.error("Failed to load data from localStorage", error);
       toast({
         variant: "destructive",
         title: "Error",
-        description: "Could not load chat history.",
+        description: "Could not load chat history or settings.",
       });
     }
     setIsMounted(true);
   }, [toast]);
+
+  useEffect(() => {
+    const handleStorageChange = (event: StorageEvent) => {
+      if (event.key === AI_MODE_KEY && event.newValue) {
+        setAiMode(event.newValue);
+      }
+    };
+    window.addEventListener('storage', handleStorageChange);
+    return () => {
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, []);
 
   useEffect(() => {
     if (isMounted) {
@@ -161,7 +177,10 @@ export function ChatPanel() {
 
     try {
       const historyForApi = updatedMessages.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
-      const response = await chat({ messages: historyForApi });
+      const response = await chat({
+        messages: historyForApi,
+        mode: aiMode as 'default' | 'creative' | 'professional',
+      });
       
       const newAiMessage: Message = { 
         id: String(Date.now() + 1), 

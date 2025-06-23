@@ -78,8 +78,7 @@ export const LeftSidebarContent = () => {
             </div>
             
             <div className="space-y-2 p-2 border-t">
-                <NavButton icon={Settings} text="Settings & Help" />
-                <NavButton icon={HelpCircle} text="Help" />
+                <NavItem icon={Settings} text="Settings &amp; Help" href="/settings" />
                 <div className="p-2 bg-muted rounded-lg flex items-center h-[56px]">
                     {mounted && (
                         <>
