@@ -139,7 +139,7 @@ export function ChatPanel() {
                                     <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
                                         <Icon className="w-5 h-5 text-primary" />
                                     </div>
-                                    <span className="font-medium whitespace-normal">{prompt}</span>
+                                    <span className="font-medium whitespace-normal break-words">{prompt}</span>
                                 </div>
                                 <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1"/>
                             </Button>
@@ -151,7 +151,7 @@ export function ChatPanel() {
     }
   
   return (
-    <div className="flex flex-col h-full">
+    <div className="flex flex-col flex-1 min-h-0">
         <header className="hidden lg:flex items-center p-4 border-b">
           <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
             <h2 className="text-lg font-semibold">AI Chat</h2>
