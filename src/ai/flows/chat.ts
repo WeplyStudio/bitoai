@@ -1,7 +1,7 @@
 'use server';
 
 import { ai } from '@/ai/genkit';
-import { MessageData, Role } from 'genkit';
+import { MessageData, Role, Part } from 'genkit';
 import type { ChatRequest, ChatMessage } from '@/ai/schemas';
 import { generateImage } from './generate-image';
 
@@ -9,7 +9,8 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   const lastUserMessage = input.messages[input.messages.length - 1];
   const imagePromptRegex = /^(generate|create|draw)\s+(an\s+)?image\s+/i;
 
-  if (lastUserMessage && lastUserMessage.role === 'user' && imagePromptRegex.test(lastUserMessage.content)) {
+  // Handle explicit image generation requests if there's no image uploaded with the prompt
+  if (lastUserMessage && lastUserMessage.role === 'user' && !lastUserMessage.imageUrl && lastUserMessage.content && imagePromptRegex.test(lastUserMessage.content)) {
     try {
       const imagePrompt = lastUserMessage.content.replace(imagePromptRegex, '').trim();
       const { imageUrl } = await generateImage({ prompt: imagePrompt });
@@ -28,12 +29,32 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     }
   }
 
-  const history: MessageData[] = input.messages.map(msg => ({
-    role: msg.role as Role,
-    content: [{ text: msg.content }],
-  }));
+  // Handle standard chat, including multimodal (text + image) input
+  const history: MessageData[] = input.messages.map(msg => {
+    const content: Part[] = [];
 
-  const systemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful.`;
+    // Always add text content if it exists
+    if (msg.content) {
+        content.push({ text: msg.content });
+    }
+
+    // For user messages, also add the image if it exists
+    if (msg.role === 'user' && msg.imageUrl) {
+      content.push({ media: { url: msg.imageUrl } });
+    }
+    
+    // If a message has no content at all (e.g., image-only upload), add a placeholder.
+    if (content.length === 0) {
+        content.push({text: ''});
+    }
+
+    return {
+      role: msg.role as Role,
+      content,
+    };
+  });
+
+  const systemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it.`;
 
   const messagesWithSystem: MessageData[] = [
     { role: 'system', content: [{ text: systemInstruction }] },

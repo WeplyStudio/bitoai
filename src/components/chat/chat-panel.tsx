@@ -28,6 +28,15 @@ const suggestionIcons = {
 
 const CHAT_HISTORY_KEY = 'bito-ai-chat-history';
 
+const toDataUri = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+};
+
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
@@ -105,16 +114,44 @@ export function ChatPanel() {
     }
   }, [isMounted, messages.length, toast]);
   
-  const handleSend = async (text: string) => {
-    if (isLoading || !text.trim()) return;
+  const handleSend = async (text: string, file?: File) => {
+    if (isLoading || (!text.trim() && !file)) return;
 
-    const newUserMessage: Message = { id: String(Date.now()), role: 'user', content: text };
+    let imageUrl: string | undefined = undefined;
+    if (file) {
+        try {
+            if (file.size > 4 * 1024 * 1024) { // 4MB limit for Gemini
+                toast({
+                    variant: 'destructive',
+                    title: 'File too large',
+                    description: 'Please upload an image smaller than 4MB.',
+                });
+                return;
+            }
+            imageUrl = await toDataUri(file);
+        } catch (error) {
+            console.error('Error converting file to data URI:', error);
+            toast({
+                variant: 'destructive',
+                title: 'Error',
+                description: 'Failed to process the image file. Please try another file.',
+            });
+            return;
+        }
+    }
+
+    const newUserMessage: Message = { 
+      id: String(Date.now()), 
+      role: 'user', 
+      content: text,
+      imageUrl: imageUrl,
+    };
     const updatedMessages = [...messages, newUserMessage];
     setMessages(updatedMessages);
     setIsLoading(true);
 
     try {
-      const historyForApi = updatedMessages.map(({ role, content }) => ({ role, content }));
+      const historyForApi = updatedMessages.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
       const response = await chat({ messages: historyForApi });
       
       const newAiMessage: Message = { 
