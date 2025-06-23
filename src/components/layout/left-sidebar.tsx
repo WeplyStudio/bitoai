@@ -1,6 +1,7 @@
 'use client';
 
 import { useTheme } from "next-themes";
+import { useState, useEffect } from 'react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -18,6 +19,11 @@ const NavItem = ({ icon: Icon, text, active = false, badge }: { icon: React.Elem
 
 export const LeftSidebarContent = () => {
     const { theme, setTheme } = useTheme();
+    const [mounted, setMounted] = useState(false);
+
+    useEffect(() => {
+        setMounted(true);
+    }, []);
 
     return (
         <>
@@ -44,21 +50,25 @@ export const LeftSidebarContent = () => {
             <div className="space-y-2 p-2 border-t">
                 <NavItem icon={Settings} text="Settings & Help" />
                 <NavItem icon={HelpCircle} text="Help" />
-                <div className="p-2 bg-muted rounded-lg flex">
-                    <Button 
-                        variant={theme === 'light' ? 'secondary' : 'ghost'} 
-                        onClick={() => setTheme('light')}
-                        className="w-1/2 flex items-center gap-2"
-                    >
-                        <Sun size={16} /> Light
-                    </Button>
-                    <Button 
-                        variant={theme === 'dark' ? 'secondary' : 'ghost'}
-                        onClick={() => setTheme('dark')}
-                        className="w-1/2 flex items-center gap-2"
-                    >
-                        <Moon size={16} /> Dark
-                    </Button>
+                <div className="p-2 bg-muted rounded-lg flex items-center h-[56px]">
+                    {mounted && (
+                        <>
+                            <Button 
+                                variant={theme === 'light' ? 'secondary' : 'ghost'} 
+                                onClick={() => setTheme('light')}
+                                className="w-1/2 flex items-center gap-2"
+                            >
+                                <Sun size={16} /> Light
+                            </Button>
+                            <Button 
+                                variant={theme === 'dark' ? 'secondary' : 'ghost'}
+                                onClick={() => setTheme('dark')}
+                                className="w-1/2 flex items-center gap-2"
+                            >
+                                <Moon size={16} /> Dark
+                            </Button>
+                        </>
+                    )}
                 </div>
                 <div className="flex items-center gap-3 p-2">
                     <Avatar className="h-10 w-10">
