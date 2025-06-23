@@ -2,7 +2,7 @@
 
 import { ScriptIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
-import { Sheet, SheetContent, SheetTrigger } from '@/components/ui/sheet';
+import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { PanelLeft, PanelRight } from 'lucide-react';
 
 interface MobileHeaderProps {
@@ -21,6 +21,8 @@ export function MobileHeader({ leftSidebar, rightSidebar }: MobileHeaderProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="left" className="w-72 p-0 bg-card border-r">
+          <SheetTitle className="sr-only">Main Menu</SheetTitle>
+          <SheetDescription className="sr-only">A list of navigation items and user account controls.</SheetDescription>
           <nav className="flex flex-col h-full overflow-y-auto">
             {leftSidebar}
           </nav>
@@ -40,6 +42,8 @@ export function MobileHeader({ leftSidebar, rightSidebar }: MobileHeaderProps) {
           </Button>
         </SheetTrigger>
         <SheetContent side="right" className="w-80 p-0 bg-card border-l">
+          <SheetTitle className="sr-only">Projects</SheetTitle>
+          <SheetDescription className="sr-only">A list of your projects.</SheetDescription>
           <aside className="flex flex-col h-full overflow-y-auto">
             {rightSidebar}
           </aside>
