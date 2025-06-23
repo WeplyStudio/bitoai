@@ -6,8 +6,8 @@ import type { ChatRequest, ChatMessage, GenerateImageOutput } from '@/ai/schemas
 import { generateImageTool } from './generate-image';
 
 export async function chat(input: ChatRequest): Promise<ChatMessage> {
-  // Limit the history to the last 20 messages to avoid exceeding the token limit.
-  const recentMessages = input.messages.slice(-20);
+  // Limit the history to the last 10 messages to avoid exceeding the token limit.
+  const recentMessages = input.messages.slice(-10);
 
   const history: MessageData[] = recentMessages.map(msg => {
     const content: Part[] = [];
