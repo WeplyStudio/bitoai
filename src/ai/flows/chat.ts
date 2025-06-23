@@ -67,13 +67,18 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   let imageUrl: string | undefined;
 
   if (response.history) {
-    const toolResponsePart = response.history
-      .flatMap(msg => msg.content)
-      .find(part => part.toolResponse?.name === 'generateImageTool');
-
-    if (toolResponsePart?.toolResponse) {
-      const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
-      imageUrl = output.imageUrl;
+    // Find messages with the 'tool' role, which contain tool responses.
+    const toolResponseMessages = response.history.filter(m => m.role === 'tool');
+    for (const msg of toolResponseMessages) {
+      // Find the specific part corresponding to our image generation tool.
+      const toolPart = msg.content.find(p => p.toolResponse?.name === 'generateImageTool');
+      if (toolPart?.toolResponse?.output) {
+        const output = toolPart.toolResponse.output as GenerateImageOutput;
+        if (output.imageUrl) {
+          imageUrl = output.imageUrl;
+          break; // Found it, no need to look further.
+        }
+      }
     }
   }
   
