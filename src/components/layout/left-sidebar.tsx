@@ -8,13 +8,14 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MessageSquare, Plus } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Users, Clock, Moon, Sun, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
-  const active = pathname === href;
+  const active = pathname === href || (href === "/" && pathname.startsWith("/?project="));
+
 
   return (
     <Link href={href} passHref>
@@ -73,7 +74,7 @@ export const LeftSidebarContent = () => {
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
                 <NavItem icon={MessageSquare} text="AI Chat" href="/" />
                 <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
-                <NavButton icon={Folder} text="Projects" />
+                <NavItem icon={Folder} text="Projects" href="/projects" />
                 <NavButton icon={FileText} text="Templates" onClick={handleOpenTemplates} />
                 <NavButton icon={Clock} text="History" />
             </div>

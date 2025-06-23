@@ -22,7 +22,8 @@ interface ProjectContextType {
   createProject: () => void;
   switchProject: (id: string) => void;
   updateActiveProjectSummary: (summary: string) => void;
-  updateActiveProjectName: (name: string) => void;
+  updateProjectName: (id: string, name: string) => void;
+  deleteProject: (id: string) => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -70,7 +71,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
         if (savedProjects.length > 0) {
             setProjects(savedProjects);
-            setActiveProjectId(savedActiveId || savedProjects[0].id);
+            setActiveProjectId(savedActiveId && savedProjects.some((p: Project) => p.id === savedActiveId) ? savedActiveId : savedProjects[0].id);
         } else {
             // Create a default project if none exist
             const newProject: Project = {
@@ -130,11 +131,44 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [activeProjectId]);
 
-  const updateActiveProjectName = useCallback((name: string) => {
-    if (activeProjectId) {
-        updateProjectProperty(activeProjectId, { name });
+  const updateProjectName = useCallback((id: string, name: string) => {
+    updateProjectProperty(id, { name });
+  }, []);
+  
+  const deleteProject = useCallback((idToDelete: string) => {
+    // Remove associated chat history
+    const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
+    delete allHistories[idToDelete];
+    localStorage.setItem(CHAT_HISTORIES_KEY, JSON.stringify(allHistories));
+
+    let newActiveProjectId = activeProjectId;
+
+    const remainingProjects = projects.filter(p => p.id !== idToDelete);
+
+    if (activeProjectId === idToDelete) {
+        if (remainingProjects.length > 0) {
+            // Switch to the most recent project
+            const mostRecentProject = [...remainingProjects].sort((a,b) => b.createdAt - a.createdAt)[0];
+            newActiveProjectId = mostRecentProject.id;
+        } else {
+            // If no projects are left, create a new one
+            const newProject: Project = {
+                id: `project-${Date.now()}`,
+                name: 'Untitled Project',
+                summary: 'Start a new conversation!',
+                createdAt: Date.now()
+            };
+            setProjects([newProject]);
+            setActiveProjectId(newProject.id);
+            return;
+        }
     }
-  }, [activeProjectId]);
+    
+    setProjects(remainingProjects);
+    setActiveProjectId(newActiveProjectId);
+
+  }, [activeProjectId, projects]);
+
 
   const activeProject = projects.find(p => p.id === activeProjectId);
 
@@ -145,7 +179,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     createProject,
     switchProject,
     updateActiveProjectSummary,
-    updateActiveProjectName
+    updateProjectName,
+    deleteProject
   };
 
   return (
