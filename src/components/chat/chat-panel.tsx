@@ -56,52 +56,52 @@ export function ChatPanel() {
       
       const newAiMessage: Message = { id: String(Date.now() + 1), role: response.role as 'model', content: response.content };
       setMessages(prev => [...prev, newAiMessage]);
-    } catch (error) {
-      console.error('Error during chat:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Failed to get a response from Script AI. Please try again.',
-      });
-      setMessages(prev => prev.filter(m => m.id !== newUserMessage.id));
+    } catch (error)      {
+        console.error('Error during chat:', error);
+        toast({
+            variant: 'destructive',
+            title: 'Error',
+            description: 'Failed to get a response from Script AI. Please try again.',
+        });
+        setMessages(prev => prev.filter(m => m.id !== newUserMessage.id));
     } finally {
-      setIsLoading(false);
+        setIsLoading(false);
     }
-  };
+    };
 
-  const WelcomeScreen = () => {
-    const prompts = initialPrompts.slice(0, 4);
-    const getIcon = (prompt: string) => {
-        const key = Object.keys(suggestionIcons).find(k => prompt.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
-        return key ? suggestionIcons[key] : Sparkles;
-    }
-    return (
-        <div className="flex flex-col items-center justify-center h-full text-center p-8">
-            <h1 className="text-4xl font-bold mb-2">Welcome to Script</h1>
-            <p className="text-muted-foreground mb-8">Get started by Script a task and Chat can do the rest. Not sure where to start?</p>
-            <div className="grid grid-cols-2 gap-4 w-full max-w-lg">
-                {prompts.map((prompt, i) => {
-                    const Icon = getIcon(prompt);
-                    return (
-                        <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between">
-                            <div className="flex items-center gap-3 text-left">
-                                <div className="p-2 rounded-full bg-primary/5">
-                                    <Icon className="w-5 h-5 text-primary" />
+    const WelcomeScreen = () => {
+        const prompts = initialPrompts.slice(0, 4);
+        const getIcon = (prompt: string) => {
+            const key = Object.keys(suggestionIcons).find(k => prompt.toLowerCase().includes(k.toLowerCase().split(' ')[0]));
+            return key ? suggestionIcons[key] : Sparkles;
+        }
+        return (
+            <div className="flex flex-col items-center justify-center h-full text-center p-8">
+                <h1 className="text-4xl font-bold mb-2">Welcome to Script</h1>
+                <p className="text-muted-foreground mb-8">Get started by Script a task and Chat can do the rest. Not sure where to start?</p>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
+                    {prompts.map((prompt, i) => {
+                        const Icon = getIcon(prompt);
+                        return (
+                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between">
+                                <div className="flex items-center gap-3 text-left">
+                                    <div className="p-2 rounded-full bg-primary/5">
+                                        <Icon className="w-5 h-5 text-primary" />
+                                    </div>
+                                    <span className="font-medium">{prompt}</span>
                                 </div>
-                                <span className="font-medium">{prompt}</span>
-                            </div>
-                            <Plus className="h-4 w-4 text-muted-foreground"/>
-                        </Button>
-                    );
-                })}
+                                <Plus className="h-4 w-4 text-muted-foreground"/>
+                            </Button>
+                        );
+                    })}
+                </div>
             </div>
-        </div>
-    );
-  }
+        );
+    }
   
   return (
     <div className="flex flex-col h-full">
-        <header className="flex items-center justify-between p-4 border-b">
+        <header className="hidden lg:flex items-center justify-between p-4 border-b">
           <h2 className="text-lg font-semibold">AI Chat</h2>
           <Button>+ Upgrade</Button>
         </header>

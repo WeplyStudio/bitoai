@@ -4,8 +4,8 @@ import { Input } from '@/components/ui/input';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { ScriptIcon } from '@/components/icons';
 import { Badge } from '@/components/ui/badge';
-import { Search, Bell, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MoreHorizontal, Plus, Square, MessageSquare } from 'lucide-react';
-import Image from 'next/image';
+import { Search, Settings, HelpCircle, FileText, Folder, Users, Clock, Moon, Sun, ChevronsUpDown, MoreHorizontal, Plus, Square, MessageSquare } from 'lucide-react';
+import { MobileHeader } from '@/components/mobile-header';
 
 const NavItem = ({ icon: Icon, text, active = false, badge }) => (
   <Button variant={active ? "secondary" : "ghost"} className={`w-full justify-start ${active ? '' : 'text-muted-foreground hover:text-foreground'}`}>
@@ -26,22 +26,21 @@ const ProjectItem = ({ title, description, active=false }) => (
     </div>
 );
 
-
-export default function Home() {
-  return (
-    <div className="flex h-screen text-foreground font-sans">
-      <nav className="w-72 bg-card border-r border-border p-4 flex flex-col gap-4">
-        <div className="flex items-center gap-2 px-2">
-          <ScriptIcon className="w-8 h-8" />
-          <h1 className="text-xl font-bold">Script</h1>
+const LeftSidebarContent = () => (
+    <>
+        <div className="flex items-center gap-2 px-4 pt-4 pb-2">
+            <ScriptIcon className="w-8 h-8" />
+            <h1 className="text-xl font-bold">Script</h1>
         </div>
         
-        <div className="relative">
-          <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search" className="pl-9" />
+        <div className="p-2">
+            <div className="relative">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                <Input placeholder="Search" className="pl-9" />
+            </div>
         </div>
 
-        <div className="flex-1 space-y-2">
+        <div className="flex-1 space-y-2 p-2 overflow-y-auto">
             <NavItem icon={MessageSquare} text="AI Chat" active />
             <NavItem icon={Folder} text="Projects" />
             <NavItem icon={FileText} text="Templates" />
@@ -49,7 +48,7 @@ export default function Home() {
             <NavItem icon={Clock} text="History" />
         </div>
         
-        <div className="space-y-2">
+        <div className="space-y-2 p-2 border-t">
             <NavItem icon={Settings} text="Settings & Help" />
             <NavItem icon={HelpCircle} text="Help" />
             <div className="p-2 bg-muted rounded-lg flex">
@@ -74,24 +73,24 @@ export default function Home() {
                 </Button>
             </div>
         </div>
-      </nav>
+    </>
+);
 
-      <main className="flex-1 flex flex-col">
-        <ChatPanel />
-      </main>
-
-      <aside className="w-80 bg-card border-l border-border p-4 flex flex-col gap-4">
-        <div className="flex justify-between items-center">
+const RightSidebarContent = () => (
+    <>
+        <div className="flex justify-between items-center p-4">
           <h2 className="text-lg font-semibold">Projects (7)</h2>
           <Button variant="ghost" size="icon">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
         </div>
-        <Button variant="outline" className="w-full justify-start">
-            <Plus className="mr-2 h-4 w-4" />
-            New Project
-        </Button>
-        <div className="space-y-2">
+        <div className="px-4">
+          <Button variant="outline" className="w-full justify-start">
+              <Plus className="mr-2 h-4 w-4" />
+              New Project
+          </Button>
+        </div>
+        <div className="flex-1 space-y-2 p-4 overflow-y-auto">
             <ProjectItem title="Learning From 100 Years o..." description="For athletes, high altitude prod..." />
             <ProjectItem title="Research officiants" description="Maxwell's equations—the foun..." />
             <ProjectItem title="What does a senior lead de..." description="Physiological respiration involv..." />
@@ -99,6 +98,27 @@ export default function Home() {
             <ProjectItem title="Meet with cake bakers" description="Physical space is often conceiv..." active />
             <ProjectItem title="Meet with cake bakers" description="Physical space is often conceiv..." />
         </div>
+    </>
+);
+
+
+export default function Home() {
+  return (
+    <div className="flex h-screen text-foreground font-sans">
+      <nav className="w-72 bg-card border-r border-border hidden lg:flex flex-col">
+        <LeftSidebarContent />
+      </nav>
+
+      <main className="flex-1 flex flex-col bg-muted/30">
+        <MobileHeader 
+            leftSidebar={<LeftSidebarContent />} 
+            rightSidebar={<RightSidebarContent />} 
+        />
+        <ChatPanel />
+      </main>
+
+      <aside className="w-80 bg-card border-l border-border hidden xl:flex flex-col">
+        <RightSidebarContent />
       </aside>
     </div>
   );
