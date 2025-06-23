@@ -1,8 +1,9 @@
 'use client';
-import { User } from 'lucide-react';
+import { User, ThumbsUp, ThumbsDown } from 'lucide-react';
 import { ScriptIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Button } from '@/components/ui/button';
 import type { Message } from './chat-panel';
 
 interface ChatMessageProps {
@@ -14,7 +15,7 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
   const isModel = message.role === 'model';
 
   return (
-    <div className={cn('flex items-start space-x-4')}>
+    <div className={cn('group flex items-start space-x-4')}>
       <Avatar className="h-8 w-8 border">
         {isModel ? (
           <AvatarFallback className='bg-primary text-primary-foreground'>
@@ -36,6 +37,17 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
       )}>
         <div className="prose prose-sm max-w-none text-current whitespace-pre-wrap break-words" dangerouslySetInnerHTML={{ __html: message.content.replace(/\n/g, '<br />') }} />
       </div>
+
+      {isModel && (
+        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center self-center gap-1">
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
+            <ThumbsUp className="h-4 w-4" />
+          </Button>
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onFeedback(message.id)}>
+            <ThumbsDown className="h-4 w-4" />
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

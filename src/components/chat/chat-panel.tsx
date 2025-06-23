@@ -3,11 +3,13 @@
 import { useState, useEffect } from 'react';
 import { generateInitialPrompt } from '@/ai/flows/generate-initial-prompt';
 import { chat } from '@/ai/flows/chat';
+import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
+import { ChatFeedbackDialog } from './chat-feedback-dialog';
 import { Button } from '@/components/ui/button';
 import { ScriptIcon } from '@/components/icons';
 import { FilePenLine, ImageIcon, UserRound, Code, Sparkles, Plus } from 'lucide-react';
@@ -28,6 +30,9 @@ export function ChatPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [initialPrompts, setInitialPrompts] = useState<string[]>([]);
   const { toast } = useToast();
+
+  const [feedbackMessage, setFeedbackMessage] = useState<Message | null>(null);
+  const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
 
   useEffect(() => {
     const fetchInitialPrompts = async () => {
@@ -67,7 +72,52 @@ export function ChatPanel() {
     } finally {
         setIsLoading(false);
     }
-    };
+  };
+
+  const handleFeedback = (messageId: string) => {
+    const messageToReview = messages.find(m => m.id === messageId);
+    if (messageToReview) {
+      setFeedbackMessage(messageToReview);
+    }
+  };
+
+  const handleFeedbackSubmit = async (feedbackText: string) => {
+    if (!feedbackMessage) return;
+
+    const messageIndex = messages.findIndex(m => m.id === feedbackMessage.id);
+    if (messageIndex < 1) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Cannot provide feedback on this message.' });
+      return;
+    }
+
+    const originalUserMessage = messages[messageIndex - 1];
+    if (originalUserMessage.role !== 'user') {
+      toast({ variant: 'destructive', title: 'Error', description: 'Cannot find original prompt for feedback.' });
+      return;
+    }
+
+    setIsSubmittingFeedback(true);
+
+    try {
+      const result = await incorporateFeedback({
+        originalPrompt: originalUserMessage.content,
+        aiResponse: feedbackMessage.content,
+        feedback: feedbackText,
+      });
+
+      const updatedMessages = [...messages];
+      updatedMessages[messageIndex] = { ...updatedMessages[messageIndex], content: result.improvedResponse };
+      setMessages(updatedMessages);
+
+      toast({ title: 'Feedback received', description: 'The response has been updated.' });
+    } catch (error) {
+      console.error('Error incorporating feedback:', error);
+      toast({ variant: 'destructive', title: 'Error', description: 'Failed to incorporate feedback.' });
+    } finally {
+      setIsSubmittingFeedback(false);
+      setFeedbackMessage(null);
+    }
+  };
 
     const WelcomeScreen = () => {
         const prompts = initialPrompts.slice(0, 4);
@@ -83,8 +133,8 @@ export function ChatPanel() {
                     {prompts.map((prompt, i) => {
                         const Icon = getIcon(prompt);
                         return (
-                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between">
-                                <div className="flex items-center gap-3 text-left">
+                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-center justify-between text-left">
+                                <div className="flex items-center gap-3">
                                     <div className="p-2 rounded-full bg-primary/5">
                                         <Icon className="w-5 h-5 text-primary" />
                                     </div>
@@ -107,13 +157,19 @@ export function ChatPanel() {
         </header>
 
         <div className="flex-1 overflow-hidden">
-            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={() => {}} />}
+            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : <ChatMessages messages={messages} isLoading={isLoading} onFeedback={handleFeedback} />}
         </div>
         
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
             <ChatInput onSend={handleSend} isLoading={isLoading} />
             <p className="text-xs text-muted-foreground text-center mt-2">Script may generate inaccurate information about people, places, or facts. Model: Script AI v1.3</p>
         </footer>
+        <ChatFeedbackDialog
+          isOpen={!!feedbackMessage}
+          onOpenChange={(open) => !open && setFeedbackMessage(null)}
+          onSubmit={handleFeedbackSubmit}
+          isSubmitting={isSubmittingFeedback}
+        />
     </div>
   );
 }

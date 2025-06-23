@@ -51,22 +51,23 @@ export function ChatInput({ onSend, isLoading }: ChatInputProps) {
             onInput={handleInput}
             placeholder="Summarize the latest..."
             rows={1}
+            maxLength={3000}
             className="pr-12 resize-none max-h-48 border-0 focus-visible:ring-0 shadow-none p-0"
             disabled={isLoading}
           />
           <div className="flex items-center justify-between flex-wrap gap-y-2 mt-auto">
             <div className="flex items-center gap-1 flex-wrap">
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
-                    <Paperclip className="h-4 w-4 mr-1" /> Attach
+                    <Paperclip className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Attach</span>
                 </Button>
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
-                    <Mic className="h-4 w-4 mr-1" /> Voice Message
+                    <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Voice Message</span>
                 </Button>
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
-                    <Sparkles className="h-4 w-4 mr-1" /> Browse Prompts
+                    <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Browse Prompts</span>
                 </Button>
             </div>
-            <span className="text-xs text-muted-foreground">20/3,000</span>
+            <span className="text-xs text-muted-foreground">{text.length}/3,000</span>
           </div>
           <Button
               type="submit"

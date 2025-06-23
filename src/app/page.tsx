@@ -79,7 +79,7 @@ const LeftSidebarContent = () => (
 const RightSidebarContent = () => (
     <>
         <div className="flex justify-between items-center p-4">
-          <h2 className="text-lg font-semibold">Projects (7)</h2>
+          <h2 className="text-lg font-semibold">Projects (6)</h2>
           <Button variant="ghost" size="icon">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
@@ -96,7 +96,6 @@ const RightSidebarContent = () => (
             <ProjectItem title="What does a senior lead de..." description="Physiological respiration involv..." />
             <ProjectItem title="Write a sweet note to your..." description="In the eighteenth century the G..." />
             <ProjectItem title="Meet with cake bakers" description="Physical space is often conceiv..." active />
-            <ProjectItem title="Meet with cake bakers" description="Physical space is often conceiv..." />
         </div>
     </>
 );
