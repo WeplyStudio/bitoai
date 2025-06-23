@@ -32,7 +32,7 @@ export function ChatMessage({ message, onFeedback }: ChatMessageProps) {
 
       <div className="min-w-0 max-w-[85%] rounded-lg bg-secondary px-4 py-3 sm:max-w-[70%]">
         {message.content && (
-          <div className="prose prose-sm dark:prose-invert max-w-none break-words overflow-x-auto">
+          <div className="prose prose-sm dark:prose-invert max-w-none">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {message.content}
             </ReactMarkdown>

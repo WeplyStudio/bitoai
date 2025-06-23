@@ -9,6 +9,16 @@ export default {
   ],
   theme: {
     extend: {
+      typography: ({ theme }: any) => ({
+        DEFAULT: {
+          css: {
+            pre: {
+              'white-space': 'pre-wrap',
+              'word-break': 'break-word',
+            },
+          },
+        },
+      }),
       fontFamily: {
         body: ['Inter', 'sans-serif'],
         headline: ['Inter', 'sans-serif'],
