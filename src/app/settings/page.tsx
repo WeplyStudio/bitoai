@@ -136,19 +136,42 @@ export default function SettingsPage() {
                 <AccordionItem value="item-1">
                     <AccordionTrigger>What is Bito AI?</AccordionTrigger>
                     <AccordionContent>
-                    Bito AI is a helpful and friendly AI assistant developed by JDev, designed to help with creative and business tasks.
+                    Bito AI is a helpful and friendly AI assistant developed by JDev, designed to help with creative and business tasks. You can ask it questions, get help with writing, brainstorm ideas, and much more.
                     </AccordionContent>
                 </AccordionItem>
-                <AccordionItem value="item-2">
-                    <AccordionTrigger>How does image generation work?</AccordionTrigger>
+                 <AccordionItem value="item-2">
+                    <AccordionTrigger>How does voice input work?</AccordionTrigger>
                     <AccordionContent>
-                    Image generation is currently disabled. Bito AI can analyze images but cannot create them.
+                    The voice input feature uses your browser's built-in Web Speech API. When you click the microphone icon, your browser will ask for permission to access your microphone. Once granted, whatever you say will be transcribed into text in real-time.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
+                    <AccordionTrigger>Can I create my own prompt templates?</AccordionTrigger>
+                    <AccordionContent>
+                    Yes! Navigate to the "Templates" page from the left sidebar. There, you can switch to the "My Prompts" tab to create, edit, and delete your own custom prompts. They are saved locally in your browser for easy access.
+                    </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-4">
                     <AccordionTrigger>Is my data private?</AccordionTrigger>
                     <AccordionContent>
-                    Your chat history is stored locally in your browser. It is not sent to our servers for storage, except to be processed by the AI model during a conversation.
+                    Yes. Your chat histories and custom prompt templates are stored locally in your browser's storage. This data is not sent to our servers for storage, except for the current conversation which is sent to the AI model for processing and is not stored long-term.
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-5">
+                    <AccordionTrigger>Why can't the AI generate images?</AccordionTrigger>
+                    <AccordionContent>
+                    Image generation is currently disabled. This allows us to focus on providing the best possible text-based conversation and task assistance experience. Bito AI can, however, analyze images that you upload.
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-6">
+                    <AccordionTrigger>What are the different AI Modes?</AccordionTrigger>
+                    <AccordionContent>
+                    The AI modes change the personality and tone of the AI's responses.
+                    <ul className="list-disc pl-5 mt-2 space-y-1">
+                        <li><b>Default:</b> A balanced, helpful, and friendly persona suitable for general tasks.</li>
+                        <li><b>Creative:</b> An enthusiastic and imaginative persona, great for brainstorming and creative writing. It may give more unexpected answers.</li>
+                        <li><b>Professional:</b> A formal and concise persona, ideal for business, technical, or formal writing tasks.</li>
+                    </ul>
                     </AccordionContent>
                 </AccordionItem>
                 </Accordion>
