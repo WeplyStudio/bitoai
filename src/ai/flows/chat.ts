@@ -66,20 +66,15 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
   const responseText = response.text;
   let imageUrl: string | undefined;
 
-  if (response.history) {
-    // Find messages with the 'tool' role, which contain tool responses.
-    const toolResponseMessages = response.history.filter(m => m.role === 'tool');
-    for (const msg of toolResponseMessages) {
-      // Find the specific part corresponding to our image generation tool.
-      const toolPart = msg.content.find(p => p.toolResponse?.name === 'generateImageTool');
-      if (toolPart?.toolResponse?.output) {
-        const output = toolPart.toolResponse.output as GenerateImageOutput;
-        if (output.imageUrl) {
-          imageUrl = output.imageUrl;
-          break; // Found it, no need to look further.
-        }
-      }
-    }
+  // Search through the entire history for the tool response for our image generation tool.
+  const toolResponsePart = response.history
+    ?.flatMap((m) => m.content)
+    .find((p) => p.toolResponse?.name === 'generateImageTool');
+
+  if (toolResponsePart?.toolResponse?.output) {
+    // The output is an object defined by GenerateImageOutputSchema: { imageUrl: string }
+    const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
+    imageUrl = output.imageUrl;
   }
   
   return {
