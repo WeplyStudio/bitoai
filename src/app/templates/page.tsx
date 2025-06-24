@@ -4,7 +4,6 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useProjects } from '@/contexts/ProjectProvider';
 import { Button } from '@/components/ui/button';
-import { ScrollArea } from '@/components/ui/scroll-area';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
@@ -49,16 +48,16 @@ const presetTemplates: Record<string, Omit<Template, 'id' | 'isCustom'>[]> = {
 const TemplateCard = ({ template, onSelect, onEdit, onDelete }: { template: Template, onSelect: (prompt: string) => void, onEdit?: (template: Template) => void, onDelete?: (templateId: string) => void }) => {
     const Icon = template.icon || Lightbulb;
     return (
-        <div className="p-4 border rounded-lg flex flex-col items-start gap-3 text-left h-full bg-card hover:border-primary/50 transition-colors">
-            <div className="p-2 rounded-full bg-primary/5">
+        <div className="p-4 border rounded-lg flex flex-col items-start gap-3 text-left h-full bg-card hover:border-primary/50 transition-colors shadow-sm hover:shadow-md">
+            <div className="p-2 rounded-full bg-primary/10">
                 <Icon className="w-5 h-5 text-primary" />
             </div>
             <div className="flex-1 w-full">
                 <h3 className="font-semibold">{template.title}</h3>
-                <p className="text-sm text-muted-foreground">{template.description}</p>
+                <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px]">{template.description}</p>
             </div>
-            <div className="flex w-full justify-between items-center">
-              <Button variant="outline" size="sm" onClick={() => onSelect(template.prompt)}>Use Template</Button>
+            <div className="flex w-full justify-between items-center pt-2 border-t border-transparent">
+              <Button variant="ghost" size="sm" onClick={() => onSelect(template.prompt)}>Use Template</Button>
               {template.isCustom && onEdit && onDelete && (
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(template)}>
@@ -223,45 +222,41 @@ export default function TemplatesPage() {
                     </Dialog>
                 </div>
                 
-                <div className="h-[calc(100vh-200px)]">
-                    <Tabs defaultValue={PRESET_TEMPLATES_KEY} className="h-full flex flex-col">
-                        <TabsList className="shrink-0">
-                            <TabsTrigger value={PRESET_TEMPLATES_KEY}>Preset</TabsTrigger>
-                            <TabsTrigger value={CUSTOM_TEMPLATES_KEY}>My Prompts</TabsTrigger>
-                        </TabsList>
-                        <ScrollArea className="flex-1 mt-4">
-                            <TabsContent value={PRESET_TEMPLATES_KEY} className="mt-0">
-                                {Object.entries(presetTemplates).map(([category, templateList]) => (
-                                    <div key={category} className="mb-8">
-                                        <h3 className="text-xl font-semibold mb-4">{category}</h3>
-                                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                            {templateList.map((template, index) => (
-                                                <TemplateCard key={index} template={{...template, id: `preset-${category}-${index}`}} onSelect={handleSelectTemplate} />
-                                            ))}
-                                        </div>
-                                    </div>
+                <Tabs defaultValue={PRESET_TEMPLATES_KEY} className="w-full">
+                    <TabsList>
+                        <TabsTrigger value={PRESET_TEMPLATES_KEY}>Preset</TabsTrigger>
+                        <TabsTrigger value={CUSTOM_TEMPLATES_KEY}>My Prompts</TabsTrigger>
+                    </TabsList>
+                    <TabsContent value={PRESET_TEMPLATES_KEY} className="mt-6">
+                        {Object.entries(presetTemplates).map(([category, templateList]) => (
+                            <div key={category} className="mb-8">
+                                <h3 className="text-xl font-semibold mb-4">{category}</h3>
+                                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                    {templateList.map((template, index) => (
+                                        <TemplateCard key={index} template={{...template, id: `preset-${category}-${index}`}} onSelect={handleSelectTemplate} />
+                                    ))}
+                                </div>
+                            </div>
+                        ))}
+                    </TabsContent>
+                     <TabsContent value={CUSTOM_TEMPLATES_KEY} className="mt-6">
+                        {customTemplates.length > 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                                {customTemplates.map((template) => (
+                                    <TemplateCard key={template.id} template={template} onSelect={handleSelectTemplate} onEdit={() => handleOpenDialog(template)} onDelete={handleDeleteTemplate} />
                                 ))}
-                            </TabsContent>
-                             <TabsContent value={CUSTOM_TEMPLATES_KEY} className="mt-0">
-                                {customTemplates.length > 0 ? (
-                                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                                        {customTemplates.map((template) => (
-                                            <TemplateCard key={template.id} template={template} onSelect={handleSelectTemplate} onEdit={() => handleOpenDialog(template)} onDelete={handleDeleteTemplate} />
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                                        <h3 className="text-xl font-semibold">No Custom Prompts Yet</h3>
-                                        <p className="text-muted-foreground mt-2 mb-4">Click the button below to create your first prompt!</p>
-                                        <Button onClick={() => handleOpenDialog()}>
-                                            <Plus className="mr-2 h-4 w-4" /> Create New Prompt
-                                        </Button>
-                                    </div>
-                                )}
-                            </TabsContent>
-                        </ScrollArea>
-                    </Tabs>
-                </div>
+                            </div>
+                        ) : (
+                            <div className="text-center py-12 border-2 border-dashed rounded-lg">
+                                <h3 className="text-xl font-semibold">No Custom Prompts Yet</h3>
+                                <p className="text-muted-foreground mt-2 mb-4">Click the button below to create your first prompt!</p>
+                                <Button onClick={() => handleOpenDialog()}>
+                                    <Plus className="mr-2 h-4 w-4" /> Create New Prompt
+                                </Button>
+                            </div>
+                        )}
+                    </TabsContent>
+                </Tabs>
             </div>
         </div>
     );
