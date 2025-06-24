@@ -46,7 +46,7 @@ export function ChatMessage({
 
   return (
     <div className={cn(
-      'group flex items-start gap-4', 
+      'group flex items-start gap-2', 
       isUser ? 'justify-end' : 'justify-start'
     )}>
       {isModel && (
