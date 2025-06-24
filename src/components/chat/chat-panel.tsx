@@ -302,10 +302,10 @@ export function ChatPanel() {
 
     const WelcomeScreen = () => {
         const welcomePrompts = [
-            { key: 'initialPrompt1', prompt: 'Write copy for a new marketing campaign', icon: FilePenLine },
-            { key: 'initialPrompt2', prompt: 'Help me brainstorm ideas for a new business', icon: Lightbulb },
-            { key: 'initialPrompt3', prompt: 'Create an avatar for a fantasy character', icon: UserRound },
-            { key: 'initialPrompt4', prompt: 'Write code for a simple to-do list app in React', icon: Code },
+            { key: 'initialPrompt1', icon: FilePenLine },
+            { key: 'initialPrompt2', icon: Lightbulb },
+            { key: 'initialPrompt3', icon: UserRound },
+            { key: 'initialPrompt4', icon: Code },
         ];
         
         return (
@@ -316,7 +316,7 @@ export function ChatPanel() {
                     {welcomePrompts.map((p, i) => {
                         const Icon = p.icon;
                         return (
-                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(p.prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
+                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(t(p.key as any))} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
                                 <div className="flex items-start gap-3 mr-4">
                                     <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
                                         <Icon className="w-5 h-5 text-primary" />
