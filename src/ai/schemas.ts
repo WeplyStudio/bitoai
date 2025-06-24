@@ -4,7 +4,7 @@ import { z } from 'genkit';
 export const ChatMessageSchema = z.object({
   role: z.enum(['user', 'model', 'system']),
   content: z.string(),
-  imageUrl: z.string().optional().describe("URL of a generated image, if any."),
+  imageUrl: z.string().optional().describe("URL of a user-uploaded image, if any."),
 });
 export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
@@ -38,16 +38,7 @@ export const SummarizeChatOutputSchema = z.object({
 });
 export type SummarizeChatOutput = z.infer<typeof SummarizeChatOutputSchema>;
 
-// From generate-image.ts
-export const GenerateImageInputSchema = z.object({
-  prompt: z.string().describe('The text prompt to generate an image from.'),
-});
-export type GenerateImageInput = z.infer<typeof GenerateImageInputSchema>;
-
-export const GenerateImageOutputSchema = z.object({
-  imageUrl: z.string().describe("The data URI of the generated image."),
-});
-export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
+// From generate-image.ts (disabled) - schemas removed
 
 // From rename-project-flow.ts
 export const RenameProjectInputSchema = z.object({
@@ -59,3 +50,9 @@ export const RenameProjectOutputSchema = z.object({
   projectName: z.string().describe('A short, descriptive project name based on the chat history.'),
 });
 export type RenameProjectOutput = z.infer<typeof RenameProjectOutputSchema>;
+
+// From generate-initial-prompt.ts
+export const InitialPromptOutputSchema = z.object({
+  prompts: z.array(z.string()).describe('An array of 4 initial prompt suggestions.'),
+});
+export type InitialPromptOutput = z.infer<typeof InitialPromptOutputSchema>;

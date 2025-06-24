@@ -13,7 +13,7 @@ import { ChatInput } from './chat-input';
 import { ChatFeedbackDialog } from './chat-feedback-dialog';
 import { TemplateDialog } from './template-dialog';
 import { Button } from '@/components/ui/button';
-import { FilePenLine, ImageIcon, UserRound, Code, Sparkles, Plus } from 'lucide-react';
+import { FilePenLine, UserRound, Code, Sparkles, Plus, Lightbulb } from 'lucide-react';
 
 export interface Message extends ChatMessage {
   id: string;
@@ -21,7 +21,7 @@ export interface Message extends ChatMessage {
 
 const suggestionIcons: { [key: string]: React.ElementType } = {
     "Write copy": FilePenLine,
-    "Image generation": ImageIcon,
+    "brainstorm ideas": Lightbulb,
     "Create avatar": UserRound,
     "Write code": Code,
 }
@@ -43,7 +43,7 @@ export function ChatPanel() {
   const [isLoading, setIsLoading] = useState(false);
   const [initialPrompts, setInitialPrompts] = useState<string[]>([
     'Write copy for a new marketing campaign',
-    'Image generation of a futuristic cityscape at night',
+    'Help me brainstorm ideas for a new business',
     'Create an avatar for a fantasy character',
     'Write code for a simple to-do list app in React',
   ]);

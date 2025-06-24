@@ -2,8 +2,7 @@
 
 import { ai } from '@/ai/genkit';
 import { MessageData, Role, Part } from 'genkit';
-import type { ChatRequest, ChatMessage, GenerateImageOutput } from '@/ai/schemas';
-import { generateImageTool } from './generate-image';
+import type { ChatRequest, ChatMessage } from '@/ai/schemas';
 
 export async function chat(input: ChatRequest): Promise<ChatMessage> {
   // Limit the history to the last 10 messages to avoid exceeding the token limit.
@@ -37,16 +36,16 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
     history.shift();
   }
 
-  let baseSystemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it. You have the ability to generate images. If the user asks for an image or describes something they want to see visually, use the generateImageTool.`;
+  let baseSystemInstruction = `You are Bito AI, a helpful and friendly AI assistant developed by JDev. You are part of a web application designed to help with creative and business tasks. Your persona should be professional, creative, and helpful. If the user uploads an image, you can analyze it and answer questions about it. You CANNOT generate images. Politely decline any requests to generate images.`;
   let temperature = 0.7;
 
   switch (input.mode) {
     case 'creative':
-      baseSystemInstruction = `You are Bito AI, a highly creative and imaginative AI assistant developed by JDev. You excel at brainstorming, storytelling, and generating novel ideas. Your tone is enthusiastic and inspiring. You have the ability to generate images. If the user asks for an image or describes something they want to see visually, use the generateImageTool.`;
+      baseSystemInstruction = `You are Bito AI, a highly creative and imaginative AI assistant developed by JDev. You excel at brainstorming, storytelling, and generating novel ideas. Your tone is enthusiastic and inspiring. You CANNOT generate images. Politely decline any requests to generate images.`;
       temperature = 1.0;
       break;
     case 'professional':
-      baseSystemInstruction = `You are Bito AI, a formal and professional AI assistant developed by JDev. Your responses are concise, structured, and geared towards business and technical tasks. Maintain a formal tone. You have the ability to generate images. If the user asks for an image or describes something they want to see visually, use the generateImageTool.`;
+      baseSystemInstruction = `You are Bito AI, a formal and professional AI assistant developed by JDev. Your responses are concise, structured, and geared towards business and technical tasks. Maintain a formal tone. You CANNOT generate images. Politely decline any requests to generate images.`;
       temperature = 0.4;
       break;
     default:
@@ -58,28 +57,16 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
       model: 'googleai/gemini-2.0-flash',
       system: baseSystemInstruction,
       messages: history,
-      tools: [generateImageTool],
       config: {
         temperature: temperature,
       },
     });
   
     const responseText = response.text;
-    let imageUrl: string | undefined;
-  
-    const toolResponsePart = response.history
-      ?.flatMap((m) => m.content)
-      .find((p) => p.toolResponse?.name === 'generateImageTool');
-  
-    if (toolResponsePart?.toolResponse?.output) {
-      const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
-      imageUrl = output.imageUrl;
-    }
     
     return {
       role: 'model',
       content: responseText,
-      imageUrl: imageUrl,
     };
   } catch (error: any) {
     console.error('Error during chat generation:', error);

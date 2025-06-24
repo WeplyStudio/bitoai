@@ -20,7 +20,7 @@ export async function generateInitialPrompt(): Promise<InitialPromptOutput> {
 const initialPrompt = ai.definePrompt({
   name: 'initialPrompt',
   output: {schema: InitialPromptOutputSchema},
-  prompt: `You are Bito AI, an AI assistant developed by JDev. Suggest 4 initial prompts that a new user can use to start a conversation with you. The prompts should be about creative or business tasks like writing copy, generating images, creating avatars, or writing code. Return the prompts as a JSON array of strings.`,
+  prompt: `You are Bito AI, an AI assistant developed by JDev. Suggest 4 initial prompts that a new user can use to start a conversation with you. The prompts should be about creative or business tasks like writing copy, brainstorming ideas, creating avatars, or writing code. Return the prompts as a JSON array of strings.`,
 });
 
 const generateInitialPromptFlow = ai.defineFlow(
