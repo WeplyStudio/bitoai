@@ -5,7 +5,7 @@ import { useRouter } from 'next/navigation';
 import { useProjects } from '@/contexts/ProjectProvider';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogTrigger, DialogClose } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter, DialogClose } from '@/components/ui/dialog';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -179,47 +179,43 @@ export default function TemplatesPage() {
 
     return (
         <div className="p-4 md:p-8">
+            <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>{editingTemplate ? 'Edit Prompt' : 'Create New Prompt'}</DialogTitle>
+                        <DialogDescription>
+                          {editingTemplate ? 'Modify the details of your custom prompt.' : 'Add a new prompt to your personal collection.'}
+                        </DialogDescription>
+                    </DialogHeader>
+                    <div className="grid gap-4 py-4">
+                        <div className="grid gap-2">
+                            <Label htmlFor="title">Title</Label>
+                            <Input id="title" value={formData.title} onChange={handleFormChange} placeholder="e.g., Social Media Post" />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="description">Description (Optional)</Label>
+                            <Input id="description" value={formData.description} onChange={handleFormChange} placeholder="e.g., Generate a short, punchy post" />
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="prompt">Prompt</Label>
+                            <Textarea id="prompt" value={formData.prompt} onChange={handleFormChange} placeholder="Write a social media post for [Product]..." rows={5} />
+                        </div>
+                    </div>
+                    <DialogFooter>
+                        <DialogClose asChild>
+                            <Button variant="ghost">Cancel</Button>
+                        </DialogClose>
+                        <Button onClick={handleSaveTemplate}>Save Prompt</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
                         <h2 className="text-3xl font-bold tracking-tight">Prompt Templates</h2>
                         <p className="text-muted-foreground">Browse prompts to kickstart conversations, or create your own.</p>
                     </div>
-                     <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
-                        <DialogTrigger asChild>
-                            <Button onClick={() => handleOpenDialog()}>
-                                <Plus className="mr-2 h-4 w-4" /> Create New Prompt
-                            </Button>
-                        </DialogTrigger>
-                        <DialogContent>
-                            <DialogHeader>
-                                <DialogTitle>{editingTemplate ? 'Edit Prompt' : 'Create New Prompt'}</DialogTitle>
-                                <DialogDescription>
-                                  {editingTemplate ? 'Modify the details of your custom prompt.' : 'Add a new prompt to your personal collection.'}
-                                </DialogDescription>
-                            </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid gap-2">
-                                    <Label htmlFor="title">Title</Label>
-                                    <Input id="title" value={formData.title} onChange={handleFormChange} placeholder="e.g., Social Media Post" />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="description">Description (Optional)</Label>
-                                    <Input id="description" value={formData.description} onChange={handleFormChange} placeholder="e.g., Generate a short, punchy post" />
-                                </div>
-                                <div className="grid gap-2">
-                                    <Label htmlFor="prompt">Prompt</Label>
-                                    <Textarea id="prompt" value={formData.prompt} onChange={handleFormChange} placeholder="Write a social media post for [Product]..." rows={5} />
-                                </div>
-                            </div>
-                            <DialogFooter>
-                                <DialogClose asChild>
-                                    <Button variant="ghost">Cancel</Button>
-                                </DialogClose>
-                                <Button onClick={handleSaveTemplate}>Save Prompt</Button>
-                            </DialogFooter>
-                        </DialogContent>
-                    </Dialog>
                 </div>
                 
                 <Tabs defaultValue={PRESET_TEMPLATES_KEY} className="w-full">
@@ -239,7 +235,13 @@ export default function TemplatesPage() {
                             </div>
                         ))}
                     </TabsContent>
-                     <TabsContent value={CUSTOM_TEMPLATES_KEY} className="mt-6">
+                     <TabsContent value={CUSTOM_TEMPLATES_KEY} className="mt-6 space-y-4">
+                        <div className="flex items-center justify-between">
+                            <h3 className="text-xl font-semibold">Your Custom Prompts</h3>
+                             <Button onClick={() => handleOpenDialog()}>
+                                <Plus className="mr-2 h-4 w-4" /> Create New Prompt
+                            </Button>
+                        </div>
                         {customTemplates.length > 0 ? (
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
                                 {customTemplates.map((template) => (
@@ -249,10 +251,7 @@ export default function TemplatesPage() {
                         ) : (
                             <div className="text-center py-12 border-2 border-dashed rounded-lg">
                                 <h3 className="text-xl font-semibold">No Custom Prompts Yet</h3>
-                                <p className="text-muted-foreground mt-2 mb-4">Click the button below to create your first prompt!</p>
-                                <Button onClick={() => handleOpenDialog()}>
-                                    <Plus className="mr-2 h-4 w-4" /> Create New Prompt
-                                </Button>
+                                <p className="text-muted-foreground mt-2 mb-4">Click "Create New Prompt" above to add your first one!</p>
                             </div>
                         )}
                     </TabsContent>
