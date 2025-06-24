@@ -94,32 +94,36 @@ export default function SettingsPage() {
             <CardTitle>Settings</CardTitle>
             <CardDescription>Customize your Bito AI experience.</CardDescription>
           </CardHeader>
-          <CardContent className="space-y-6">
-            <div className="space-y-2">
-              <Label htmlFor="ai-mode">AI Mode</Label>
-              <Select value={aiMode} onValueChange={handleModeChange}>
-                <SelectTrigger id="ai-mode" className="w-[180px]">
-                  <SelectValue placeholder="Select a mode" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="default">Default</SelectItem>
-                  <SelectItem value="creative">Creative</SelectItem>
-                  <SelectItem value="professional">Professional</SelectItem>
-                </SelectContent>
-              </Select>
-              <p className="text-sm text-muted-foreground">
-                Choose the personality for Bito AI responses.
-              </p>
+          <CardContent className="space-y-4">
+            <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="ai-mode">AI Mode</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Choose the personality for Bito AI responses.
+                  </p>
+                </div>
+                <Select value={aiMode} onValueChange={handleModeChange}>
+                  <SelectTrigger id="ai-mode" className="w-[180px]">
+                    <SelectValue placeholder="Select a mode" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="default">Default</SelectItem>
+                    <SelectItem value="creative">Creative</SelectItem>
+                    <SelectItem value="professional">Professional</SelectItem>
+                  </SelectContent>
+                </Select>
             </div>
-            <div className="space-y-2">
-              <Label>Export Data</Label>
-              <Button variant="outline" onClick={handleExportChat}>
-                <Download className="mr-2 h-4 w-4" />
-                Export All Chats
-              </Button>
-              <p className="text-sm text-muted-foreground">
-                Download your complete chat history for all chats as a JSON file.
-              </p>
+            <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label>Export Data</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Download your complete chat history for all chats as a JSON file.
+                  </p>
+                </div>
+                <Button variant="outline" onClick={handleExportChat}>
+                  <Download className="mr-2 h-4 w-4" />
+                  Export All Chats
+                </Button>
             </div>
           </CardContent>
         </Card>
