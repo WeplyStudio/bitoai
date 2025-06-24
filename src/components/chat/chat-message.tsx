@@ -129,7 +129,7 @@ export function ChatMessage({
 
       {isUser && (
         <Avatar className="h-8 w-8 border flex-shrink-0">
-          <AvatarImage src="https://placehold.co/40x40.png" alt="User" data-ai-hint="woman portrait" />
+          <AvatarImage src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User" />
           <AvatarFallback>
             <User className="h-5 w-5" />
           </AvatarFallback>
