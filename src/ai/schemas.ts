@@ -48,3 +48,14 @@ export const GenerateImageOutputSchema = z.object({
   imageUrl: z.string().describe("The data URI of the generated image."),
 });
 export type GenerateImageOutput = z.infer<typeof GenerateImageOutputSchema>;
+
+// From rename-project-flow.ts
+export const RenameProjectInputSchema = z.object({
+  chatHistory: z.string().describe('The chat history to be used for generating a project name.'),
+});
+export type RenameProjectInput = z.infer<typeof RenameProjectInputSchema>;
+
+export const RenameProjectOutputSchema = z.object({
+  projectName: z.string().describe('A short, descriptive project name based on the chat history.'),
+});
+export type RenameProjectOutput = z.infer<typeof RenameProjectOutputSchema>;

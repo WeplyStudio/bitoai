@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
+import { renameProject } from '@/ai/flows/rename-project-flow';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 import { useProjects } from '@/contexts/ProjectProvider';
@@ -57,8 +58,9 @@ export function ChatPanel() {
   
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState('');
+  const [isRenaming, setIsRenaming] = useState(false);
 
-  const { activeProject, updateActiveProjectSummary } = useProjects();
+  const { activeProject, updateProjectName, updateActiveProjectSummary } = useProjects();
 
   useEffect(() => {
     const openDialog = () => setTemplateDialogOpen(true);
@@ -114,6 +116,41 @@ export function ChatPanel() {
       }
     }
   }, [messages, activeProject, isMounted, editingMessageId]);
+
+  useEffect(() => {
+    const autoRenameProject = async () => {
+      if (
+        !activeProject ||
+        isLoading ||
+        isRenaming ||
+        messages.length !== 3 || // Trigger after user, AI, and user's 2nd message
+        activeProject.name !== 'Untitled Project'
+      ) {
+        return;
+      }
+
+      setIsRenaming(true);
+      try {
+        const chatHistory = messages
+          .map(m => `${m.role}: ${m.content}`)
+          .join('\n');
+        
+        const result = await renameProject({ chatHistory });
+        
+        if (result && result.projectName) {
+          updateProjectName(activeProject.id, result.projectName);
+          toast({
+            title: 'Project Renamed',
+            description: `This chat was automatically named "${result.projectName}".`,
+          });
+        }
+      } catch (error) {
+        console.error("Failed to automatically rename project:", error);
+      }
+    };
+
+    autoRenameProject();
+  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast]);
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
