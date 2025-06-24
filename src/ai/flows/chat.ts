@@ -53,33 +53,45 @@ export async function chat(input: ChatRequest): Promise<ChatMessage> {
       break;
   }
 
-  const response = await ai.generate({
-    model: 'googleai/gemini-pro',
-    system: baseSystemInstruction,
-    messages: history,
-    tools: [generateImageTool],
-    config: {
-      temperature: temperature,
-    },
-  });
-
-  const responseText = response.text;
-  let imageUrl: string | undefined;
-
-  // Search through the entire history for the tool response for our image generation tool.
-  const toolResponsePart = response.history
-    ?.flatMap((m) => m.content)
-    .find((p) => p.toolResponse?.name === 'generateImageTool');
-
-  if (toolResponsePart?.toolResponse?.output) {
-    // The output is an object defined by GenerateImageOutputSchema: { imageUrl: string }
-    const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
-    imageUrl = output.imageUrl;
-  }
+  try {
+    const response = await ai.generate({
+      model: 'googleai/gemini-2.0-flash',
+      system: baseSystemInstruction,
+      messages: history,
+      tools: [generateImageTool],
+      config: {
+        temperature: temperature,
+      },
+    });
   
-  return {
-    role: 'model',
-    content: responseText,
-    imageUrl: imageUrl,
-  };
+    const responseText = response.text;
+    let imageUrl: string | undefined;
+  
+    const toolResponsePart = response.history
+      ?.flatMap((m) => m.content)
+      .find((p) => p.toolResponse?.name === 'generateImageTool');
+  
+    if (toolResponsePart?.toolResponse?.output) {
+      const output = toolResponsePart.toolResponse.output as GenerateImageOutput;
+      imageUrl = output.imageUrl;
+    }
+    
+    return {
+      role: 'model',
+      content: responseText,
+      imageUrl: imageUrl,
+    };
+  } catch (error: any) {
+    console.error('Error during chat generation:', error);
+
+    if (error.message && (error.message.includes('exceeds the maximum number of tokens allowed') || error.message.includes('token count'))) {
+      return {
+        role: 'model',
+        content: 'Maaf, permintaan Anda terlalu besar untuk saya proses. Mohon coba perpendek pesan Anda atau gunakan gambar yang lebih kecil.',
+      };
+    }
+
+    // Rethrow other errors to be handled by the client's toast notification
+    throw error;
+  }
 }
