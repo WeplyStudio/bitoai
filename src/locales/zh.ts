@@ -119,6 +119,35 @@ export const zh = {
   promptCreatedDescription: '“{{title}}”已添加到您的提示中。',
   promptDeleted: '提示已删除',
   promptDeletedDescription: '自定义提示已被删除。',
+
+  // Template Dialog
+  dialogTemplatesTitle: '提示模板',
+  dialogTemplatesDescription: '从这些精心制作的提示开始。点击“使用模板”将其添加到您的聊天输入中。',
+  dialogTemplatesNoCustomPrompts: '您还没有创建任何自定义提示。',
+
+  // Template Presets
+  templateCategoryGeneral: '通用',
+  templateGeneralTitle1: '头脑风暴',
+  templateGeneralDescription1: '为任何主题生成一系列想法。',
+  templateGeneralTitle2: '总结文本',
+  templateGeneralDescription2: '获取长文本的简明摘要。',
+  templateGeneralTitle3: '扮演一个角色',
+  templateGeneralDescription3: '与扮演特定角色的 AI 进行对话。',
+  templateCategoryMarketing: '市场营销',
+  templateMarketingTitle1: '撰写博客文章',
+  templateMarketingDescription1: '为给定主题创建博客文章的草稿。',
+  templateMarketingTitle2: '制作营销邮件',
+  templateMarketingDescription2: '生成一封有说服力的电子邮件来推广产品或服务。',
+  templateCategoryEmail: '电子邮件',
+  templateEmailTitle1: '撰写专业电子邮件',
+  templateEmailDescription1: '为商务沟通撰写正式电子邮件。',
+  templateEmailTitle2: '后续邮件',
+  templateEmailDescription2: '在会议或面试后起草一封礼貌的后续电子邮件。',
+  templateCategoryCode: '代码',
+  templateCodeTitle1: '解释代码片段',
+  templateCodeDescription1: '获取一段代码的详细解释。',
+  templateCodeTitle2: '编写一个函数',
+  templateCodeDescription2: '用任何编程语言生成一个函数。',
   
   // Community Page
   communityChatTitle: '社区聊天',

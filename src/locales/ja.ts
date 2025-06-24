@@ -119,6 +119,35 @@ export const ja = {
   promptCreatedDescription: '「{{title}}」がプロンプトに追加されました。',
   promptDeleted: 'プロンプトが削除されました',
   promptDeletedDescription: 'カスタムプロンプトが削除されました。',
+
+  // Template Dialog
+  dialogTemplatesTitle: 'プロンプトテンプレート',
+  dialogTemplatesDescription: 'これらの専門的に作成されたプロンプトから始めましょう。「テンプレートを使用」をクリックして、チャット入力に追加します。',
+  dialogTemplatesNoCustomPrompts: 'まだカスタムプロンプトを作成していません。',
+
+  // Template Presets
+  templateCategoryGeneral: '一般',
+  templateGeneralTitle1: 'アイデアをブレインストーミング',
+  templateGeneralDescription1: '任意のトピックに関するアイデアのリストを生成します。',
+  templateGeneralTitle2: 'テキストを要約',
+  templateGeneralDescription2: '長いテキストの簡潔な要約を取得します。',
+  templateGeneralTitle3: 'キャラクターとして振る舞う',
+  templateGeneralDescription3: '特定のキャラクターとして振る舞うAIと会話します。',
+  templateCategoryMarketing: 'マーケティング',
+  templateMarketingTitle1: 'ブログ記事を書く',
+  templateMarketingDescription1: '与えられたトピックに関するブログ記事の下書きを作成します。',
+  templateMarketingTitle2: 'マーケティングメールを作成',
+  templateMarketingDescription2: '製品やサービスを宣伝するための説得力のあるメールを生成します。',
+  templateCategoryEmail: 'メール',
+  templateEmailTitle1: 'プロフェッショナルなメールを書く',
+  templateEmailDescription1: 'ビジネスコミュニケーションのためのフォーマルなメールを作成します。',
+  templateEmailTitle2: 'フォローアップメール',
+  templateEmailDescription2: '会議や面接の後に丁寧なフォローアップメールの下書きを作成します。',
+  templateCategoryCode: 'コード',
+  templateCodeTitle1: 'コードスニペットを説明',
+  templateCodeDescription1: 'コードの一部分の詳細な説明を取得します。',
+  templateCodeTitle2: '関数を書く',
+  templateCodeDescription2: '任意のプログラミング言語で関数を生成します。',
   
   // Community Page
   communityChatTitle: 'コミュニティチャット',

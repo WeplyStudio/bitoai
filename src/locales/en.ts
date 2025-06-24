@@ -120,6 +120,35 @@ export const en = {
   promptDeleted: 'Prompt Deleted',
   promptDeletedDescription: 'The custom prompt has been removed.',
 
+  // Template Dialog
+  dialogTemplatesTitle: 'Prompt Templates',
+  dialogTemplatesDescription: 'Get started with these expertly crafted prompts. Click "Use Template" to add it to your chat input.',
+  dialogTemplatesNoCustomPrompts: 'You haven\'t created any custom prompts yet.',
+
+  // Template Presets
+  templateCategoryGeneral: 'General',
+  templateGeneralTitle1: 'Brainstorm ideas',
+  templateGeneralDescription1: 'Generate a list of ideas for any topic.',
+  templateGeneralTitle2: 'Summarize text',
+  templateGeneralDescription2: 'Get a concise summary of a long piece of text.',
+  templateGeneralTitle3: 'Act as a character',
+  templateGeneralDescription3: 'Have a conversation with an AI acting as a specific character.',
+  templateCategoryMarketing: 'Marketing',
+  templateMarketingTitle1: 'Write a blog post',
+  templateMarketingDescription1: 'Create a draft for a blog post on a given topic.',
+  templateMarketingTitle2: 'Craft a marketing email',
+  templateMarketingDescription2: 'Generate a compelling email to promote a product or service.',
+  templateCategoryEmail: 'Email',
+  templateEmailTitle1: 'Write a professional email',
+  templateEmailDescription1: 'Compose a formal email for business communication.',
+  templateEmailTitle2: 'Follow-up email',
+  templateEmailDescription2: 'Draft a polite follow-up email after a meeting or interview.',
+  templateCategoryCode: 'Code',
+  templateCodeTitle1: 'Explain a code snippet',
+  templateCodeDescription1: 'Get a detailed explanation of a piece of code.',
+  templateCodeTitle2: 'Write a function',
+  templateCodeDescription2: 'Generate a function in any programming language.',
+
   // Community Page
   communityChatTitle: 'Community Chat',
   communityChatDescription: 'Global anonymous chat room',

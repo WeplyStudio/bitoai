@@ -120,6 +120,35 @@ export const id = {
   promptDeleted: 'Prompt Dihapus',
   promptDeletedDescription: 'Prompt kustom telah dihapus.',
 
+  // Template Dialog
+  dialogTemplatesTitle: 'Template Prompt',
+  dialogTemplatesDescription: 'Mulailah dengan prompt yang dibuat secara ahli ini. Klik "Gunakan Template" untuk menambahkannya ke input obrolan Anda.',
+  dialogTemplatesNoCustomPrompts: 'Anda belum membuat prompt kustom.',
+  
+  // Template Presets
+  templateCategoryGeneral: 'Umum',
+  templateGeneralTitle1: 'Brainstorm ide',
+  templateGeneralDescription1: 'Hasilkan daftar ide untuk berbagai topik.',
+  templateGeneralTitle2: 'Ringkas teks',
+  templateGeneralDescription2: 'Dapatkan ringkasan singkat dari teks yang panjang.',
+  templateGeneralTitle3: 'Berperan sebagai karakter',
+  templateGeneralDescription3: 'Lakukan percakapan dengan AI yang berperan sebagai karakter tertentu.',
+  templateCategoryMarketing: 'Pemasaran',
+  templateMarketingTitle1: 'Tulis postingan blog',
+  templateMarketingDescription1: 'Buat draf untuk postingan blog tentang topik tertentu.',
+  templateMarketingTitle2: 'Buat email pemasaran',
+  templateMarketingDescription2: 'Hasilkan email yang menarik untuk mempromosikan produk atau layanan.',
+  templateCategoryEmail: 'Email',
+  templateEmailTitle1: 'Tulis email profesional',
+  templateEmailDescription1: 'Tulis email formal untuk komunikasi bisnis.',
+  templateEmailTitle2: 'Email tindak lanjut',
+  templateEmailDescription2: 'Buat draf email tindak lanjut yang sopan setelah rapat atau wawancara.',
+  templateCategoryCode: 'Kode',
+  templateCodeTitle1: 'Jelaskan cuplikan kode',
+  templateCodeDescription1: 'Dapatkan penjelasan rinci tentang sepotong kode.',
+  templateCodeTitle2: 'Tulis sebuah fungsi',
+  templateCodeDescription2: 'Hasilkan fungsi dalam bahasa pemrograman apa pun.',
+
   // Community Page
   communityChatTitle: 'Obrolan Komunitas',
   communityChatDescription: 'Ruang obrolan anonim global',
