@@ -54,7 +54,7 @@ export default function ProjectsPage() {
               <p className="text-muted-foreground mt-2">Create a new project from the sidebar to get started!</p>
           </div>
         ) : (
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          <div className="grid max-w-md mx-auto gap-6 sm:max-w-none sm:mx-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
             {sortedProjects.map((project) => (
               <Card key={project.id} className="flex flex-col">
                 <CardHeader>
