@@ -119,24 +119,26 @@ export function ChatPanel() {
 
   useEffect(() => {
     const autoRenameProject = async () => {
+      // Trigger after the first AI response (user message + AI response = 2 messages).
+      // Only run for projects that haven't been named yet.
       if (
         !activeProject ||
         isLoading ||
         isRenaming ||
-        messages.length !== 3 || // Trigger after user, AI, and user's 2nd message
+        messages.length !== 2 ||
         activeProject.name !== 'Untitled Project'
       ) {
         return;
       }
-
+  
       setIsRenaming(true);
       try {
         const chatHistory = messages
-          .map(m => `${m.role}: ${m.content}`)
+          .map(m => `${m.role}: ${m.content || ''}`)
           .join('\n');
-        
+  
         const result = await renameProject({ chatHistory });
-        
+  
         if (result && result.projectName) {
           updateProjectName(activeProject.id, result.projectName);
           toast({
@@ -146,11 +148,13 @@ export function ChatPanel() {
         }
       } catch (error) {
         console.error("Failed to automatically rename project:", error);
+      } finally {
+        setIsRenaming(false);
       }
     };
-
+  
     autoRenameProject();
-  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast]);
+  }, [messages, activeProject, isLoading, updateProjectName, toast]);
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);

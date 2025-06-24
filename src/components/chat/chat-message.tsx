@@ -33,7 +33,7 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
           <BitoIcon className="h-5 w-5" />
         </AvatarFallback>
       </Avatar>
-      <div className="flex flex-col items-start gap-2 w-full max-w-[90%] sm:max-w-[80%] lg:max-w-[75%]">
+      <div className="flex flex-col items-start gap-2 w-full max-w-[75%] sm:max-w-[75%] lg:max-w-[75%]">
         <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3">
           {message.content && (
             <div className="prose prose-sm dark:prose-invert max-w-none">
