@@ -3,6 +3,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
 import { renameProject } from '@/ai/flows/rename-project-flow';
+import { chat } from '@/ai/flows/chat';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 import { useProjects } from '@/contexts/ProjectProvider';
@@ -166,58 +167,28 @@ export function ChatPanel() {
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
-    let accumulatedContent = "";
-    const aiMessageId = `model-${Date.now()}`;
-    const placeholderAiMessage: Message = {
-      id: aiMessageId,
-      role: 'model',
-      content: '',
-    };
-    setMessages(prev => [...prev, placeholderAiMessage]);
-  
+
     try {
-      // Defensively filter out any null/undefined messages before sending.
       const cleanHistory = history.filter(Boolean);
-      
       const historyForApi = cleanHistory.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
-      
-      const response = await fetch('/api/chat/stream', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          messages: historyForApi,
-          mode: aiMode,
-          language: language,
-        }),
+
+      const response = await chat({
+        messages: historyForApi,
+        mode: aiMode,
+        language: language,
       });
 
-      if (!response.body) {
-        throw new Error('Response body is null');
+      if (!response || !response.content) {
+        throw new Error('AI did not return a response.');
       }
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Failed to get response from Bito AI' }));
-        throw new Error(errorData.error);
-      }
+      const aiMessage: Message = {
+        id: `model-${Date.now()}`,
+        role: 'model',
+        content: response.content,
+      };
 
-      const reader = response.body.getReader();
-      const decoder = new TextDecoder();
-  
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-  
-        accumulatedContent += decoder.decode(value, { stream: true });
-        setMessages(prev =>
-          prev.map(msg =>
-            msg.id === aiMessageId
-              ? { ...msg, content: accumulatedContent }
-              : msg
-          )
-        );
-      }
+      setMessages(prev => [...prev, aiMessage]);
     } catch (error: any) {
       console.error('Error during chat:', error);
       toast({
@@ -225,8 +196,6 @@ export function ChatPanel() {
         title: 'Error',
         description: error.message || 'Failed to get a response from Bito AI. Please try again.',
       });
-      // Remove the placeholder on error
-      setMessages(prev => prev.filter(msg => msg.id !== aiMessageId));
     } finally {
       setIsLoading(false);
     }

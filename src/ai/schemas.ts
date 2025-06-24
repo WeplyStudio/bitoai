@@ -15,6 +15,11 @@ export const ChatRequestSchema = z.object({
 });
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 
+export const ChatResponseSchema = z.object({
+  content: z.string(),
+});
+export type ChatResponse = z.infer<typeof ChatResponseSchema>;
+
 // From feedback-incorporation.ts
 export const IncorporateFeedbackInputSchema = z.object({
   originalPrompt: z.string().describe('The original prompt that generated the initial response.'),
