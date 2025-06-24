@@ -133,7 +133,7 @@ export default function SettingsPage() {
                   </SelectContent>
                 </Select>
             </div>
-            <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+            <div className="flex flex-col items-start gap-3 rounded-lg border p-4">
                 <div className="space-y-0.5">
                   <Label>{t('exportData')}</Label>
                   <p className="text-sm text-muted-foreground">
