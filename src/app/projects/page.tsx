@@ -29,14 +29,14 @@ export default function ProjectsPage() {
   const handleSaveName = (projectId: string) => {
     if (newProjectName.trim()) {
       updateProjectName(projectId, newProjectName.trim());
-      toast({ title: 'Project Renamed', description: `Project has been renamed to "${newProjectName.trim()}".` });
+      toast({ title: 'Chat Renamed', description: `Chat has been renamed to "${newProjectName.trim()}".` });
       handleCancelEditing();
     }
   };
 
   const handleDeleteProject = (projectId: string) => {
     deleteProject(projectId);
-    toast({ variant: 'destructive', title: 'Project Deleted', description: 'The project and its chat history have been deleted.' });
+    toast({ variant: 'destructive', title: 'Chat Deleted', description: 'The chat and its history have been deleted.' });
   };
   
   const sortedProjects = [...projects].sort((a, b) => b.createdAt - a.createdAt);
@@ -45,13 +45,13 @@ export default function ProjectsPage() {
     <div className="p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Manage Projects</h2>
+          <h2 className="text-3xl font-bold tracking-tight">Manage Chats</h2>
         </div>
         
         {projects.length === 0 ? (
           <div className="text-center py-12">
-              <h3 className="text-xl font-semibold">No Projects Yet</h3>
-              <p className="text-muted-foreground mt-2">Create a new project from the sidebar to get started!</p>
+              <h3 className="text-xl font-semibold">No Chats Yet</h3>
+              <p className="text-muted-foreground mt-2">Create a new chat from the sidebar to get started!</p>
           </div>
         ) : (
           <div className="grid max-w-md mx-auto gap-6 sm:max-w-none sm:mx-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -106,7 +106,7 @@ export default function ProjectsPage() {
                         <AlertDialogHeader>
                           <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your project
+                            This action cannot be undone. This will permanently delete your chat
                             and its entire chat history.
                           </AlertDialogDescription>
                         </AlertDialogHeader>

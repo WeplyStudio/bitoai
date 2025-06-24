@@ -126,7 +126,7 @@ export function ChatPanel() {
         isLoading ||
         isRenaming ||
         messages.length !== 2 ||
-        activeProject.name !== 'Untitled Project'
+        activeProject.name !== 'Untitled Chat'
       ) {
         return;
       }
@@ -142,19 +142,19 @@ export function ChatPanel() {
         if (result && result.projectName) {
           updateProjectName(activeProject.id, result.projectName);
           toast({
-            title: 'Project Renamed',
+            title: 'Chat Renamed',
             description: `This chat was automatically named "${result.projectName}".`,
           });
         }
       } catch (error) {
-        console.error("Failed to automatically rename project:", error);
+        console.error("Failed to automatically rename chat:", error);
       } finally {
         setIsRenaming(false);
       }
     };
   
     autoRenameProject();
-  }, [messages, activeProject, isLoading, updateProjectName, toast]);
+  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast]);
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
@@ -335,13 +335,13 @@ export function ChatPanel() {
         );
     }
   
-    const NoProjectsScreen = () => (
+    const NoChatsScreen = () => (
         <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">No Active Project</h1>
-            <p className="text-muted-foreground mb-8 max-w-md">It looks like you don't have any projects. Create one to get started!</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">No Active Chat</h1>
+            <p className="text-muted-foreground mb-8 max-w-md">It looks like you don't have any chats. Create one to get started!</p>
             <Button onClick={createProject}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create New Project
+                Create New Chat
             </Button>
         </div>
     );
@@ -356,7 +356,7 @@ export function ChatPanel() {
         </header>
 
         <div className="flex-1 overflow-y-auto">
-            {!activeProject ? <NoProjectsScreen /> : 
+            {!activeProject ? <NoChatsScreen /> : 
             messages.length === 0 && !isLoading ? <WelcomeScreen/> : 
             <ChatMessages 
               messages={messages} 

@@ -76,7 +76,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
         } else if (!savedProjectsRaw) { // Only create a new project if there's nothing in storage
             const newProject: Project = {
                 id: `project-${Date.now()}`,
-                name: 'Untitled Project',
+                name: 'Untitled Chat',
                 summary: 'Start a new conversation!',
                 createdAt: Date.now()
             };
@@ -106,7 +106,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const createProject = useCallback(() => {
     const newProject: Project = {
         id: `project-${Date.now()}`,
-        name: 'Untitled Project',
+        name: 'Untitled Chat',
         summary: 'A new conversation begins...',
         createdAt: Date.now()
     };

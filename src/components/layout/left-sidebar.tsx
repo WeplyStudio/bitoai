@@ -67,14 +67,14 @@ export const LeftSidebarContent = () => {
                 </div>
                  <Button variant="outline" className="w-full justify-start" onClick={handleNewProject}>
                     <Plus className="mr-2 h-4 w-4" />
-                    New Project
+                    New Chat
                 </Button>
             </div>
 
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
                 <NavItem icon={MessageSquare} text="AI Chat" href="/" />
                 <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
-                <NavItem icon={Folder} text="Projects" href="/projects" />
+                <NavItem icon={Folder} text="Chats" href="/projects" />
                 <NavButton icon={FileText} text="Templates" onClick={handleOpenTemplates} />
             </div>
             

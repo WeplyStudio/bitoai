@@ -25,7 +25,7 @@ export const RightSidebarContent = () => {
   return (
     <>
         <div className="flex justify-between items-center p-4">
-          <h2 className="text-lg font-semibold">Projects ({projects.length})</h2>
+          <h2 className="text-lg font-semibold">Chats ({projects.length})</h2>
           <Button variant="ghost" size="icon">
             <MoreHorizontal className="h-4 w-4" />
           </Button>
@@ -33,7 +33,7 @@ export const RightSidebarContent = () => {
         <div className="px-4">
           <Button variant="outline" className="w-full justify-start" onClick={() => createProject()}>
               <Plus className="mr-2 h-4 w-4" />
-              New Project
+              New Chat
           </Button>
         </div>
         <div className="flex-1 space-y-2 p-4 overflow-y-auto">
