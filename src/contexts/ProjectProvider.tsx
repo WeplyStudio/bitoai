@@ -113,27 +113,27 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     setActiveProjectId(newProject.id);
   }, []);
 
-  const switchProject = (id: string) => {
+  const switchProject = useCallback((id: string) => {
     if (projects.some(p => p.id === id)) {
         setActiveProjectId(id);
     }
-  };
+  }, [projects]);
 
-  const updateProjectProperty = (id: string, updates: Partial<Omit<Project, 'id'>>) => {
+  const updateProjectProperty = useCallback((id: string, updates: Partial<Omit<Project, 'id'>>) => {
       setProjects(prev =>
           prev.map(p => (p.id === id ? { ...p, ...updates } : p))
       );
-  }
+  }, []);
 
   const updateActiveProjectSummary = useCallback((summary: string) => {
     if (activeProjectId) {
       updateProjectProperty(activeProjectId, { summary });
     }
-  }, [activeProjectId]);
+  }, [activeProjectId, updateProjectProperty]);
 
   const updateProjectName = useCallback((id: string, name: string) => {
     updateProjectProperty(id, { name });
-  }, []);
+  }, [updateProjectProperty]);
   
   const deleteProject = useCallback((idToDelete: string) => {
     // Remove associated chat history
