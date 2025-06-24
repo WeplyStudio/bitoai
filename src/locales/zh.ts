@@ -173,4 +173,12 @@ export const zh = {
   delete: '删除',
   areYouSure: '您确定吗？',
   saveAndSubmit: '保存并提交',
+
+  // Settings Page Dropdowns
+  selectAiModePlaceholder: '选择模式',
+  selectLanguagePlaceholder: '选择语言',
+  lang_id: '印度尼西亚语',
+  lang_en: '英语',
+  lang_zh: '普通话',
+  lang_ja: '日语',
 };

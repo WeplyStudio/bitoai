@@ -173,4 +173,12 @@ export const en = {
   delete: 'Delete',
   areYouSure: 'Are you absolutely sure?',
   saveAndSubmit: 'Save & Submit',
+
+  // Settings Page Dropdowns
+  selectAiModePlaceholder: 'Select a mode',
+  selectLanguagePlaceholder: 'Select a language',
+  lang_id: 'Indonesian',
+  lang_en: 'English',
+  lang_zh: 'Mandarin',
+  lang_ja: 'Japanese',
 };

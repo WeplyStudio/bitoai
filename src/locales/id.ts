@@ -173,4 +173,12 @@ export const id = {
   delete: 'Hapus',
   areYouSure: 'Apakah Anda benar-benar yakin?',
   saveAndSubmit: 'Simpan & Kirim',
+
+  // Settings Page Dropdowns
+  selectAiModePlaceholder: 'Pilih mode',
+  selectLanguagePlaceholder: 'Pilih bahasa',
+  lang_id: 'Bahasa Indonesia',
+  lang_en: 'Inggris',
+  lang_zh: 'Mandarin',
+  lang_ja: 'Jepang',
 };

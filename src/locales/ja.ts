@@ -173,4 +173,12 @@ export const ja = {
   delete: '削除',
   areYouSure: '本当によろしいですか？',
   saveAndSubmit: '保存して送信',
+
+  // Settings Page Dropdowns
+  selectAiModePlaceholder: 'モードを選択',
+  selectLanguagePlaceholder: '言語を選択',
+  lang_id: 'インドネシア語',
+  lang_en: '英語',
+  lang_zh: '中国語',
+  lang_ja: '日本語',
 };

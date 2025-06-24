@@ -101,16 +101,16 @@ export default function SettingsPage() {
                 </div>
                 <Select value={aiMode} onValueChange={handleModeChange}>
                   <SelectTrigger id="ai-mode" className="w-[180px]">
-                    <SelectValue placeholder="Select a mode" />
+                    <SelectValue placeholder={t('selectAiModePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="default">Default</SelectItem>
-                    <SelectItem value="creative">Creative</SelectItem>
-                    <SelectItem value="professional">Professional</SelectItem>
-                    <SelectItem value="storyteller">Storyteller</SelectItem>
-                    <SelectItem value="sarcastic">Sarcastic</SelectItem>
-                    <SelectItem value="technical">Technical</SelectItem>
-                    <SelectItem value="philosopher">Philosopher</SelectItem>
+                    <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
+                    <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
+                    <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
+                    <SelectItem value="storyteller">{t('faqAiModeStorytellerTitle')}</SelectItem>
+                    <SelectItem value="sarcastic">{t('faqAiModeSarcasticTitle')}</SelectItem>
+                    <SelectItem value="technical">{t('faqAiModeTechnicalTitle')}</SelectItem>
+                    <SelectItem value="philosopher">{t('faqAiModePhilosopherTitle')}</SelectItem>
                   </SelectContent>
                 </Select>
             </div>
@@ -123,13 +123,13 @@ export default function SettingsPage() {
                 </div>
                 <Select value={language} onValueChange={handleLanguageChange}>
                   <SelectTrigger id="language" className="w-[180px]">
-                    <SelectValue placeholder="Select a language" />
+                    <SelectValue placeholder={t('selectLanguagePlaceholder')} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="id">Bahasa Indonesia</SelectItem>
-                    <SelectItem value="en">English</SelectItem>
-                    <SelectItem value="zh">Mandarin</SelectItem>
-                    <SelectItem value="ja">Japanese</SelectItem>
+                    <SelectItem value="id">{t('lang_id')}</SelectItem>
+                    <SelectItem value="en">{t('lang_en')}</SelectItem>
+                    <SelectItem value="zh">{t('lang_zh')}</SelectItem>
+                    <SelectItem value="ja">{t('lang_ja')}</SelectItem>
                   </SelectContent>
                 </Select>
             </div>
