@@ -110,6 +110,10 @@ export default function SettingsPage() {
                     <SelectItem value="default">Default</SelectItem>
                     <SelectItem value="creative">Creative</SelectItem>
                     <SelectItem value="professional">Professional</SelectItem>
+                    <SelectItem value="storyteller">Storyteller</SelectItem>
+                    <SelectItem value="sarcastic">Sarcastic</SelectItem>
+                    <SelectItem value="technical">Technical</SelectItem>
+                    <SelectItem value="philosopher">Philosopher</SelectItem>
                   </SelectContent>
                 </Select>
             </div>
@@ -170,11 +174,15 @@ export default function SettingsPage() {
                  <AccordionItem value="item-6">
                     <AccordionTrigger>What are the different AI Modes?</AccordionTrigger>
                     <AccordionContent>
-                    The AI modes change the personality and tone of the AI's responses.
-                    <ul className="list-disc pl-5 mt-2 space-y-1">
+                    The AI modes change the personality and tone of the AI's responses. Each mode is fine-tuned with a specific system prompt and temperature setting to achieve a different style.
+                    <ul className="list-disc pl-5 mt-2 space-y-2">
                         <li><b>Default:</b> A balanced, helpful, and friendly persona suitable for general tasks.</li>
-                        <li><b>Creative:</b> An enthusiastic and imaginative persona, great for brainstorming and creative writing. It may give more unexpected answers.</li>
-                        <li><b>Professional:</b> A formal and concise persona, ideal for business, technical, or formal writing tasks.</li>
+                        <li><b>Creative:</b> An enthusiastic and imaginative persona, great for brainstorming and creative writing. Uses a higher temperature for more unexpected answers.</li>
+                        <li><b>Professional:</b> A formal and concise persona, ideal for business or formal writing tasks.</li>
+                        <li><b>Storyteller:</b> Weaves compelling and imaginative narratives in response to your prompts.</li>
+                        <li><b>Sarcastic:</b> A witty, slightly grumpy assistant that provides correct but sarcastic answers.</li>
+                        <li><b>Technical:</b> Delivers highly precise, structured, and factual responses, like technical documentation. Uses a lower temperature for accuracy.</li>
+                        <li><b>Philosopher:</b> Responds with deep, thoughtful, and inquisitive reflections on your prompts.</li>
                     </ul>
                     </AccordionContent>
                 </AccordionItem>

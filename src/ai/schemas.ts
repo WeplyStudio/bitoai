@@ -10,7 +10,7 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 export const ChatRequestSchema = z.object({
   messages: z.array(ChatMessageSchema),
-  mode: z.enum(['default', 'creative', 'professional']).optional().describe('The personality mode for the AI response.'),
+  mode: z.enum(['default', 'creative', 'professional', 'storyteller', 'sarcastic', 'technical', 'philosopher']).optional().describe('The personality mode for the AI response.'),
 });
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 
