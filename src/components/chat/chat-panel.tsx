@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect, useCallback } from 'react';
-import { chat } from '@/ai/flows/chat';
 import { incorporateFeedback } from '@/ai/flows/feedback-incorporation';
 import { renameProject } from '@/ai/flows/rename-project-flow';
 import type { ChatMessage } from '@/ai/schemas';
@@ -28,6 +27,7 @@ const suggestionIcons: { [key: string]: React.ElementType } = {
 
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 const AI_MODE_KEY = 'bito-ai-mode';
+const LANGUAGE_KEY = 'bito-ai-language';
 const TEMPLATE_PROMPT_KEY = 'bito-ai-template-prompt';
 
 
@@ -57,6 +57,7 @@ export function ChatPanel() {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [aiMode, setAiMode] = useState('default');
+  const [language, setLanguage] = useState('id');
   
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState('');
@@ -76,10 +77,14 @@ export function ChatPanel() {
     try {
       const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
       setAiMode(savedMode);
+      const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || 'id';
+      setLanguage(savedLanguage);
 
       if (activeProject) {
-        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
-        const projectHistory = allHistories[activeProject.id] || [];
+        const allHistoriesRaw = localStorage.getItem(CHAT_HISTORIES_KEY) || '{}';
+        const allHistories = JSON.parse(allHistoriesRaw);
+        // Filter out any null/undefined entries from history
+        const projectHistory = (allHistories[activeProject.id] || []).filter(Boolean);
         setMessages(projectHistory);
       } else {
         setMessages([]);
@@ -99,6 +104,9 @@ export function ChatPanel() {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === AI_MODE_KEY && event.newValue) {
         setAiMode(event.newValue);
+      }
+      if (event.key === LANGUAGE_KEY && event.newValue) {
+        setLanguage(event.newValue);
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -158,34 +166,68 @@ export function ChatPanel() {
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
+    let accumulatedContent = "";
+    const aiMessageId = `model-${Date.now()}`;
+    const placeholderAiMessage: Message = {
+      id: aiMessageId,
+      role: 'model',
+      content: '',
+    };
+    setMessages(prev => [...prev, placeholderAiMessage]);
+  
     try {
       const historyForApi = history.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
-      const response = await chat({
-        messages: historyForApi,
-        mode: aiMode as 'default' | 'creative' | 'professional',
-      });
       
-      const newAiMessage: Message = { 
-        id: String(Date.now() + 1), 
-        role: response.role as 'model', 
-        content: response.content,
-        imageUrl: response.imageUrl,
-      };
+      const response = await fetch('/api/chat/stream', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          messages: historyForApi,
+          mode: aiMode,
+          language: language,
+        }),
+      });
 
-      setMessages([...history, newAiMessage]);
+      if (!response.body) {
+        throw new Error('Response body is null');
+      }
 
+      if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Failed to get response from Bito AI');
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+  
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+  
+        accumulatedContent += decoder.decode(value, { stream: true });
+        setMessages(prev =>
+          prev.map(msg =>
+            msg.id === aiMessageId
+              ? { ...msg, content: accumulatedContent }
+              : msg
+          )
+        );
+      }
     } catch (error) {
       console.error('Error during chat:', error);
       toast({
-          variant: 'destructive',
-          title: 'Error',
-          description: 'Failed to get a response from Bito AI. Please try again.',
+        variant: 'destructive',
+        title: 'Error',
+        description: 'Failed to get a response from Bito AI. Please try again.',
       });
-      setMessages(history); 
+      // Remove the placeholder on error
+      setMessages(prev => prev.filter(msg => msg.id !== aiMessageId));
     } finally {
       setIsLoading(false);
     }
-  }, [aiMode, toast]);
+  }, [aiMode, language, toast]);
 
   const handleSend = async (text: string, file?: File) => {
     if (isLoading || (!text.trim() && !file) || !activeProject) return;
@@ -214,7 +256,7 @@ export function ChatPanel() {
     }
 
     const newUserMessage: Message = { 
-      id: String(Date.now()), 
+      id: `user-${Date.now()}`, 
       role: 'user', 
       content: text,
       imageUrl: imageUrl,
@@ -382,6 +424,7 @@ export function ChatPanel() {
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}
+                language={language}
               />
               <p className="text-xs text-muted-foreground text-center mt-2">Bito AI may generate inaccurate information. Developed by JDev.</p>
             </div>

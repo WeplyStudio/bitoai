@@ -13,9 +13,17 @@ interface ChatInputProps {
   value: string;
   onChange: (value: string) => void;
   onBrowsePrompts: () => void;
+  language: string;
 }
 
-export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts }: ChatInputProps) {
+const speechLangMap: { [key: string]: string } = {
+    id: 'id-ID',
+    en: 'en-US',
+    zh: 'zh-CN',
+    ja: 'ja-JP',
+};
+
+export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts, language }: ChatInputProps) {
   const [file, setFile] = useState<File | null>(null);
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -33,7 +41,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
       const recognition = new SpeechRecognition();
       recognition.continuous = true;
       recognition.interimResults = true;
-      recognition.lang = 'id-ID';
+      recognition.lang = speechLangMap[language] || 'id-ID';
 
       recognition.onstart = () => {
         setIsRecording(true);
@@ -57,6 +65,8 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
           errorMessage = 'Akses mikrofon ditolak. Mohon izinkan akses di pengaturan browser Anda.';
         } else if (event.error === 'no-speech') {
           errorMessage = 'Tidak ada suara yang terdeteksi. Mohon coba lagi.';
+        } else if (event.error === 'language-not-supported') {
+            errorMessage = 'Bahasa yang dipilih tidak didukung untuk input suara.';
         }
         toast({
           variant: 'destructive',
@@ -74,7 +84,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
     } else {
       setIsSpeechSupported(false);
     }
-  }, [onChange, toast, value]);
+  }, [onChange, toast, value, language]);
 
   const handleSendClick = () => {
     if (value.trim() || file) {

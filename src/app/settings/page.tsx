@@ -7,38 +7,53 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle } from 'lucide-react';
+import { Download, Mail, MessageCircle, Languages } from 'lucide-react';
 
 const AI_MODE_KEY = 'bito-ai-mode';
+const LANGUAGE_KEY = 'bito-ai-language';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 
 export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
+  const [language, setLanguage] = useState('id');
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
+    const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || 'id';
+    setLanguage(savedLanguage);
     setIsMounted(true);
   }, []);
 
   useEffect(() => {
     if(isMounted) {
       localStorage.setItem(AI_MODE_KEY, aiMode);
-      // Dispatch a storage event to notify other tabs/components
-      window.dispatchEvent(new StorageEvent('storage', {
-          key: AI_MODE_KEY,
-          newValue: aiMode,
-      }));
+      window.dispatchEvent(new StorageEvent('storage', { key: AI_MODE_KEY, newValue: aiMode }));
     }
   }, [aiMode, isMounted]);
+
+  useEffect(() => {
+    if(isMounted) {
+      localStorage.setItem(LANGUAGE_KEY, language);
+      window.dispatchEvent(new StorageEvent('storage', { key: LANGUAGE_KEY, newValue: language }));
+    }
+  }, [language, isMounted]);
   
   const handleModeChange = (value: string) => {
     setAiMode(value);
     toast({
       title: 'AI Mode Updated',
       description: `Bito AI will now respond in ${value} mode.`,
+    });
+  };
+
+  const handleLanguageChange = (value: string) => {
+    setLanguage(value);
+    toast({
+      title: 'Language Updated',
+      description: `Bito AI will now respond in the selected language.`,
     });
   };
 
@@ -117,11 +132,30 @@ export default function SettingsPage() {
                   </SelectContent>
                 </Select>
             </div>
+             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label htmlFor="language">Language</Label>
+                  <p className="text-sm text-muted-foreground">
+                    Choose the language for AI responses and voice input.
+                  </p>
+                </div>
+                <Select value={language} onValueChange={handleLanguageChange}>
+                  <SelectTrigger id="language" className="w-[180px]">
+                    <SelectValue placeholder="Select a language" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="id">Bahasa Indonesia</SelectItem>
+                    <SelectItem value="en">English</SelectItem>
+                    <SelectItem value="zh">Mandarin</SelectItem>
+                    <SelectItem value="ja">Japanese</SelectItem>
+                  </SelectContent>
+                </Select>
+            </div>
             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
                   <Label>Export Data</Label>
                   <p className="text-sm text-muted-foreground">
-                    Download your complete chat history for all chats as a JSON file.
+                    Download your complete history for all chats as a JSON file.
                   </p>
                 </div>
                 <Button variant="outline" onClick={handleExportChat}>
@@ -150,7 +184,13 @@ export default function SettingsPage() {
                  <AccordionItem value="item-2">
                     <AccordionTrigger>How does voice input work?</AccordionTrigger>
                     <AccordionContent>
-                    The voice input feature uses your browser's built-in Web Speech API. When you click the microphone icon, your browser will ask for permission to access your microphone. Once granted, whatever you say will be transcribed into text in real-time.
+                    The voice input feature uses your browser's built-in Web Speech API. When you click the microphone icon, your browser will ask for permission to access your microphone. Once granted, whatever you say will be transcribed into text in the language you've selected in the settings.
+                    </AccordionContent>
+                </AccordionItem>
+                 <AccordionItem value="item-7">
+                    <AccordionTrigger>Can I change the response language?</AccordionTrigger>
+                    <AccordionContent>
+                    Yes! In the Settings page, you can choose from several languages (Bahasa Indonesia, English, Mandarin, Japanese). The AI will respond in your selected language, and the voice input will also be configured for that language to improve accuracy.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
@@ -162,7 +202,7 @@ export default function SettingsPage() {
                 <AccordionItem value="item-4">
                     <AccordionTrigger>Is my data private?</AccordionTrigger>
                     <AccordionContent>
-                    Yes. Your chat histories and custom prompt templates are stored locally in your browser's storage. This data is not sent to our servers for storage, except for the current conversation which is sent to the AI model for processing and is not stored long-term.
+                    Yes. Your chat histories, custom prompt templates, and settings are stored locally in your browser's storage. This data is not sent to our servers for storage, except for the current conversation which is sent to the AI model for processing and is not stored long-term.
                     </AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-5">
