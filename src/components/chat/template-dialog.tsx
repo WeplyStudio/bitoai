@@ -107,7 +107,7 @@ export function TemplateDialog({ isOpen, onOpenChange, onSelectTemplate }: Templ
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                             {Object.entries(presetTemplates).flatMap(([category, templateList]) => 
                                 templateList.map((template, index) => (
-                                    <TemplateCard key={`preset-${index}`} template={{...template, id: `preset-${category}-${index}`}} onSelect={onSelectTemplate} />
+                                    <TemplateCard key={`preset-${category}-${index}`} template={{...template, id: `preset-${category}-${index}`}} onSelect={onSelectTemplate} />
                                 ))
                             )}
                         </div>
