@@ -1,7 +1,7 @@
 
 'use client';
 
-import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useMemo } from 'react';
 
 const PROJECTS_KEY = 'bito-ai-projects';
 const ACTIVE_PROJECT_ID_KEY = 'bito-ai-active-project-id';
@@ -66,14 +66,14 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   useEffect(() => {
     try {
         migrateOldChatHistory();
-        const savedProjects = JSON.parse(localStorage.getItem(PROJECTS_KEY) || '[]');
+        const savedProjectsRaw = localStorage.getItem(PROJECTS_KEY);
+        const savedProjects = savedProjectsRaw ? JSON.parse(savedProjectsRaw) : [];
         const savedActiveId = localStorage.getItem(ACTIVE_PROJECT_ID_KEY);
 
         if (savedProjects.length > 0) {
             setProjects(savedProjects);
             setActiveProjectId(savedActiveId && savedProjects.some((p: Project) => p.id === savedActiveId) ? savedActiveId : savedProjects[0].id);
-        } else {
-            // Create a default project if none exist
+        } else if (!savedProjectsRaw) { // Only create a new project if there's nothing in storage
             const newProject: Project = {
                 id: `project-${Date.now()}`,
                 name: 'Untitled Project',
@@ -85,7 +85,6 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
         }
     } catch (error) {
         console.error("Failed to load projects from localStorage", error);
-        // Handle potential corrupted data
         localStorage.removeItem(PROJECTS_KEY);
         localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
     } finally {
@@ -119,60 +118,44 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [projects]);
 
-  const updateProjectProperty = useCallback((id: string, updates: Partial<Omit<Project, 'id'>>) => {
-      setProjects(prev =>
-          prev.map(p => (p.id === id ? { ...p, ...updates } : p))
-      );
+  const updateProjectName = useCallback((id: string, name: string) => {
+    setProjects(prev =>
+        prev.map(p => (p.id === id ? { ...p, name } : p))
+    );
   }, []);
-
+  
   const updateActiveProjectSummary = useCallback((summary: string) => {
     if (activeProjectId) {
-      updateProjectProperty(activeProjectId, { summary });
+      setProjects(prev =>
+        prev.map(p => (p.id === activeProjectId ? { ...p, summary } : p))
+      );
     }
-  }, [activeProjectId, updateProjectProperty]);
+  }, [activeProjectId]);
 
-  const updateProjectName = useCallback((id: string, name: string) => {
-    updateProjectProperty(id, { name });
-  }, [updateProjectProperty]);
-  
   const deleteProject = useCallback((idToDelete: string) => {
-    // Remove associated chat history
     const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
     delete allHistories[idToDelete];
     localStorage.setItem(CHAT_HISTORIES_KEY, JSON.stringify(allHistories));
 
-    let newActiveProjectId = activeProjectId;
-
     const remainingProjects = projects.filter(p => p.id !== idToDelete);
-
+    
     if (activeProjectId === idToDelete) {
         if (remainingProjects.length > 0) {
-            // Switch to the most recent project
             const mostRecentProject = [...remainingProjects].sort((a,b) => b.createdAt - a.createdAt)[0];
-            newActiveProjectId = mostRecentProject.id;
+            setActiveProjectId(mostRecentProject.id);
         } else {
-            // If no projects are left, create a new one
-            const newProject: Project = {
-                id: `project-${Date.now()}`,
-                name: 'Untitled Project',
-                summary: 'Start a new conversation!',
-                createdAt: Date.now()
-            };
-            setProjects([newProject]);
-            setActiveProjectId(newProject.id);
+            createProject();
+            // The createProject function will set the new projects and active ID.
+            // We just need to return here to avoid setProjects being called twice.
             return;
         }
     }
-    
     setProjects(remainingProjects);
-    setActiveProjectId(newActiveProjectId);
+  }, [activeProjectId, projects, createProject]);
 
-  }, [activeProjectId, projects]);
+  const activeProject = useMemo(() => projects.find(p => p.id === activeProjectId), [projects, activeProjectId]);
 
-
-  const activeProject = projects.find(p => p.id === activeProjectId);
-
-  const value = {
+  const value = useMemo(() => ({
     projects,
     activeProjectId,
     activeProject,
@@ -181,7 +164,16 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     updateActiveProjectSummary,
     updateProjectName,
     deleteProject
-  };
+  }), [
+    projects, 
+    activeProjectId, 
+    activeProject, 
+    createProject, 
+    switchProject, 
+    updateActiveProjectSummary, 
+    updateProjectName, 
+    deleteProject
+  ]);
 
   return (
     <ProjectContext.Provider value={value}>
