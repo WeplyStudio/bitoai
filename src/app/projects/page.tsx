@@ -42,87 +42,89 @@ export default function ProjectsPage() {
   const sortedProjects = [...projects].sort((a, b) => b.createdAt - a.createdAt);
 
   return (
-    <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
-      <div className="flex items-center justify-between space-y-2 mb-4">
-        <h2 className="text-3xl font-bold tracking-tight">Manage Projects</h2>
-      </div>
-      
-      {projects.length === 0 ? (
-        <div className="text-center py-12">
-            <h3 className="text-xl font-semibold">No Projects Yet</h3>
-            <p className="text-muted-foreground mt-2">Create a new project from the sidebar to get started!</p>
+    <div className="p-4 md:p-8">
+      <div className="max-w-7xl mx-auto space-y-6">
+        <div className="flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight">Manage Projects</h2>
         </div>
-      ) : (
-        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3">
-          {sortedProjects.map((project) => (
-            <Card key={project.id} className="flex flex-col">
-              <CardHeader>
-                {editingProjectId === project.id ? (
-                  <div className="flex items-center gap-2">
-                    <Input 
-                      value={newProjectName} 
-                      onChange={(e) => setNewProjectName(e.target.value)}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') handleSaveName(project.id);
-                        if (e.key === 'Escape') handleCancelEditing();
-                      }}
-                      autoFocus
-                      onBlur={handleCancelEditing}
-                      className="h-9"
-                    />
-                  </div>
-                ) : (
-                  <CardTitle className="flex items-start justify-between gap-2">
-                    <span className="truncate break-words">{project.name}</span>
-                    <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => handleStartEditing(project)}>
-                      <Edit className="h-4 w-4" />
-                    </Button>
-                  </CardTitle>
-                )}
-                <CardDescription>
-                  Created {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="flex-grow">
-                <p className="text-sm text-muted-foreground line-clamp-3">{project.summary}</p>
-              </CardContent>
-              <CardFooter className="flex justify-end gap-2">
-                {editingProjectId === project.id ? (
-                    <>
-                        <Button variant="ghost" onClick={handleCancelEditing}>Cancel</Button>
-                        <Button onClick={() => handleSaveName(project.id)}>
-                            <Save className="mr-2 h-4 w-4" /> Save
-                        </Button>
-                    </>
-                ) : (
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive" size="sm">
-                        <Trash2 className="mr-2 h-4 w-4" /> Delete
+        
+        {projects.length === 0 ? (
+          <div className="text-center py-12">
+              <h3 className="text-xl font-semibold">No Projects Yet</h3>
+              <p className="text-muted-foreground mt-2">Create a new project from the sidebar to get started!</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+            {sortedProjects.map((project) => (
+              <Card key={project.id} className="flex flex-col">
+                <CardHeader>
+                  {editingProjectId === project.id ? (
+                    <div className="flex items-center gap-2">
+                      <Input 
+                        value={newProjectName} 
+                        onChange={(e) => setNewProjectName(e.target.value)}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') handleSaveName(project.id);
+                          if (e.key === 'Escape') handleCancelEditing();
+                        }}
+                        autoFocus
+                        onBlur={handleCancelEditing}
+                        className="h-9"
+                      />
+                    </div>
+                  ) : (
+                    <CardTitle className="flex items-start justify-between gap-2">
+                      <span className="truncate break-words">{project.name}</span>
+                      <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => handleStartEditing(project)}>
+                        <Edit className="h-4 w-4" />
                       </Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently delete your project
-                          and its entire chat history.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => handleDeleteProject(project.id)}>
-                          Delete
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
-                )}
-              </CardFooter>
-            </Card>
-          ))}
-        </div>
-      )}
+                    </CardTitle>
+                  )}
+                  <CardDescription>
+                    Created {formatDistanceToNow(new Date(project.createdAt), { addSuffix: true })}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="flex-grow">
+                  <p className="text-sm text-muted-foreground line-clamp-3">{project.summary}</p>
+                </CardContent>
+                <CardFooter className="flex justify-end gap-2">
+                  {editingProjectId === project.id ? (
+                      <>
+                          <Button variant="ghost" onClick={handleCancelEditing}>Cancel</Button>
+                          <Button onClick={() => handleSaveName(project.id)}>
+                              <Save className="mr-2 h-4 w-4" /> Save
+                          </Button>
+                      </>
+                  ) : (
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive" size="sm">
+                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                        </Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently delete your project
+                            and its entire chat history.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => handleDeleteProject(project.id)}>
+                            Delete
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  )}
+                </CardFooter>
+              </Card>
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
