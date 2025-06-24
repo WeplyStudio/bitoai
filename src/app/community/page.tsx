@@ -10,6 +10,7 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { SendHorizonal } from 'lucide-react';
 import { UserIcon } from '@/components/icons';
 import { formatDistanceToNow } from 'date-fns';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 interface Message {
   _id: string;
@@ -26,6 +27,7 @@ export default function CommunityPage() {
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
+  const { t } = useLanguage();
 
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -37,8 +39,8 @@ export default function CommunityPage() {
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Could not load community messages.',
+        title: t('error'),
+        description: t('errorLoadCommunityMessages'),
       });
     } finally {
       setIsLoading(false);
@@ -77,8 +79,8 @@ export default function CommunityPage() {
     } catch (error) {
       toast({
         variant: 'destructive',
-        title: 'Error',
-        description: 'Could not send your message. Please try again.',
+        title: t('error'),
+        description: t('errorSendCommunityMessage'),
       });
     } finally {
       setIsSending(false);
@@ -89,8 +91,8 @@ export default function CommunityPage() {
     <div className="flex flex-col h-screen bg-muted/30">
       <header className="flex items-center p-4 border-b bg-card">
         <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
-          <h2 className="text-lg font-semibold">Community Chat</h2>
-          <span className="text-sm text-muted-foreground">Global anonymous chat room</span>
+          <h2 className="text-lg font-semibold">{t('communityChatTitle')}</h2>
+          <span className="text-sm text-muted-foreground">{t('communityChatDescription')}</span>
         </div>
       </header>
 
@@ -98,7 +100,7 @@ export default function CommunityPage() {
         <ScrollArea className="h-full" viewportRef={scrollViewportRef}>
           <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
             {isLoading && messages.length === 0 ? (
-              <p className="text-center text-muted-foreground">Loading messages...</p>
+              <p className="text-center text-muted-foreground">{t('communityLoading')}</p>
             ) : (
               messages.map((msg) => (
                 <div key={msg._id} className="group flex items-start space-x-4">
@@ -120,7 +122,7 @@ export default function CommunityPage() {
               ))
             )}
              {messages.length === 0 && !isLoading && (
-              <p className="text-center text-muted-foreground">No messages yet. Be the first to say something!</p>
+              <p className="text-center text-muted-foreground">{t('communityNoMessages')}</p>
              )}
           </div>
         </ScrollArea>
@@ -133,7 +135,7 @@ export default function CommunityPage() {
               <Textarea
                 value={newMessage}
                 onChange={(e) => setNewMessage(e.target.value)}
-                placeholder="Type your message..."
+                placeholder={t('communityTypeMessage')}
                 rows={2}
                 maxLength={1000}
                 className="pr-12 resize-none"
@@ -147,14 +149,14 @@ export default function CommunityPage() {
                 disabled={isSending || !newMessage.trim()}
               >
                 <SendHorizonal className="h-4 w-4" />
-                <span className="sr-only">Send</span>
+                <span className="sr-only">{t('send')}</span>
               </Button>
             </div>
             <div className='flex items-center gap-2'>
               <Input
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
-                placeholder="Your name (optional)"
+                placeholder={t('communityAuthorPlaceholder')}
                 maxLength={30}
                 className="h-9"
                 disabled={isSending}

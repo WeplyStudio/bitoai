@@ -120,6 +120,44 @@ export const zh = {
   promptDeleted: '提示已删除',
   promptDeletedDescription: '自定义提示已被删除。',
   
+  // Community Page
+  communityChatTitle: '社区聊天',
+  communityChatDescription: '全球匿名聊天室',
+  communityLoading: '正在加载消息...',
+  communityNoMessages: '还没有消息。成为第一个发言的人吧！',
+  communityTypeMessage: '输入您的消息...',
+  communityAuthorPlaceholder: '您的名字（可选）',
+  errorLoadCommunityMessages: '无法加载社区消息。',
+  errorSendCommunityMessage: '无法发送您的消息。请重试。',
+  
+  // Chat Panel & Toasts
+  chatRenamed: '聊天已重命名',
+  chatRenamedDescription: '此聊天已自动命名为“{{projectName}}”。',
+  fileTooLarge: '文件太大',
+  fileTooLargeDescription: '请上传小于4MB的图片。',
+  imageProcessError: '图片错误',
+  imageProcessErrorDescription: '处理图片文件失败。请尝试其他文件。',
+  feedbackError: '反馈错误',
+  feedbackErrorPrompt: '无法对此消息提供反馈。',
+  feedbackErrorNoPrompt: '找不到用于反馈的原始提示。',
+  feedbackSuccess: '已收到反馈',
+  feedbackSuccessDescription: '响应已更新。',
+  feedbackIncorporateError: '未能采纳反馈。',
+  copyCode: '复制代码',
+
+  // Feedback Dialog
+  feedbackTitle: '提供反馈',
+  feedbackDescription: '我们如何改进此响应？您的反馈将用于生成更好的答案。',
+  feedbackPlaceholder: '例如，让解释更简单。',
+  submitting: '正在提交...',
+  submitFeedback: '提交反馈',
+
+  // Image Preview Dialog
+  imagePreviewTitle: '图片预览',
+  imagePreviewAlt: '放大预览',
+  close: '关闭',
+  download: '下载',
+
   // Other
   save: '保存',
   cancel: '取消',

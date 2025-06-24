@@ -120,6 +120,44 @@ export const en = {
   promptDeleted: 'Prompt Deleted',
   promptDeletedDescription: 'The custom prompt has been removed.',
 
+  // Community Page
+  communityChatTitle: 'Community Chat',
+  communityChatDescription: 'Global anonymous chat room',
+  communityLoading: 'Loading messages...',
+  communityNoMessages: 'No messages yet. Be the first to say something!',
+  communityTypeMessage: 'Type your message...',
+  communityAuthorPlaceholder: 'Your name (optional)',
+  errorLoadCommunityMessages: 'Could not load community messages.',
+  errorSendCommunityMessage: 'Could not send your message. Please try again.',
+  
+  // Chat Panel & Toasts
+  chatRenamed: 'Chat Renamed',
+  chatRenamedDescription: 'This chat was automatically named "{{projectName}}".',
+  fileTooLarge: 'File too large',
+  fileTooLargeDescription: 'Please upload an image smaller than 4MB.',
+  imageProcessError: 'Image Error',
+  imageProcessErrorDescription: 'Failed to process the image file. Please try another file.',
+  feedbackError: 'Feedback Error',
+  feedbackErrorPrompt: 'Cannot provide feedback on this message.',
+  feedbackErrorNoPrompt: 'Cannot find original prompt for feedback.',
+  feedbackSuccess: 'Feedback received',
+  feedbackSuccessDescription: 'The response has been updated.',
+  feedbackIncorporateError: 'Failed to incorporate feedback.',
+  copyCode: 'Copy code',
+
+  // Feedback Dialog
+  feedbackTitle: 'Provide Feedback',
+  feedbackDescription: 'How can we improve this response? Your feedback will be used to generate a better answer.',
+  feedbackPlaceholder: 'e.g., Make the explanation simpler.',
+  submitting: 'Submitting...',
+  submitFeedback: 'Submit Feedback',
+
+  // Image Preview Dialog
+  imagePreviewTitle: 'Image Preview',
+  imagePreviewAlt: 'Enlarged preview',
+  close: 'Close',
+  download: 'Download',
+
   // Other
   save: 'Save',
   cancel: 'Cancel',

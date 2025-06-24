@@ -119,6 +119,44 @@ export const ja = {
   promptCreatedDescription: '「{{title}}」がプロンプトに追加されました。',
   promptDeleted: 'プロンプトが削除されました',
   promptDeletedDescription: 'カスタムプロンプトが削除されました。',
+  
+  // Community Page
+  communityChatTitle: 'コミュニティチャット',
+  communityChatDescription: 'グローバルな匿名チャットルーム',
+  communityLoading: 'メッセージを読み込んでいます...',
+  communityNoMessages: 'まだメッセージはありません。最初に何か言ってみましょう！',
+  communityTypeMessage: 'メッセージを入力してください...',
+  communityAuthorPlaceholder: 'あなたの名前（任意）',
+  errorLoadCommunityMessages: 'コミュニティメッセージを読み込めませんでした。',
+  errorSendCommunityMessage: 'メッセージを送信できませんでした。もう一度お試しください。',
+
+  // Chat Panel & Toasts
+  chatRenamed: 'チャット名が変更されました',
+  chatRenamedDescription: 'このチャットは自動的に「{{projectName}}」と名付けられました。',
+  fileTooLarge: 'ファイルが大きすぎます',
+  fileTooLargeDescription: '4MB未満の画像をアップロードしてください。',
+  imageProcessError: '画像エラー',
+  imageProcessErrorDescription: '画像ファイルの処理に失敗しました。別のファイルをお試しください。',
+  feedbackError: 'フィードバックエラー',
+  feedbackErrorPrompt: 'このメッセージにフィードバックを提供できません。',
+  feedbackErrorNoPrompt: 'フィードバックの元のプロンプトが見つかりません。',
+  feedbackSuccess: 'フィードバックを受け取りました',
+  feedbackSuccessDescription: '応答が更新されました。',
+  feedbackIncorporateError: 'フィードバックの反映に失敗しました。',
+  copyCode: 'コードをコピー',
+
+  // Feedback Dialog
+  feedbackTitle: 'フィードバックを提供する',
+  feedbackDescription: 'この応答をどのように改善できますか？あなたのフィードバックはより良い回答を生成するために使用されます。',
+  feedbackPlaceholder: '例：説明をより簡単にしてください。',
+  submitting: '送信中...',
+  submitFeedback: 'フィードバックを送信',
+
+  // Image Preview Dialog
+  imagePreviewTitle: '画像プレビュー',
+  imagePreviewAlt: '拡大プレビュー',
+  close: '閉じる',
+  download: 'ダウンロード',
 
   // Other
   save: '保存',

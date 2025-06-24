@@ -145,8 +145,8 @@ export function ChatPanel() {
         if (result && result.projectName) {
           updateProjectName(activeProject.id, result.projectName);
           toast({
-            title: 'Chat Renamed',
-            description: `This chat was automatically named "${result.projectName}".`,
+            title: t('chatRenamed'),
+            description: t('chatRenamedDescription', { projectName: result.projectName }),
           });
         }
       } catch (error) {
@@ -157,7 +157,7 @@ export function ChatPanel() {
     };
   
     autoRenameProject();
-  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast]);
+  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast, t]);
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
@@ -168,8 +168,8 @@ export function ChatPanel() {
 
       const response = await chat({
         messages: historyForApi,
-        mode: aiMode,
-        language: language,
+        mode: aiMode as any,
+        language: language as any,
       });
 
       if (!response || !response.content) {
@@ -187,13 +187,13 @@ export function ChatPanel() {
       console.error('Error during chat:', error);
       toast({
         variant: 'destructive',
-        title: 'Error',
+        title: t('error'),
         description: error.message || 'Failed to get a response from Bito AI. Please try again.',
       });
     } finally {
       setIsLoading(false);
     }
-  }, [aiMode, language, toast]);
+  }, [aiMode, language, toast, t]);
 
   const handleSend = async (text: string, file?: File) => {
     if (isLoading || (!text.trim() && !file) || !activeProject) return;
@@ -204,8 +204,8 @@ export function ChatPanel() {
             if (file.size > 4 * 1024 * 1024) {
                 toast({
                     variant: 'destructive',
-                    title: 'File too large',
-                    description: 'Please upload an image smaller than 4MB.',
+                    title: t('fileTooLarge'),
+                    description: t('fileTooLargeDescription'),
                 });
                 return;
             }
@@ -214,8 +214,8 @@ export function ChatPanel() {
             console.error('Error converting file to data URI:', error);
             toast({
                 variant: 'destructive',
-                title: 'Error',
-                description: 'Failed to process the image file. Please try another file.',
+                title: t('imageProcessError'),
+                description: t('imageProcessErrorDescription'),
             });
             return;
         }
@@ -280,13 +280,13 @@ export function ChatPanel() {
 
     const messageIndex = messages.findIndex(m => m.id === feedbackMessage.id);
     if (messageIndex < 1) {
-      toast({ variant: 'destructive', title: 'Error', description: 'Cannot provide feedback on this message.' });
+      toast({ variant: 'destructive', title: t('feedbackError'), description: t('feedbackErrorPrompt') });
       return;
     }
 
     const originalUserMessage = messages[messageIndex - 1];
     if (originalUserMessage.role !== 'user') {
-      toast({ variant: 'destructive', title: 'Error', description: 'Cannot find original prompt for feedback.' });
+      toast({ variant: 'destructive', title: t('feedbackError'), description: t('feedbackErrorNoPrompt') });
       return;
     }
 
@@ -303,10 +303,10 @@ export function ChatPanel() {
       updatedMessages[messageIndex] = { ...updatedMessages[messageIndex], content: result.improvedResponse };
       setMessages(updatedMessages);
 
-      toast({ title: 'Feedback received', description: 'The response has been updated.' });
+      toast({ title: t('feedbackSuccess'), description: t('feedbackSuccessDescription') });
     } catch (error) {
       console.error('Error incorporating feedback:', error);
-      toast({ variant: 'destructive', title: 'Error', description: 'Failed to incorporate feedback.' });
+      toast({ variant: 'destructive', title: t('error'), description: t('feedbackIncorporateError') });
     } finally {
       setIsSubmittingFeedback(false);
       setFeedbackMessage(null);

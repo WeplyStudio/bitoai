@@ -25,6 +25,8 @@ interface ChatMessageProps {
 }
 
 const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate'>) => {
+  const { t } = useLanguage();
+  
   const CodeBlock = ({ node, ...props }: any) => {
     const [hasCopied, setHasCopied] = useState(false);
     const codeString = node?.children[0]?.children[0]?.value;
@@ -48,7 +50,7 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
           variant="ghost"
           onClick={onCopy}
           className="absolute top-2 right-2 h-7 w-7 text-zinc-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
-          aria-label="Copy code"
+          aria-label={t('copyCode')}
         >
           {hasCopied ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
         </Button>

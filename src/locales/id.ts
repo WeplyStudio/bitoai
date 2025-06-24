@@ -120,6 +120,44 @@ export const id = {
   promptDeleted: 'Prompt Dihapus',
   promptDeletedDescription: 'Prompt kustom telah dihapus.',
 
+  // Community Page
+  communityChatTitle: 'Obrolan Komunitas',
+  communityChatDescription: 'Ruang obrolan anonim global',
+  communityLoading: 'Memuat pesan...',
+  communityNoMessages: 'Belum ada pesan. Jadilah yang pertama mengatakan sesuatu!',
+  communityTypeMessage: 'Ketik pesan Anda...',
+  communityAuthorPlaceholder: 'Nama Anda (opsional)',
+  errorLoadCommunityMessages: 'Tidak dapat memuat pesan komunitas.',
+  errorSendCommunityMessage: 'Tidak dapat mengirim pesan Anda. Silakan coba lagi.',
+  
+  // Chat Panel & Toasts
+  chatRenamed: 'Obrolan Dinamai Ulang',
+  chatRenamedDescription: 'Obrolan ini secara otomatis dinamai "{{projectName}}".',
+  fileTooLarge: 'File terlalu besar',
+  fileTooLargeDescription: 'Harap unggah gambar yang lebih kecil dari 4MB.',
+  imageProcessError: 'Kesalahan Gambar',
+  imageProcessErrorDescription: 'Gagal memproses file gambar. Silakan coba file lain.',
+  feedbackError: 'Kesalahan Umpan Balik',
+  feedbackErrorPrompt: 'Tidak dapat memberikan umpan balik pada pesan ini.',
+  feedbackErrorNoPrompt: 'Tidak dapat menemukan prompt asli untuk umpan balik.',
+  feedbackSuccess: 'Umpan balik diterima',
+  feedbackSuccessDescription: 'Respons telah diperbarui.',
+  feedbackIncorporateError: 'Gagal memasukkan umpan balik.',
+  copyCode: 'Salin kode',
+
+  // Feedback Dialog
+  feedbackTitle: 'Berikan Umpan Balik',
+  feedbackDescription: 'Bagaimana kami dapat meningkatkan respons ini? Umpan balik Anda akan digunakan untuk menghasilkan jawaban yang lebih baik.',
+  feedbackPlaceholder: 'contoh, Buat penjelasannya lebih sederhana.',
+  submitting: 'Mengirim...',
+  submitFeedback: 'Kirim Umpan Balik',
+
+  // Image Preview Dialog
+  imagePreviewTitle: 'Pratinjau Gambar',
+  imagePreviewAlt: 'Pratinjau yang diperbesar',
+  close: 'Tutup',
+  download: 'Unduh',
+
   // Other
   save: 'Simpan',
   cancel: 'Batal',
