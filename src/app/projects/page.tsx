@@ -9,12 +9,14 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { useToast } from '@/hooks/use-toast';
 import { formatDistanceToNow } from 'date-fns';
 import { Trash2, Edit, Save } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 export default function ProjectsPage() {
   const { projects, updateProjectName, deleteProject } = useProjects();
   const [editingProjectId, setEditingProjectId] = useState<string | null>(null);
   const [newProjectName, setNewProjectName] = useState('');
   const { toast } = useToast();
+  const { t } = useLanguage();
 
   const handleStartEditing = (project: Project) => {
     setEditingProjectId(project.id);
@@ -28,15 +30,16 @@ export default function ProjectsPage() {
 
   const handleSaveName = (projectId: string) => {
     if (newProjectName.trim()) {
-      updateProjectName(projectId, newProjectName.trim());
-      toast({ title: 'Chat Renamed', description: `Chat has been renamed to "${newProjectName.trim()}".` });
+      const trimmedName = newProjectName.trim();
+      updateProjectName(projectId, trimmedName);
+      toast({ title: t('chatRenamed'), description: t('chatRenamedToastDescription', { projectName: trimmedName }) });
       handleCancelEditing();
     }
   };
 
   const handleDeleteProject = (projectId: string) => {
     deleteProject(projectId);
-    toast({ variant: 'destructive', title: 'Chat Deleted', description: 'The chat and its history have been deleted.' });
+    toast({ variant: 'destructive', title: t('chatDeleted'), description: t('chatDeletedDescription') });
   };
   
   const sortedProjects = [...projects].sort((a, b) => b.createdAt - a.createdAt);
@@ -45,13 +48,13 @@ export default function ProjectsPage() {
     <div className="p-4 md:p-8">
       <div className="max-w-7xl mx-auto space-y-6">
         <div className="flex items-center justify-between">
-          <h2 className="text-3xl font-bold tracking-tight">Manage Chats</h2>
+          <h2 className="text-3xl font-bold tracking-tight">{t('manageChatsTitle')}</h2>
         </div>
         
         {projects.length === 0 ? (
           <div className="text-center py-12">
-              <h3 className="text-xl font-semibold">No Chats Yet</h3>
-              <p className="text-muted-foreground mt-2">Create a new chat from the sidebar to get started!</p>
+              <h3 className="text-xl font-semibold">{t('noChatsYet')}</h3>
+              <p className="text-muted-foreground mt-2">{t('noChatsYetDescription')}</p>
           </div>
         ) : (
           <div className="grid max-w-md mx-auto gap-6 sm:max-w-none sm:mx-0 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -90,30 +93,29 @@ export default function ProjectsPage() {
                 <CardFooter className="flex justify-end gap-2">
                   {editingProjectId === project.id ? (
                       <>
-                          <Button variant="ghost" onClick={handleCancelEditing}>Cancel</Button>
+                          <Button variant="ghost" onClick={handleCancelEditing}>{t('cancel')}</Button>
                           <Button onClick={() => handleSaveName(project.id)}>
-                              <Save className="mr-2 h-4 w-4" /> Save
+                              <Save className="mr-2 h-4 w-4" /> {t('save')}
                           </Button>
                       </>
                   ) : (
                     <AlertDialog>
                       <AlertDialogTrigger asChild>
                         <Button variant="destructive" size="sm">
-                          <Trash2 className="mr-2 h-4 w-4" /> Delete
+                          <Trash2 className="mr-2 h-4 w-4" /> {t('delete')}
                         </Button>
                       </AlertDialogTrigger>
                       <AlertDialogContent>
                         <AlertDialogHeader>
-                          <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                          <AlertDialogTitle>{t('areYouSure')}</AlertDialogTitle>
                           <AlertDialogDescription>
-                            This action cannot be undone. This will permanently delete your chat
-                            and its entire chat history.
+                            {t('deleteChatConfirmation')}
                           </AlertDialogDescription>
                         </AlertDialogHeader>
                         <AlertDialogFooter>
-                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
                           <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => handleDeleteProject(project.id)}>
-                            Delete
+                            {t('delete')}
                           </AlertDialogAction>
                         </AlertDialogFooter>
                       </AlertDialogContent>

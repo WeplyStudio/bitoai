@@ -158,6 +158,15 @@ export const zh = {
   close: '关闭',
   download: '下载',
 
+  // Projects/Manage Chats Page
+  manageChatsTitle: '管理聊天',
+  noChatsYet: '尚无聊天',
+  noChatsYetDescription: '从侧边栏创建一个新聊天以开始！',
+  deleteChatConfirmation: '此操作无法撤销。这将永久删除您的聊天及其全部历史记录。',
+  chatRenamedToastDescription: '聊天已重命名为“{{projectName}}”。',
+  chatDeleted: '聊天已删除',
+  chatDeletedDescription: '该聊天及其历史记录已被删除。',
+
   // Other
   save: '保存',
   cancel: '取消',

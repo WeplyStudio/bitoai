@@ -158,6 +158,15 @@ export const ja = {
   close: '閉じる',
   download: 'ダウンロード',
 
+  // Projects/Manage Chats Page
+  manageChatsTitle: 'チャットの管理',
+  noChatsYet: 'まだチャットがありません',
+  noChatsYetDescription: 'サイドバーから新しいチャットを作成して始めましょう！',
+  deleteChatConfirmation: 'この操作は元に戻せません。これにより、チャットとその履歴全体が完全に削除されます。',
+  chatRenamedToastDescription: 'チャットの名前が「{{projectName}}」に変更されました。',
+  chatDeleted: 'チャットが削除されました',
+  chatDeletedDescription: 'チャットとその履歴が削除されました。',
+
   // Other
   save: '保存',
   cancel: 'キャンセル',

@@ -158,6 +158,15 @@ export const en = {
   close: 'Close',
   download: 'Download',
 
+  // Projects/Manage Chats Page
+  manageChatsTitle: 'Manage Chats',
+  noChatsYet: 'No Chats Yet',
+  noChatsYetDescription: 'Create a new chat from the sidebar to get started!',
+  deleteChatConfirmation: 'This action cannot be undone. This will permanently delete your chat and its entire chat history.',
+  chatRenamedToastDescription: 'Chat has been renamed to "{{projectName}}".',
+  chatDeleted: 'Chat Deleted',
+  chatDeletedDescription: 'The chat and its history have been deleted.',
+
   // Other
   save: 'Save',
   cancel: 'Cancel',

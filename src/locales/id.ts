@@ -158,6 +158,15 @@ export const id = {
   close: 'Tutup',
   download: 'Unduh',
 
+  // Projects/Manage Chats Page
+  manageChatsTitle: 'Kelola Obrolan',
+  noChatsYet: 'Belum Ada Obrolan',
+  noChatsYetDescription: 'Buat obrolan baru dari bilah sisi untuk memulai!',
+  deleteChatConfirmation: 'Tindakan ini tidak dapat dibatalkan. Ini akan menghapus obrolan Anda dan seluruh riwayatnya secara permanen.',
+  chatRenamedToastDescription: 'Obrolan telah diganti namanya menjadi "{{projectName}}".',
+  chatDeleted: 'Obrolan Dihapus',
+  chatDeletedDescription: 'Obrolan dan riwayatnya telah dihapus.',
+
   // Other
   save: 'Simpan',
   cancel: 'Batal',
