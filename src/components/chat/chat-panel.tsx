@@ -26,8 +26,10 @@ const suggestionIcons: { [key: string]: React.ElementType } = {
     "Write code": Code,
 }
 
-const CHAT_HISTORY_KEY = 'bito-ai-chat-histories';
+const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 const AI_MODE_KEY = 'bito-ai-mode';
+const TEMPLATE_PROMPT_KEY = 'bito-ai-template-prompt';
+
 
 const toDataUri = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {
@@ -60,15 +62,15 @@ export function ChatPanel() {
   const [editedContent, setEditedContent] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
 
-  const { activeProject, createProject, updateProjectName, updateActiveProjectSummary } = useProjects();
+  const { activeProject, createProject, updateProjectName } = useProjects();
 
   useEffect(() => {
-    const openDialog = () => setTemplateDialogOpen(true);
-    window.addEventListener('openTemplates', openDialog);
-    return () => {
-      window.removeEventListener('openTemplates', openDialog);
-    };
-  }, []);
+    const templatePrompt = localStorage.getItem(TEMPLATE_PROMPT_KEY);
+    if (templatePrompt) {
+        setInputText(templatePrompt);
+        localStorage.removeItem(TEMPLATE_PROMPT_KEY);
+    }
+  }, [isMounted]);
 
   useEffect(() => {
     try {
@@ -76,7 +78,7 @@ export function ChatPanel() {
       setAiMode(savedMode);
 
       if (activeProject) {
-        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
+        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
         const projectHistory = allHistories[activeProject.id] || [];
         setMessages(projectHistory);
       } else {
@@ -108,9 +110,9 @@ export function ChatPanel() {
   useEffect(() => {
     if (isMounted && activeProject && !editingMessageId) {
       try {
-        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORY_KEY) || '{}');
+        const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
         allHistories[activeProject.id] = messages;
-        localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(allHistories));
+        localStorage.setItem(CHAT_HISTORIES_KEY, JSON.stringify(allHistories));
       } catch (error) {
         console.error("Failed to save messages to localStorage", error);
       }
@@ -119,8 +121,6 @@ export function ChatPanel() {
 
   useEffect(() => {
     const autoRenameProject = async () => {
-      // Trigger after the first AI response (user message + AI response = 2 messages).
-      // Only run for projects that haven't been named yet.
       if (
         !activeProject ||
         isLoading ||
@@ -221,6 +221,7 @@ export function ChatPanel() {
     };
     const updatedMessages = [...messages, newUserMessage];
     setMessages(updatedMessages);
+    setInputText('');
     await callChatApi(updatedMessages);
   };
 

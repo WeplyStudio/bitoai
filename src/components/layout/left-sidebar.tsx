@@ -28,14 +28,6 @@ const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, t
   );
 };
 
-const NavButton = ({ icon: Icon, text, badge, onClick }: { icon: React.ElementType, text: string, badge?: string, onClick?: () => void }) => (
-    <Button variant="ghost" className="w-full justify-start text-muted-foreground hover:text-foreground" onClick={onClick}>
-      <Icon className="mr-2 h-4 w-4" />
-      <span>{text}</span>
-      {badge && <Badge variant="secondary" className="ml-auto">{badge}</Badge>}
-    </Button>
-  );
-
 export const LeftSidebarContent = () => {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
@@ -47,10 +39,6 @@ export const LeftSidebarContent = () => {
 
     const handleNewProject = () => {
         createProject();
-    };
-
-    const handleOpenTemplates = () => {
-        window.dispatchEvent(new Event('openTemplates'));
     };
 
     return (
@@ -75,7 +63,7 @@ export const LeftSidebarContent = () => {
                 <NavItem icon={MessageSquare} text="AI Chat" href="/" />
                 <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
                 <NavItem icon={Folder} text="Chats" href="/projects" />
-                <NavButton icon={FileText} text="Templates" onClick={handleOpenTemplates} />
+                <NavItem icon={FileText} text="Templates" href="/templates" />
             </div>
             
             <div className="space-y-2 p-2 border-t">
