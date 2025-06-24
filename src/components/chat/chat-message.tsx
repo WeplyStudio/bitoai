@@ -95,69 +95,67 @@ export function ChatMessage({
 
   if (isUser) {
     return (
-      <div className="group flex justify-end">
-        <div className="flex flex-col items-end gap-1 w-full max-w-[95%] sm:max-w-[85%] md:max-w-[75%] lg:max-w-[70%]">
-          {isEditing ? (
-            <div className="w-full space-y-2">
-              <Textarea 
-                  value={editedContent}
-                  onChange={(e) => onEditedContentChange(e.target.value)}
-                  className="w-full"
-                  rows={3}
-                  autoFocus
-              />
-              <div className="flex justify-end gap-2">
-                  <Button variant="ghost" size="sm" onClick={onCancelEdit}>
-                      <X className="h-4 w-4 mr-1"/>
-                      Cancel
-                  </Button>
-                  <Button size="sm" onClick={handleSave}>
-                      <Save className="h-4 w-4 mr-1"/>
-                      Save & Submit
-                  </Button>
-              </div>
+      <div className="group flex items-start gap-3 justify-end">
+        {isEditing ? (
+          <div className="w-full max-w-[80%] space-y-2">
+            <Textarea 
+                value={editedContent}
+                onChange={(e) => onEditedContentChange(e.target.value)}
+                className="w-full"
+                rows={3}
+                autoFocus
+            />
+            <div className="flex justify-end gap-2">
+                <Button variant="ghost" size="sm" onClick={onCancelEdit}>
+                    <X className="h-4 w-4 mr-1"/>
+                    Cancel
+                </Button>
+                <Button size="sm" onClick={handleSave}>
+                    <Save className="h-4 w-4 mr-1"/>
+                    Save & Submit
+                </Button>
             </div>
-          ) : (
-            <>
-              <div className="min-w-0 w-fit flex-shrink rounded-lg bg-primary text-primary-foreground px-4 py-3">
-                {message.content && (
-                  <div className="prose prose-sm dark:prose-invert max-w-none">
-                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                      {message.content}
-                    </ReactMarkdown>
-                  </div>
-                )}
-                {message.imageUrl && (
-                  <>
-                    <div 
-                      className={cn("mt-2 rounded-lg overflow-hidden border cursor-pointer", !message.content && "mt-0")}
-                      onClick={() => setIsModalOpen(true)}
-                    >
-                      <img 
-                        src={message.imageUrl} 
-                        alt="User upload" 
-                        className="max-w-sm w-full h-auto" 
-                      />
-                    </div>
-                    {isModalOpen && <ImagePreviewDialog isOpen={isModalOpen} onOpenChange={setIsModalOpen} imageUrl={message.imageUrl} />}
-                  </>
-                )}
-              </div>
-              <div className="flex items-center gap-2">
-                <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-                  <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-white" onClick={() => onStartEdit(message.id, message.content)}>
-                    <Pencil className="h-4 w-4" />
-                  </Button>
+          </div>
+        ) : (
+          <>
+            <div className="flex items-center self-center opacity-0 group-hover:opacity-100 transition-opacity">
+              <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
+                <Pencil className="h-4 w-4" />
+              </Button>
+            </div>
+
+            <div className="min-w-0 w-fit flex-shrink rounded-lg bg-primary text-primary-foreground px-4 py-3 max-w-[calc(100%-80px)]">
+              {message.content && (
+                <div className="prose prose-sm dark:prose-invert max-w-none break-words">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {message.content}
+                  </ReactMarkdown>
                 </div>
-                <Avatar className="h-8 w-8 border flex-shrink-0">
-                  <AvatarFallback>
-                    <UserIcon className="h-5 w-5" />
-                  </AvatarFallback>
-                </Avatar>
-              </div>
-            </>
-          )}
-        </div>
+              )}
+              {message.imageUrl && (
+                <>
+                  <div 
+                    className={cn("mt-2 rounded-lg overflow-hidden border cursor-pointer", !message.content && "mt-0")}
+                    onClick={() => setIsModalOpen(true)}
+                  >
+                    <img 
+                      src={message.imageUrl} 
+                      alt="User upload" 
+                      className="max-w-sm w-full h-auto" 
+                    />
+                  </div>
+                  {isModalOpen && <ImagePreviewDialog isOpen={isModalOpen} onOpenChange={setIsModalOpen} imageUrl={message.imageUrl} />}
+                </>
+              )}
+            </div>
+
+            <Avatar className="h-8 w-8 border flex-shrink-0">
+              <AvatarFallback>
+                <UserIcon className="h-5 w-5" />
+              </AvatarFallback>
+            </Avatar>
+          </>
+        )}
       </div>
     );
   }
