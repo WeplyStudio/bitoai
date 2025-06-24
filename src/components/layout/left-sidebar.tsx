@@ -11,6 +11,7 @@ import { BitoIcon } from '@/components/icons';
 import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
+import { useLanguage } from "@/contexts/LanguageProvider";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
@@ -32,6 +33,7 @@ export const LeftSidebarContent = () => {
     const { theme, setTheme } = useTheme();
     const [mounted, setMounted] = useState(false);
     const { createProject } = useProjects();
+    const { t } = useLanguage();
 
     useEffect(() => {
         setMounted(true);
@@ -51,23 +53,23 @@ export const LeftSidebarContent = () => {
             <div className="p-2 space-y-2">
                 <div className="relative">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
-                    <Input placeholder="Search" className="pl-9" />
+                    <Input placeholder={t('search')} className="pl-9" />
                 </div>
                  <Button variant="outline" className="w-full justify-start" onClick={handleNewProject}>
                     <Plus className="mr-2 h-4 w-4" />
-                    New Chat
+                    {t('newChat')}
                 </Button>
             </div>
 
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
-                <NavItem icon={MessageSquare} text="AI Chat" href="/" />
-                <NavItem icon={Users} text="Community" href="/community" badge="LIVE" />
-                <NavItem icon={Folder} text="Chats" href="/projects" />
-                <NavItem icon={FileText} text="Templates" href="/templates" />
+                <NavItem icon={MessageSquare} text={t('aiChat')} href="/" />
+                <NavItem icon={Users} text={t('community')} href="/community" badge={t('live')} />
+                <NavItem icon={Folder} text={t('chats')} href="/projects" />
+                <NavItem icon={FileText} text={t('templates')} href="/templates" />
             </div>
             
             <div className="space-y-2 p-2 border-t">
-                <NavItem icon={Settings} text="Settings &amp; Help" href="/settings" />
+                <NavItem icon={Settings} text={t('settingsAndHelp')} href="/settings" />
                 <div className="p-2 bg-muted rounded-lg flex items-center h-[56px]">
                     {mounted && (
                         <>
@@ -76,14 +78,14 @@ export const LeftSidebarContent = () => {
                                 onClick={() => setTheme('light')}
                                 className="w-1/2 flex items-center gap-2"
                             >
-                                <Sun size={16} /> Light
+                                <Sun size={16} /> {t('light')}
                             </Button>
                             <Button 
                                 variant={theme === 'dark' ? 'secondary' : 'ghost'}
                                 onClick={() => setTheme('dark')}
                                 className="w-1/2 flex items-center gap-2"
                             >
-                                <Moon size={16} /> Dark
+                                <Moon size={16} /> {t('dark')}
                             </Button>
                         </>
                     )}

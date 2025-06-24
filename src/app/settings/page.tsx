@@ -1,59 +1,45 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import { useLanguage } from '@/contexts/LanguageProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle, Languages } from 'lucide-react';
+import { Download, Mail, MessageCircle } from 'lucide-react';
 
 const AI_MODE_KEY = 'bito-ai-mode';
-const LANGUAGE_KEY = 'bito-ai-language';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 
 export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
-  const [language, setLanguage] = useState('id');
   const { toast } = useToast();
-  const [isMounted, setIsMounted] = useState(false);
+  const { language, setLanguage, t } = useLanguage();
 
   useEffect(() => {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
-    const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || 'id';
-    setLanguage(savedLanguage);
-    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    if(isMounted) {
-      localStorage.setItem(AI_MODE_KEY, aiMode);
-      window.dispatchEvent(new StorageEvent('storage', { key: AI_MODE_KEY, newValue: aiMode }));
-    }
-  }, [aiMode, isMounted]);
+    localStorage.setItem(AI_MODE_KEY, aiMode);
+  }, [aiMode]);
 
-  useEffect(() => {
-    if(isMounted) {
-      localStorage.setItem(LANGUAGE_KEY, language);
-      window.dispatchEvent(new StorageEvent('storage', { key: LANGUAGE_KEY, newValue: language }));
-    }
-  }, [language, isMounted]);
-  
   const handleModeChange = (value: string) => {
     setAiMode(value);
     toast({
-      title: 'AI Mode Updated',
-      description: `Bito AI will now respond in ${value} mode.`,
+      title: t('aiModeUpdated'),
+      description: t('aiModeUpdatedTo', { mode: value }),
     });
   };
 
   const handleLanguageChange = (value: string) => {
-    setLanguage(value);
+    setLanguage(value as any);
     toast({
-      title: 'Language Updated',
-      description: `Bito AI will now respond in the selected language.`,
+      title: t('languageUpdated'),
+      description: t('languageUpdatedMessage'),
     });
   };
 
@@ -63,8 +49,8 @@ export default function SettingsPage() {
       if (!allChatHistories || allChatHistories === '{}') {
         toast({
           variant: 'destructive',
-          title: 'Error',
-          description: 'No chat history to export.',
+          title: t('error'),
+          description: t('errorNoChatHistoryToExport'),
         });
         return;
       }
@@ -80,8 +66,8 @@ export default function SettingsPage() {
       URL.revokeObjectURL(url);
       
       toast({
-        title: 'Export Successful',
-        description: 'All of your chat histories have been downloaded.',
+        title: t('exportSuccessful'),
+        description: t('exportSuccessfulMessage'),
       });
 
     } catch (error) {
@@ -94,27 +80,23 @@ export default function SettingsPage() {
     }
   };
 
-  if (!isMounted) {
-      return null;
-  }
-
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2 mb-4">
-        <h2 className="text-3xl font-bold tracking-tight">Settings &amp; Help</h2>
+        <h2 className="text-3xl font-bold tracking-tight">{t('settingsTitle')}</h2>
       </div>
       <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Settings</CardTitle>
-            <CardDescription>Customize your Bito AI experience.</CardDescription>
+            <CardDescription>{t('settingsDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="ai-mode">AI Mode</Label>
+                  <Label htmlFor="ai-mode">{t('aiMode')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Choose the personality for Bito AI responses.
+                    {t('aiModeDescription')}
                   </p>
                 </div>
                 <Select value={aiMode} onValueChange={handleModeChange}>
@@ -134,9 +116,9 @@ export default function SettingsPage() {
             </div>
              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label htmlFor="language">Language</Label>
+                  <Label htmlFor="language">{t('language')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Choose the language for AI responses and voice input.
+                    {t('languageDescription')}
                   </p>
                 </div>
                 <Select value={language} onValueChange={handleLanguageChange}>
@@ -153,14 +135,14 @@ export default function SettingsPage() {
             </div>
             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                 <div className="space-y-0.5">
-                  <Label>Export Data</Label>
+                  <Label>{t('exportData')}</Label>
                   <p className="text-sm text-muted-foreground">
-                    Download your complete history for all chats as a JSON file.
+                    {t('exportDataDescription')}
                   </p>
                 </div>
                 <Button variant="outline" onClick={handleExportChat}>
                   <Download className="mr-2 h-4 w-4" />
-                  Export All Chats
+                  {t('exportAllChats')}
                 </Button>
             </div>
           </CardContent>
@@ -168,12 +150,12 @@ export default function SettingsPage() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Help &amp; Support</CardTitle>
-            <CardDescription>Find answers and get in touch.</CardDescription>
+            <CardTitle>{t('helpAndSupport')}</CardTitle>
+            <CardDescription>{t('helpAndSupportDescription')}</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <div>
-                <h3 className="text-lg font-medium mb-2">Frequently Asked Questions</h3>
+                <h3 className="text-lg font-medium mb-2">{t('faq')}</h3>
                 <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>What is Bito AI?</AccordionTrigger>
@@ -229,16 +211,16 @@ export default function SettingsPage() {
                 </Accordion>
             </div>
             <div>
-                <h3 className="text-lg font-medium mb-2">Contact Support</h3>
+                <h3 className="text-lg font-medium mb-2">{t('contactSupport')}</h3>
                 <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
                     <Button asChild variant="outline" className="justify-center w-full">
                         <a href="mailto:admin@weplystudio.my.id">
-                            <Mail className="mr-2 h-4 w-4" /> Email
+                            <Mail className="mr-2 h-4 w-4" /> {t('email')}
                         </a>
                     </Button>
                     <Button asChild variant="outline" className="justify-center w-full">
                         <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
-                             <MessageCircle className="mr-2 h-4 w-4" /> WhatsApp
+                             <MessageCircle className="mr-2 h-4 w-4" /> {t('whatsapp')}
                         </a>
                     </Button>
                 </div>

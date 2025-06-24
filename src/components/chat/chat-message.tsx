@@ -10,6 +10,7 @@ import type { Message } from './chat-panel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ImagePreviewDialog } from './image-preview-dialog';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 interface ChatMessageProps {
   message: Message;
@@ -104,6 +105,7 @@ const ChatMessageUser = ({
   onEditedContentChange
 }: Pick<ChatMessageProps, 'message' | 'onStartEdit' | 'onCancelEdit' | 'onSaveEdit' | 'isEditing' | 'editedContent' | 'onEditedContentChange'>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { t } = useLanguage();
 
   const handleSave = () => {
     if (editedContent.trim()) {
@@ -126,11 +128,11 @@ const ChatMessageUser = ({
             <div className="flex justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancelEdit}>
                 <X className="h-4 w-4 mr-1"/>
-                Cancel
+                {t('cancel')}
               </Button>
               <Button size="sm" onClick={handleSave}>
                 <Save className="h-4 w-4 mr-1"/>
-                Save & Submit
+                {t('saveAndSubmit')}
               </Button>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { SendHorizonal, Paperclip, Mic, Sparkles, X } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { cn } from '@/lib/utils';
 import { VoiceVisualizer } from './voice-visualizer';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 interface ChatInputProps {
   onSend: (message: string, file?: File) => void;
@@ -28,6 +29,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const { t } = useLanguage();
 
   const [isRecording, setIsRecording] = useState(false);
   const [isSpeechSupported, setIsSpeechSupported] = useState(false);
@@ -170,7 +172,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
               onChange={(e) => onChange(e.target.value)}
               onKeyDown={handleKeyDown}
               onInput={handleInput}
-              placeholder="Jelaskan gambar atau ajukan pertanyaan..."
+              placeholder={t('explainImageOrAsk')}
               rows={1}
               maxLength={3000}
               className="pr-12 resize-none max-h-48 border-0 focus-visible:ring-0 shadow-none p-0"
@@ -180,7 +182,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
             <div className="flex items-center justify-between flex-wrap gap-y-2 mt-auto">
               <div className="flex items-center gap-1 flex-wrap">
                   <Button type="button" variant="ghost" size="sm" className="text-muted-foreground" onClick={handleAttachClick}>
-                      <Paperclip className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Lampirkan</span>
+                      <Paperclip className="h-4 w-4" /> <span className="hidden sm:inline ml-1">{t('attach')}</span>
                   </Button>
                   <Button 
                       type="button" 
@@ -194,10 +196,10 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
                       disabled={!isSpeechSupported || isLoading}
                       title={isSpeechSupported ? (isRecording ? "Stop recording" : "Use microphone") : "Speech recognition not supported"}
                   >
-                      <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">{isRecording ? "Berhenti" : "Gunakan Mikrofon"}</span>
+                      <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">{isRecording ? t('stop') : t('useMicrophone')}</span>
                   </Button>
                   <Button type="button" variant="ghost" size="sm" className="text-muted-foreground" onClick={onBrowsePrompts}>
-                      <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Telusuri Prompt</span>
+                      <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">{t('browsePrompts')}</span>
                   </Button>
               </div>
               <span className="text-xs text-muted-foreground">{value.length}/3,000</span>
@@ -209,7 +211,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
                 disabled={isLoading || (!value.trim() && !file)}
             >
               <SendHorizonal className="h-4 w-4" />
-              <span className="sr-only">Kirim</span>
+              <span className="sr-only">{t('send')}</span>
             </Button>
           </div>
       </form>

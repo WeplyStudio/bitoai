@@ -7,6 +7,7 @@ import { chat } from '@/ai/flows/chat';
 import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 import { useProjects } from '@/contexts/ProjectProvider';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
@@ -28,7 +29,6 @@ const suggestionIcons: { [key: string]: React.ElementType } = {
 
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 const AI_MODE_KEY = 'bito-ai-mode';
-const LANGUAGE_KEY = 'bito-ai-language';
 const TEMPLATE_PROMPT_KEY = 'bito-ai-template-prompt';
 
 
@@ -58,13 +58,13 @@ export function ChatPanel() {
   const [isSubmittingFeedback, setIsSubmittingFeedback] = useState(false);
   const [isTemplateDialogOpen, setTemplateDialogOpen] = useState(false);
   const [aiMode, setAiMode] = useState('default');
-  const [language, setLanguage] = useState('id');
   
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
   const [editedContent, setEditedContent] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
 
   const { activeProject, createProject, updateProjectName } = useProjects();
+  const { language, t } = useLanguage();
 
   useEffect(() => {
     const templatePrompt = localStorage.getItem(TEMPLATE_PROMPT_KEY);
@@ -78,13 +78,10 @@ export function ChatPanel() {
     try {
       const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
       setAiMode(savedMode);
-      const savedLanguage = localStorage.getItem(LANGUAGE_KEY) || 'id';
-      setLanguage(savedLanguage);
 
       if (activeProject) {
         const allHistoriesRaw = localStorage.getItem(CHAT_HISTORIES_KEY) || '{}';
         const allHistories = JSON.parse(allHistoriesRaw);
-        // Filter out any null/undefined entries from history
         const projectHistory = (allHistories[activeProject.id] || []).filter(Boolean);
         setMessages(projectHistory);
       } else {
@@ -105,9 +102,6 @@ export function ChatPanel() {
     const handleStorageChange = (event: StorageEvent) => {
       if (event.key === AI_MODE_KEY && event.newValue) {
         setAiMode(event.newValue);
-      }
-      if (event.key === LANGUAGE_KEY && event.newValue) {
-        setLanguage(event.newValue);
       }
     };
     window.addEventListener('storage', handleStorageChange);
@@ -328,8 +322,8 @@ export function ChatPanel() {
         }
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">Welcome to Bito</h1>
-                <p className="text-muted-foreground mb-8 max-w-md">Get started by telling Bito a task and it can do the rest. Not sure where to start?</p>
+                <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('welcomeToBito')}</h1>
+                <p className="text-muted-foreground mb-8 max-w-md">{t('welcomeMessage')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
                     {prompts.map((prompt, i) => {
                         const Icon = getIcon(prompt);
@@ -352,11 +346,11 @@ export function ChatPanel() {
   
     const NoChatsScreen = () => (
         <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
-            <h1 className="text-3xl md:text-4xl font-bold mb-2">No Active Chat</h1>
-            <p className="text-muted-foreground mb-8 max-w-md">It looks like you don't have any chats. Create one to get started!</p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('noActiveChat')}</h1>
+            <p className="text-muted-foreground mb-8 max-w-md">{t('noActiveChatMessage')}</p>
             <Button onClick={createProject}>
                 <Plus className="mr-2 h-4 w-4" />
-                Create New Chat
+                {t('createNewChat')}
             </Button>
         </div>
     );
@@ -366,7 +360,7 @@ export function ChatPanel() {
         <header className="hidden lg:flex items-center p-4 border-b">
           <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
             <h2 className="text-lg font-semibold">{activeProject?.name || 'AI Chat'}</h2>
-            <Button>+ Upgrade</Button>
+            <Button>{t('upgrade')}</Button>
           </div>
         </header>
 
@@ -398,7 +392,7 @@ export function ChatPanel() {
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}
                 language={language}
               />
-              <p className="text-xs text-muted-foreground text-center mt-2">Bito AI may generate inaccurate information. Developed by JDev.</p>
+              <p className="text-xs text-muted-foreground text-center mt-2">{t('bitoAiMayBeInaccurate')}</p>
             </div>
         </footer>
         <ChatFeedbackDialog

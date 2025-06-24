@@ -3,6 +3,7 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { ProjectProvider } from '@/contexts/ProjectProvider';
+import { LanguageProvider } from '@/contexts/LanguageProvider';
 
 export const metadata: Metadata = {
   title: 'Bito AI',
@@ -28,9 +29,11 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <ProjectProvider>
-            {children}
-          </ProjectProvider>
+          <LanguageProvider>
+            <ProjectProvider>
+              {children}
+            </ProjectProvider>
+          </LanguageProvider>
           <Toaster />
         </ThemeProvider>
       </body>

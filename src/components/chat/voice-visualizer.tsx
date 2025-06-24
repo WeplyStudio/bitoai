@@ -2,6 +2,7 @@
 
 import { Mic } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 interface VoiceVisualizerProps {
   isRecording: boolean;
@@ -18,6 +19,8 @@ const SoundWave = () => (
 );
 
 export function VoiceVisualizer({ isRecording }: VoiceVisualizerProps) {
+  const { t } = useLanguage();
+
   return (
     <div className={cn(
       "fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm transition-opacity duration-300",
@@ -28,10 +31,10 @@ export function VoiceVisualizer({ isRecording }: VoiceVisualizerProps) {
           <Mic className="h-8 w-8 text-white" />
         </div>
         <div className="flex flex-col items-center gap-2">
-            <p className="text-white font-medium text-lg">Mendengarkan...</p>
+            <p className="text-white font-medium text-lg">{t('listening')}</p>
             <SoundWave />
         </div>
-        <p className='text-sm text-white/60'>Ucapkan sesuatu untuk memulai transkripsi</p>
+        <p className='text-sm text-white/60'>{t('saySomething')}</p>
       </div>
     </div>
   );
