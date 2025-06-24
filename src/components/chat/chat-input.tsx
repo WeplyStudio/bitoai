@@ -3,6 +3,8 @@ import { useState, useRef, type KeyboardEvent, useEffect, ChangeEvent } from 're
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { SendHorizonal, Paperclip, Mic, Sparkles, X } from 'lucide-react';
+import { useToast } from '@/hooks/use-toast';
+import { cn } from '@/lib/utils';
 
 interface ChatInputProps {
   onSend: (message: string, file?: File) => void;
@@ -17,6 +19,57 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
   const [filePreview, setFilePreview] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  const [isRecording, setIsRecording] = useState(false);
+  const [isSpeechSupported, setIsSpeechSupported] = useState(false);
+  const speechRecognitionRef = useRef<SpeechRecognition | null>(null);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const SpeechRecognition = window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+    if (SpeechRecognition) {
+      setIsSpeechSupported(true);
+      const recognition = new SpeechRecognition();
+      recognition.continuous = true;
+      recognition.interimResults = true;
+      recognition.lang = 'id-ID';
+
+      recognition.onresult = (event) => {
+        let finalTranscript = '';
+        for (let i = event.resultIndex; i < event.results.length; ++i) {
+          if (event.results[i].isFinal) {
+            finalTranscript += event.results[i][0].transcript;
+          }
+        }
+        if (finalTranscript) {
+          onChange(value + finalTranscript + ' ');
+        }
+      };
+
+      recognition.onerror = (event) => {
+        let errorMessage = 'Terjadi kesalahan pada pengenalan suara.';
+        if (event.error === 'not-allowed' || event.error === 'service-not-allowed') {
+          errorMessage = 'Akses mikrofon ditolak. Mohon izinkan akses di pengaturan browser Anda.';
+        } else if (event.error === 'no-speech') {
+          errorMessage = 'Tidak ada suara yang terdeteksi. Mohon coba lagi.';
+        }
+        toast({
+          variant: 'destructive',
+          title: 'Error',
+          description: errorMessage,
+        });
+        setIsRecording(false);
+      };
+
+      recognition.onend = () => {
+        setIsRecording(false);
+      };
+
+      speechRecognitionRef.current = recognition;
+    } else {
+      setIsSpeechSupported(false);
+    }
+  }, [onChange, toast, value]);
 
   const handleSendClick = () => {
     if (value.trim() || file) {
@@ -66,6 +119,17 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
       fileInputRef.current.value = "";
     }
   }
+  
+  const handleMicClick = () => {
+    if (!speechRecognitionRef.current) return;
+    
+    if (isRecording) {
+      speechRecognitionRef.current.stop();
+    } else {
+      speechRecognitionRef.current.start();
+    }
+    setIsRecording(!isRecording);
+  };
 
   return (
     <form onSubmit={(e) => { e.preventDefault(); handleSendClick(); }} className="w-full">
@@ -90,7 +154,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
             onChange={(e) => onChange(e.target.value)}
             onKeyDown={handleKeyDown}
             onInput={handleInput}
-            placeholder="Describe the image or ask a question..."
+            placeholder={isRecording ? "Mendengarkan..." : "Jelaskan gambar atau ajukan pertanyaan..."}
             rows={1}
             maxLength={3000}
             className="pr-12 resize-none max-h-48 border-0 focus-visible:ring-0 shadow-none p-0"
@@ -100,13 +164,24 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
           <div className="flex items-center justify-between flex-wrap gap-y-2 mt-auto">
             <div className="flex items-center gap-1 flex-wrap">
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground" onClick={handleAttachClick}>
-                    <Paperclip className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Attach</span>
+                    <Paperclip className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Lampirkan</span>
                 </Button>
-                <Button type="button" variant="ghost" size="sm" className="text-muted-foreground">
-                    <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Voice Message</span>
+                <Button 
+                    type="button" 
+                    variant={isRecording ? "secondary" : "ghost"} 
+                    size="sm" 
+                    className={cn(
+                        "text-muted-foreground",
+                        isRecording && "text-primary animate-pulse"
+                    )} 
+                    onClick={handleMicClick}
+                    disabled={!isSpeechSupported || isLoading}
+                    title={isSpeechSupported ? (isRecording ? "Stop recording" : "Use microphone") : "Speech recognition not supported"}
+                >
+                    <Mic className="h-4 w-4" /> <span className="hidden sm:inline ml-1">{isRecording ? "Berhenti" : "Gunakan Mikrofon"}</span>
                 </Button>
                 <Button type="button" variant="ghost" size="sm" className="text-muted-foreground" onClick={onBrowsePrompts}>
-                    <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Browse Prompts</span>
+                    <Sparkles className="h-4 w-4" /> <span className="hidden sm:inline ml-1">Telusuri Prompt</span>
                 </Button>
             </div>
             <span className="text-xs text-muted-foreground">{value.length}/3,000</span>
@@ -118,7 +193,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts 
               disabled={isLoading || (!value.trim() && !file)}
           >
             <SendHorizonal className="h-4 w-4" />
-            <span className="sr-only">Send</span>
+            <span className="sr-only">Kirim</span>
           </Button>
         </div>
     </form>
