@@ -219,4 +219,10 @@ export const id = {
   lang_en: 'Inggris',
   lang_zh: 'Mandarin',
   lang_ja: 'Jepang',
+
+  // Welcome Screen Prompts
+  initialPrompt1: 'Tulis draf untuk kampanye pemasaran baru',
+  initialPrompt2: 'Bantu saya brainstorming ide untuk bisnis baru',
+  initialPrompt3: 'Buat avatar untuk karakter fantasi',
+  initialPrompt4: 'Tulis kode untuk aplikasi daftar tugas sederhana di React',
 };

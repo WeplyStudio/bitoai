@@ -219,4 +219,10 @@ export const en = {
   lang_en: 'English',
   lang_zh: 'Mandarin',
   lang_ja: 'Japanese',
+
+  // Welcome Screen Prompts
+  initialPrompt1: 'Write copy for a new marketing campaign',
+  initialPrompt2: 'Help me brainstorm ideas for a new business',
+  initialPrompt3: 'Create an avatar for a fantasy character',
+  initialPrompt4: 'Write code for a simple to-do list app in React',
 };

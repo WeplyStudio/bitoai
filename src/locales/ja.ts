@@ -219,4 +219,10 @@ export const ja = {
   lang_en: '英語',
   lang_zh: '中国語',
   lang_ja: '日本語',
+
+  // Welcome Screen Prompts
+  initialPrompt1: '新しいマーケティングキャンペーンのコピーを書く',
+  initialPrompt2: '新しいビジネスのアイデアをブレインストーミングするのを手伝って',
+  initialPrompt3: 'ファンタジーキャラクターのアバターを作成する',
+  initialPrompt4: 'Reactで簡単なToDoリストアプリのコードを書く',
 };

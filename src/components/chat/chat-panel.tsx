@@ -20,13 +20,6 @@ export interface Message extends ChatMessage {
   id: string;
 }
 
-const suggestionIcons: { [key: string]: React.ElementType } = {
-    "Write copy": FilePenLine,
-    "brainstorm ideas": Lightbulb,
-    "Create avatar": UserRound,
-    "Write code": Code,
-}
-
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 const AI_MODE_KEY = 'bito-ai-mode';
 const TEMPLATE_PROMPT_KEY = 'bito-ai-template-prompt';
@@ -44,12 +37,6 @@ const toDataUri = (file: File): Promise<string> => {
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [initialPrompts, setInitialPrompts] = useState<string[]>([
-    'Write copy for a new marketing campaign',
-    'Help me brainstorm ideas for a new business',
-    'Create an avatar for a fantasy character',
-    'Write code for a simple to-do list app in React',
-  ]);
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -314,26 +301,27 @@ export function ChatPanel() {
   };
 
     const WelcomeScreen = () => {
-        const prompts = initialPrompts.slice(0, 4);
-        const getIcon = (prompt: string) => {
-            const lowerCasePrompt = prompt.toLowerCase();
-            const key = Object.keys(suggestionIcons).find(k => lowerCasePrompt.includes(k.toLowerCase()));
-            return key ? suggestionIcons[key as keyof typeof suggestionIcons] : Sparkles;
-        }
+        const welcomePrompts = [
+            { key: 'initialPrompt1', prompt: 'Write copy for a new marketing campaign', icon: FilePenLine },
+            { key: 'initialPrompt2', prompt: 'Help me brainstorm ideas for a new business', icon: Lightbulb },
+            { key: 'initialPrompt3', prompt: 'Create an avatar for a fantasy character', icon: UserRound },
+            { key: 'initialPrompt4', prompt: 'Write code for a simple to-do list app in React', icon: Code },
+        ];
+        
         return (
             <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
                 <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('welcomeToBito')}</h1>
                 <p className="text-muted-foreground mb-8 max-w-md">{t('welcomeMessage')}</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
-                    {prompts.map((prompt, i) => {
-                        const Icon = getIcon(prompt);
+                    {welcomePrompts.map((p, i) => {
+                        const Icon = p.icon;
                         return (
-                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
+                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(p.prompt)} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
                                 <div className="flex items-start gap-3 mr-4">
                                     <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
                                         <Icon className="w-5 h-5 text-primary" />
                                     </div>
-                                    <span className="font-medium whitespace-normal break-words">{prompt}</span>
+                                    <span className="font-medium whitespace-normal break-words">{t(p.key as any)}</span>
                                 </div>
                                 <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1"/>
                             </Button>

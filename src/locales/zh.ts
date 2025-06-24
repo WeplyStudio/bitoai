@@ -219,4 +219,10 @@ export const zh = {
   lang_en: '英语',
   lang_zh: '普通话',
   lang_ja: '日语',
+
+  // Welcome Screen Prompts
+  initialPrompt1: '为新的营销活动撰写文案',
+  initialPrompt2: '帮我为新业务构思创意',
+  initialPrompt3: '为幻想角色创建头像',
+  initialPrompt4: '用React编写一个简单的待办事项列表应用代码',
 };
