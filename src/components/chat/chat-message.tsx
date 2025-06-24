@@ -1,7 +1,7 @@
 'use client';
 import { useState } from 'react';
-import { User, ThumbsUp, ThumbsDown, RefreshCw, Pencil, Save, X } from 'lucide-react';
-import { BitoIcon } from '@/components/icons';
+import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Save, X } from 'lucide-react';
+import { BitoIcon, UserIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
@@ -129,9 +129,8 @@ export function ChatMessage({
 
       {isUser && (
         <Avatar className="h-8 w-8 border flex-shrink-0">
-          <AvatarImage src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" alt="User" />
           <AvatarFallback>
-            <User className="h-5 w-5" />
+            <UserIcon className="h-5 w-5" />
           </AvatarFallback>
         </Avatar>
       )}
