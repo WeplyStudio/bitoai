@@ -97,6 +97,8 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
       if (activeProjectId) {
         localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectId);
+      } else {
+        localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
       }
     }
   }, [projects, activeProjectId, isMounted]);
@@ -139,19 +141,17 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
     const remainingProjects = projects.filter(p => p.id !== idToDelete);
     
+    setProjects(remainingProjects);
+
     if (activeProjectId === idToDelete) {
         if (remainingProjects.length > 0) {
             const mostRecentProject = [...remainingProjects].sort((a,b) => b.createdAt - a.createdAt)[0];
             setActiveProjectId(mostRecentProject.id);
         } else {
-            createProject();
-            // The createProject function will set the new projects and active ID.
-            // We just need to return here to avoid setProjects being called twice.
-            return;
+            setActiveProjectId(null);
         }
     }
-    setProjects(remainingProjects);
-  }, [activeProjectId, projects, createProject]);
+  }, [activeProjectId, projects]);
 
   const activeProject = useMemo(() => projects.find(p => p.id === activeProjectId), [projects, activeProjectId]);
 

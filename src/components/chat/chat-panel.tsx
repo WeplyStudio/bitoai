@@ -60,7 +60,7 @@ export function ChatPanel() {
   const [editedContent, setEditedContent] = useState('');
   const [isRenaming, setIsRenaming] = useState(false);
 
-  const { activeProject, updateProjectName, updateActiveProjectSummary } = useProjects();
+  const { activeProject, createProject, updateProjectName, updateActiveProjectSummary } = useProjects();
 
   useEffect(() => {
     const openDialog = () => setTemplateDialogOpen(true);
@@ -331,6 +331,17 @@ export function ChatPanel() {
         );
     }
   
+    const NoProjectsScreen = () => (
+        <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">No Active Project</h1>
+            <p className="text-muted-foreground mb-8 max-w-md">It looks like you don't have any projects. Create one to get started!</p>
+            <Button onClick={createProject}>
+                <Plus className="mr-2 h-4 w-4" />
+                Create New Project
+            </Button>
+        </div>
+    );
+  
   return (
     <div className="flex flex-col flex-1 min-h-0">
         <header className="hidden lg:flex items-center p-4 border-b">
@@ -341,7 +352,8 @@ export function ChatPanel() {
         </header>
 
         <div className="flex-1 overflow-y-auto">
-            {messages.length === 0 && !isLoading ? <WelcomeScreen/> : 
+            {!activeProject ? <NoProjectsScreen /> : 
+            messages.length === 0 && !isLoading ? <WelcomeScreen/> : 
             <ChatMessages 
               messages={messages} 
               isLoading={isLoading} 
