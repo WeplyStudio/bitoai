@@ -176,7 +176,10 @@ export function ChatPanel() {
     setMessages(prev => [...prev, placeholderAiMessage]);
   
     try {
-      const historyForApi = history.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
+      // Defensively filter out any null/undefined messages before sending.
+      const cleanHistory = history.filter(Boolean);
+      
+      const historyForApi = cleanHistory.map(({ role, content, imageUrl }) => ({ role, content: content || '', imageUrl }));
       
       const response = await fetch('/api/chat/stream', {
         method: 'POST',
@@ -195,8 +198,8 @@ export function ChatPanel() {
       }
 
       if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Failed to get response from Bito AI');
+        const errorData = await response.json().catch(() => ({ error: 'Failed to get response from Bito AI' }));
+        throw new Error(errorData.error);
       }
 
       const reader = response.body.getReader();
@@ -215,12 +218,12 @@ export function ChatPanel() {
           )
         );
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error during chat:', error);
       toast({
         variant: 'destructive',
         title: 'Error',
-        description: 'Failed to get a response from Bito AI. Please try again.',
+        description: error.message || 'Failed to get a response from Bito AI. Please try again.',
       });
       // Remove the placeholder on error
       setMessages(prev => prev.filter(msg => msg.id !== aiMessageId));
