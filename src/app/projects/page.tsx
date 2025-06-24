@@ -74,7 +74,7 @@ export default function ProjectsPage() {
                     </div>
                   ) : (
                     <CardTitle className="flex items-start justify-between gap-2">
-                      <span className="truncate break-words">{project.name}</span>
+                      <span className="break-words">{project.name}</span>
                       <Button variant="ghost" size="icon" className="h-8 w-8 flex-shrink-0" onClick={() => handleStartEditing(project)}>
                         <Edit className="h-4 w-4" />
                       </Button>
