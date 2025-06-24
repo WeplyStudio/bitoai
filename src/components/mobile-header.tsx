@@ -29,7 +29,7 @@ export function MobileHeader({ leftSidebar, rightSidebar }: MobileHeaderProps) {
         </SheetContent>
       </Sheet>
 
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5">
         <BitoIcon className="w-7 h-7" />
         <h1 className="text-lg font-bold">Bito</h1>
       </div>
