@@ -20,25 +20,30 @@ export async function renameProject(input: RenameProjectInput): Promise<RenamePr
   return renameProjectFlow(input);
 }
 
-const prompt = ai.definePrompt({
-  name: 'renameProjectPrompt',
-  input: {schema: RenameProjectInputSchema},
-  output: {schema: RenameProjectOutputSchema},
-  prompt: `You are an expert at creating concise, descriptive titles. Based on the following chat conversation, create a short and relevant project title. The title should be a maximum of 5 words. Do not use quotation marks in the title.
-
-  Chat History:
-  {{{chatHistory}}}
-  `,
-});
-
 const renameProjectFlow = ai.defineFlow(
   {
     name: 'renameProjectFlow',
     inputSchema: RenameProjectInputSchema,
     outputSchema: RenameProjectOutputSchema,
   },
-  async input => {
-    const {output} = await prompt(input);
-    return output!;
+  async (input) => {
+    const languageMap: { [key: string]: string } = {
+        id: 'Indonesian',
+        en: 'English',
+        zh: 'Mandarin Chinese',
+        ja: 'Japanese',
+    };
+    const titleLanguage = languageMap[input.language || 'id'] || 'Indonesian';
+
+    const response = await ai.generate({
+      model: 'googleai/gemini-2.0-flash',
+      output: {
+          schema: RenameProjectOutputSchema,
+      },
+      system: `You are an expert at creating concise, descriptive titles in ${titleLanguage}. Based on the following chat conversation, create a short and relevant project title. The title MUST be in ${titleLanguage}. The title should be a maximum of 5 words. Do not use quotation marks in the title.`,
+      messages: [{ role: 'user', content: [{ text: `Chat History:\n${input.chatHistory}` }] }],
+    });
+
+    return response.output!;
   }
 );

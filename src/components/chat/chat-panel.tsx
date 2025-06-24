@@ -127,7 +127,7 @@ export function ChatPanel() {
           .map(m => `${m.role}: ${m.content || ''}`)
           .join('\n');
   
-        const result = await renameProject({ chatHistory });
+        const result = await renameProject({ chatHistory, language: language as any });
   
         if (result && result.projectName) {
           updateProjectName(activeProject.id, result.projectName);
@@ -144,7 +144,7 @@ export function ChatPanel() {
     };
   
     autoRenameProject();
-  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast, t]);
+  }, [messages, activeProject, isLoading, isRenaming, updateProjectName, toast, t, language]);
 
   const callChatApi = useCallback(async (history: Message[]) => {
     setIsLoading(true);
@@ -300,37 +300,45 @@ export function ChatPanel() {
     }
   };
 
-    const WelcomeScreen = () => {
-        const welcomePrompts = [
-            { key: 'initialPrompt1', icon: FilePenLine },
-            { key: 'initialPrompt2', icon: Lightbulb },
-            { key: 'initialPrompt3', icon: UserRound },
-            { key: 'initialPrompt4', icon: Code },
-        ];
-        
-        return (
-            <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
-                <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('welcomeToBito')}</h1>
-                <p className="text-muted-foreground mb-8 max-w-md">{t('welcomeMessage')}</p>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
-                    {welcomePrompts.map((p, i) => {
-                        const Icon = p.icon;
-                        return (
-                            <Button key={i} variant="outline" size="lg" onClick={() => handleSend(t(p.key as any))} className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left">
-                                <div className="flex items-start gap-3 mr-4">
-                                    <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
-                                        <Icon className="w-5 h-5 text-primary" />
-                                    </div>
-                                    <span className="font-medium whitespace-normal break-words">{t(p.key as any)}</span>
+  const WelcomeScreen = () => {
+    const welcomePrompts = [
+        { displayKey: 'initialPrompt1', actionKey: 'initialPrompt1Action' },
+        { displayKey: 'initialPrompt2', actionKey: 'initialPrompt2Action' },
+        { displayKey: 'initialPrompt3', actionKey: 'initialPrompt3Action' },
+        { displayKey: 'initialPrompt4', actionKey: 'initialPrompt4Action' },
+    ];
+    
+    const icons = [FilePenLine, Lightbulb, UserRound, Code];
+
+    return (
+        <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
+            <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('welcomeToBito')}</h1>
+            <p className="text-muted-foreground mb-8 max-w-md">{t('welcomeMessage')}</p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-lg">
+                {welcomePrompts.map((p, i) => {
+                    const Icon = icons[i];
+                    return (
+                        <Button 
+                            key={i} 
+                            variant="outline" 
+                            size="lg" 
+                            onClick={() => handleSend(t(p.actionKey as any))} 
+                            className="bg-card hover:bg-secondary h-auto p-4 flex items-start justify-between text-left"
+                        >
+                            <div className="flex items-start gap-3 mr-4">
+                                <div className="p-2 rounded-full bg-primary/5 flex-shrink-0">
+                                    <Icon className="w-5 h-5 text-primary" />
                                 </div>
-                                <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1"/>
-                            </Button>
-                        );
-                    })}
-                </div>
+                                <span className="font-medium whitespace-normal break-words">{t(p.displayKey as any)}</span>
+                            </div>
+                            <Plus className="h-4 w-4 text-muted-foreground flex-shrink-0 mt-1"/>
+                        </Button>
+                    );
+                })}
             </div>
-        );
-    }
+        </div>
+    );
+}
   
     const NoChatsScreen = () => (
         <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">

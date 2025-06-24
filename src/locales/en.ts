@@ -220,9 +220,15 @@ export const en = {
   lang_zh: 'Mandarin',
   lang_ja: 'Japanese',
 
-  // Welcome Screen Prompts
+  // Welcome Screen Prompts (Display Text)
   initialPrompt1: 'Write copy for a new marketing campaign',
   initialPrompt2: 'Help me brainstorm ideas for a new business',
   initialPrompt3: 'Create an avatar for a fantasy character',
   initialPrompt4: 'Write code for a simple to-do list app in React',
+  
+  // Welcome Screen Prompts (Action Text)
+  initialPrompt1Action: 'Write copy for a new marketing campaign called "Urban Explorer" for a line of durable, stylish backpacks.',
+  initialPrompt2Action: 'Help me brainstorm three ideas for a new eco-friendly subscription box business.',
+  initialPrompt3Action: 'Create an avatar for a fantasy character. She is an elven ranger, with long silver hair, green eyes, and leather armor. She carries a bow and arrow.',
+  initialPrompt4Action: 'Write the code for a simple to-do list app in React using functional components and hooks. It should allow adding and removing tasks.',
 };

@@ -49,6 +49,7 @@ export type SummarizeChatOutput = z.infer<typeof SummarizeChatOutputSchema>;
 // From rename-project-flow.ts
 export const RenameProjectInputSchema = z.object({
   chatHistory: z.string().describe('The chat history to be used for generating a project name.'),
+  language: z.enum(['id', 'en', 'zh', 'ja']).optional().describe('The language for the project title.'),
 });
 export type RenameProjectInput = z.infer<typeof RenameProjectInputSchema>;
 

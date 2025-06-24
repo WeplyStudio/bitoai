@@ -220,9 +220,15 @@ export const zh = {
   lang_zh: '普通话',
   lang_ja: '日语',
 
-  // Welcome Screen Prompts
+  // Welcome Screen Prompts (Display Text)
   initialPrompt1: '为新的营销活动撰写文案',
   initialPrompt2: '帮我为新业务构思创意',
   initialPrompt3: '为幻想角色创建头像',
   initialPrompt4: '用React编写一个简单的待办事项列表应用代码',
+
+  // Welcome Screen Prompts (Action Text)
+  initialPrompt1Action: '为名为“城市探险家”的一系列耐用时尚背包撰写新的营销活动文案。',
+  initialPrompt2Action: '帮我为新的环保订阅盒业务构思三个创意。',
+  initialPrompt3Action: '为一个幻想角色创建头像。她是一个精灵游侠，有长长的银发、绿色的眼睛和皮甲。她带着弓箭。',
+  initialPrompt4Action: '用React编写一个简单的待办事项列表应用代码，使用功能组件和钩子。它应该允许添加和删除任务。',
 };

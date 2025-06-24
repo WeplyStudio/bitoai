@@ -220,9 +220,15 @@ export const id = {
   lang_zh: 'Mandarin',
   lang_ja: 'Jepang',
 
-  // Welcome Screen Prompts
+  // Welcome Screen Prompts (Display Text)
   initialPrompt1: 'Tulis draf untuk kampanye pemasaran baru',
   initialPrompt2: 'Bantu saya brainstorming ide untuk bisnis baru',
   initialPrompt3: 'Buat avatar untuk karakter fantasi',
   initialPrompt4: 'Tulis kode untuk aplikasi daftar tugas sederhana di React',
+
+  // Welcome Screen Prompts (Action Text)
+  initialPrompt1Action: 'Tulis draf untuk kampanye pemasaran baru bernama "Penjelajah Kota" untuk lini ransel yang tahan lama dan bergaya.',
+  initialPrompt2Action: 'Bantu saya brainstorming tiga ide untuk bisnis kotak langganan ramah lingkungan yang baru.',
+  initialPrompt3Action: 'Buat avatar untuk karakter fantasi. Dia adalah seorang ranger peri, dengan rambut perak panjang, mata hijau, dan baju zirah kulit. Dia membawa busur dan panah.',
+  initialPrompt4Action: 'Tulis kode untuk aplikasi daftar tugas sederhana di React menggunakan komponen fungsional dan hook. Aplikasi harus memungkinkan penambahan dan penghapusan tugas.',
 };

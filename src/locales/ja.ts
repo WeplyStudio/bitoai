@@ -220,9 +220,15 @@ export const ja = {
   lang_zh: '中国語',
   lang_ja: '日本語',
 
-  // Welcome Screen Prompts
+  // Welcome Screen Prompts (Display Text)
   initialPrompt1: '新しいマーケティングキャンペーンのコピーを書く',
   initialPrompt2: '新しいビジネスのアイデアをブレインストーミングするのを手伝って',
   initialPrompt3: 'ファンタジーキャラクターのアバターを作成する',
   initialPrompt4: 'Reactで簡単なToDoリストアプリのコードを書く',
+
+  // Welcome Screen Prompts (Action Text)
+  initialPrompt1Action: '「アーバンエクスプローラー」という名前の耐久性のあるスタイリッシュなバックパックの新しいマーケティングキャンペーンのコピーを書いてください。',
+  initialPrompt2Action: '新しい環境に優しいサブスクリプションボックスビジネスのアイデアを3つブレインストーミングするのを手伝ってください。',
+  initialPrompt3Action: 'ファンタジーキャラクターのアバターを作成してください。彼女はエルフのレンジャーで、長い銀髪、緑色の目、革の鎧を着ています。弓矢を持っています。',
+  initialPrompt4Action: 'Reactで、関数コンポーネントとフックを使用して簡単なToDoリストアプリのコードを書いてください。タスクの追加と削除ができるようにする必要があります。',
 };
