@@ -1,6 +1,6 @@
 'use client';
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Save, X } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Save, X, Clipboard, Check } from 'lucide-react';
 import { BitoIcon, UserIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -26,6 +26,37 @@ interface ChatMessageProps {
 const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate'>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
 
+  const CodeBlock = ({ node, ...props }: any) => {
+    const [hasCopied, setHasCopied] = useState(false);
+    const codeString = node?.children[0]?.children[0]?.value;
+
+    const onCopy = () => {
+      if (codeString) {
+        navigator.clipboard.writeText(codeString).then(() => {
+          setHasCopied(true);
+          setTimeout(() => {
+            setHasCopied(false);
+          }, 2000);
+        });
+      }
+    };
+
+    return (
+      <div className="relative group">
+        <pre {...props} />
+        <Button
+          size="icon"
+          variant="ghost"
+          onClick={onCopy}
+          className="absolute top-2 right-2 h-7 w-7 text-zinc-400 hover:text-white opacity-0 group-hover:opacity-100 transition-opacity"
+          aria-label="Copy code"
+        >
+          {hasCopied ? <Check className="h-4 w-4 text-green-500" /> : <Clipboard className="h-4 w-4" />}
+        </Button>
+      </div>
+    );
+  };
+
   return (
     <div className="group flex items-start gap-3 justify-start">
       <Avatar className="h-8 w-8 border flex-shrink-0">
@@ -33,11 +64,16 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
           <BitoIcon className="h-5 w-5" />
         </AvatarFallback>
       </Avatar>
-      <div className="flex flex-col items-start gap-2 w-full max-w-[75%] sm:max-w-[75%] lg:max-w-[75%]">
-        <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3">
+      <div className="flex flex-col items-start gap-2 w-full max-w-[80%] sm:max-w-[80%] lg:max-w-[85%]">
+        <div className="min-w-0 w-full flex-shrink rounded-lg bg-secondary px-4 py-3">
           {message.content && (
             <div className="prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  pre: CodeBlock,
+                }}
+              >
                 {message.content}
               </ReactMarkdown>
             </div>
@@ -92,71 +128,62 @@ const ChatMessageUser = ({
     }
   };
 
-  if (isEditing) {
-    return (
-      <div className="group flex items-start gap-3 justify-end">
-        <div className="w-full max-w-[80%] space-y-2">
-          <Textarea 
+  return (
+    <div className="group flex items-start gap-4 justify-end">
+      <div className="order-2 flex flex-col items-end gap-2">
+        {isEditing ? (
+          <div className="w-full max-w-2xl space-y-2">
+            <Textarea 
               value={editedContent}
               onChange={(e) => onEditedContentChange(e.target.value)}
               className="w-full"
               rows={3}
               autoFocus
-          />
-          <div className="flex justify-end gap-2">
+            />
+            <div className="flex justify-end gap-2">
               <Button variant="ghost" size="sm" onClick={onCancelEdit}>
-                  <X className="h-4 w-4 mr-1"/>
-                  Cancel
+                <X className="h-4 w-4 mr-1"/>
+                Cancel
               </Button>
               <Button size="sm" onClick={handleSave}>
-                  <Save className="h-4 w-4 mr-1"/>
-                  Save & Submit
+                <Save className="h-4 w-4 mr-1"/>
+                Save & Submit
               </Button>
-          </div>
-        </div>
-        <Avatar className="h-8 w-8 border flex-shrink-0">
-          <AvatarFallback>
-            <UserIcon className="h-5 w-5" />
-          </AvatarFallback>
-        </Avatar>
-      </div>
-    );
-  }
-
-  return (
-    <div className="group flex items-start gap-3 justify-end">
-      <div className="flex items-center self-center opacity-0 group-hover:opacity-100 transition-opacity">
-        <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
-          <Pencil className="h-4 w-4" />
-        </Button>
-      </div>
-
-      <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-[calc(100%-80px)]">
-        {message.content && (
-          <div className="prose prose-sm dark:prose-invert max-w-none break-words">
-            <ReactMarkdown remarkPlugins={[remarkGfm]}>
-              {message.content}
-            </ReactMarkdown>
-          </div>
-        )}
-        {message.imageUrl && (
-          <>
-            <div 
-              className={cn("mt-2 rounded-lg overflow-hidden border cursor-pointer", !message.content && "mt-0")}
-              onClick={() => setIsModalOpen(true)}
-            >
-              <img 
-                src={message.imageUrl} 
-                alt="User upload" 
-                className="max-w-sm w-full h-auto" 
-              />
             </div>
-            {isModalOpen && <ImagePreviewDialog isOpen={isModalOpen} onOpenChange={setIsModalOpen} imageUrl={message.imageUrl} />}
-          </>
+          </div>
+        ) : (
+          <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-xl">
+            {message.content && (
+              <div className="prose prose-sm dark:prose-invert max-w-none break-words">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {message.content}
+                </ReactMarkdown>
+              </div>
+            )}
+            {message.imageUrl && (
+              <>
+                <div 
+                  className={cn("mt-2 rounded-lg overflow-hidden border cursor-pointer", !message.content && "mt-0")}
+                  onClick={() => setIsModalOpen(true)}
+                >
+                  <img 
+                    src={message.imageUrl} 
+                    alt="User upload" 
+                    className="max-w-sm w-full h-auto" 
+                  />
+                </div>
+                {isModalOpen && <ImagePreviewDialog isOpen={isModalOpen} onOpenChange={setIsModalOpen} imageUrl={message.imageUrl} />}
+              </>
+            )}
+          </div>
         )}
+        <div className="flex items-center self-end opacity-0 group-hover:opacity-100 transition-opacity">
+          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
+            <Pencil className="h-4 w-4" />
+          </Button>
+        </div>
       </div>
-
-      <Avatar className="h-8 w-8 border flex-shrink-0">
+      <Avatar className="h-8 w-8 border flex-shrink-0 order-1">
         <AvatarFallback>
           <UserIcon className="h-5 w-5" />
         </AvatarFallback>
