@@ -7,7 +7,8 @@ import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { SendHorizonal, User } from 'lucide-react';
+import { SendHorizonal } from 'lucide-react';
+import { UserIcon } from '@/components/icons';
 import { formatDistanceToNow } from 'date-fns';
 
 interface Message {
@@ -103,7 +104,7 @@ export default function CommunityPage() {
                 <div key={msg._id} className="group flex items-start space-x-4">
                   <Avatar className="h-8 w-8 border">
                     <AvatarFallback className="bg-primary text-primary-foreground">
-                       <User className="h-4 w-4" />
+                       <UserIcon className="h-5 w-5" />
                     </AvatarFallback>
                   </Avatar>
                   <div className="max-w-[80%] rounded-lg px-4 py-3 bg-secondary">
