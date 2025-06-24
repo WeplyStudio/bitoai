@@ -78,7 +78,7 @@ export function ChatMessage({
             </div>
         </div>
       ) : (
-        <div className="min-w-0 flex-shrink rounded-lg bg-secondary px-4 py-3 sm:max-w-[70%] max-w-[85%] xl:max-w-4xl">
+        <div className="min-w-0 flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-[95%] sm:max-w-[90%] md:max-w-[80%] lg:max-w-[75%]">
           {message.content && (
             <div className="prose prose-sm dark:prose-invert max-w-none">
               <ReactMarkdown remarkPlugins={[remarkGfm]}>
