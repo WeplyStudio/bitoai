@@ -10,7 +10,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Download, Mail, MessageCircle } from 'lucide-react';
 
 const AI_MODE_KEY = 'bito-ai-mode';
-const CHAT_HISTORY_KEY = 'bito-ai-chat-history';
+const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 
 export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
@@ -44,8 +44,8 @@ export default function SettingsPage() {
 
   const handleExportChat = () => {
     try {
-      const chatHistory = localStorage.getItem(CHAT_HISTORY_KEY);
-      if (!chatHistory || chatHistory === '[]') {
+      const allChatHistories = localStorage.getItem(CHAT_HISTORIES_KEY);
+      if (!allChatHistories || allChatHistories === '{}') {
         toast({
           variant: 'destructive',
           title: 'Error',
@@ -54,11 +54,11 @@ export default function SettingsPage() {
         return;
       }
 
-      const blob = new Blob([chatHistory], { type: 'application/json' });
+      const blob = new Blob([allChatHistories], { type: 'application/json' });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = 'bito-ai-chat-history.json';
+      a.download = 'bito-ai-all-chats.json';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -66,7 +66,7 @@ export default function SettingsPage() {
       
       toast({
         title: 'Export Successful',
-        description: 'Your chat history has been downloaded.',
+        description: 'All of your chat histories have been downloaded.',
       });
 
     } catch (error) {
@@ -115,10 +115,10 @@ export default function SettingsPage() {
               <Label>Export Data</Label>
               <Button variant="outline" onClick={handleExportChat}>
                 <Download className="mr-2 h-4 w-4" />
-                Export Chat History
+                Export All Chats
               </Button>
               <p className="text-sm text-muted-foreground">
-                Download your complete chat history as a JSON file.
+                Download your complete chat history for all chats as a JSON file.
               </p>
             </div>
           </CardContent>
@@ -142,7 +142,7 @@ export default function SettingsPage() {
                 <AccordionItem value="item-2">
                     <AccordionTrigger>How does image generation work?</AccordionTrigger>
                     <AccordionContent>
-                    You can ask Bito AI to generate an image by typing a prompt like "generate an image of a red car". The AI will then create an image based on your description.
+                    Image generation is currently disabled. Bito AI can analyze images but cannot create them.
                     </AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
