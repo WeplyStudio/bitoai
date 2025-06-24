@@ -77,21 +77,21 @@ export default function TemplatesPage() {
 
     const presetTemplates: Record<string, Omit<Template, 'id' | 'isCustom'>[]> = {
       [t('templateCategoryGeneral')]: [
-        { icon: Lightbulb, title: t('templateGeneralTitle1'), description: t('templateGeneralDescription1'), prompt: "Brainstorm 10 unique ideas for [your topic here]. For each idea, provide a brief description." },
-        { icon: MessageSquare, title: t('templateGeneralTitle2'), description: t('templateGeneralDescription2'), prompt: "Summarize the following text into 3 key bullet points:\n\n[paste text here]" },
-        { icon: Bot, title: t('templateGeneralTitle3'), description: t('templateGeneralDescription3'), prompt: "I want you to act as a [character name], for example, a pirate. I want you to respond and answer like a pirate using pirate-like vocabulary and tone. My first sentence is: 'Hello!'" },
+        { icon: Lightbulb, title: t('templateGeneralTitle1'), description: t('templateGeneralDescription1'), prompt: t('templateGeneralPrompt1') },
+        { icon: MessageSquare, title: t('templateGeneralTitle2'), description: t('templateGeneralDescription2'), prompt: t('templateGeneralPrompt2') },
+        { icon: Bot, title: t('templateGeneralTitle3'), description: t('templateGeneralDescription3'), prompt: t('templateGeneralPrompt3') },
       ],
       [t('templateCategoryMarketing')]: [
-        { icon: FileText, title: t('templateMarketingTitle1'), description: t('templateMarketingDescription1'), prompt: "Write a 500-word blog post about the benefits of [topic], targeting an audience of [target audience]." },
-        { icon: Mail, title: t('templateMarketingTitle2'), description: t('templateMarketingDescription2'), prompt: "Write a marketing email to announce the launch of our new product, [product name]. The target audience is [audience], and the key benefits are [benefit 1], [benefit 2], and [benefit 3]." },
+        { icon: FileText, title: t('templateMarketingTitle1'), description: t('templateMarketingDescription1'), prompt: t('templateMarketingPrompt1') },
+        { icon: Mail, title: t('templateMarketingTitle2'), description: t('templateMarketingDescription2'), prompt: t('templateMarketingPrompt2') },
       ],
       [t('templateCategoryEmail')]: [
-        { icon: Mail, title: t('templateEmailTitle1'), description: t('templateEmailDescription1'), prompt: "Write a professional email to [recipient name] regarding [subject]. I need to convey the following points:\n1. [Point 1]\n2. [Point 2]\n3. [Point 3]" },
-        { icon: Mail, title: t('templateEmailTitle2'), description: t('templateEmailDescription2'), prompt: "Write a follow-up email after a meeting with [person's name] on [date] to discuss [topic]. I want to thank them for their time and reiterate my interest." }
+        { icon: Mail, title: t('templateEmailTitle1'), description: t('templateEmailDescription1'), prompt: t('templateEmailPrompt1') },
+        { icon: Mail, title: t('templateEmailTitle2'), description: t('templateEmailDescription2'), prompt: t('templateEmailPrompt2') }
       ],
       [t('templateCategoryCode')]: [
-        { icon: Code, title: t('templateCodeTitle1'), description: t('templateCodeDescription1'), prompt: "Explain the following code snippet and what it does:\n\n```[language]\n[paste code here]\n```" },
-        { icon: Code, title: t('templateCodeTitle2'), description: t('templateCodeDescription2'), prompt: "Write a function in [programming language] that takes [input] and returns [output]." }
+        { icon: Code, title: t('templateCodeTitle1'), description: t('templateCodeDescription1'), prompt: t('templateCodePrompt1') },
+        { icon: Code, title: t('templateCodeTitle2'), description: t('templateCodeDescription2'), prompt: t('templateCodePrompt2') }
       ]
     };
 
