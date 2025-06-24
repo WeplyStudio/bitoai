@@ -64,7 +64,7 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
           <BitoIcon className="h-5 w-5" />
         </AvatarFallback>
       </Avatar>
-      <div className="flex flex-col items-start gap-2 w-full max-w-[80%] sm:max-w-[80%] lg:max-w-[85%]">
+      <div className="flex flex-col items-start gap-2 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[85%]">
         <div className="min-w-0 w-full flex-shrink rounded-lg bg-secondary px-4 py-3">
           {message.content && (
             <div className="prose prose-sm dark:prose-invert max-w-none">
@@ -129,8 +129,8 @@ const ChatMessageUser = ({
   };
 
   return (
-    <div className="group flex items-start gap-4 justify-end">
-      <div className="order-2 flex flex-col items-end gap-2">
+    <div className="group flex items-start gap-3 justify-end">
+      <div className="flex flex-col items-end gap-1 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] order-1">
         {isEditing ? (
           <div className="w-full max-w-2xl space-y-2">
             <Textarea 
@@ -152,7 +152,7 @@ const ChatMessageUser = ({
             </div>
           </div>
         ) : (
-          <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-xl">
+          <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-full">
             {message.content && (
               <div className="prose prose-sm dark:prose-invert max-w-none break-words">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -183,7 +183,7 @@ const ChatMessageUser = ({
           </Button>
         </div>
       </div>
-      <Avatar className="h-8 w-8 border flex-shrink-0 order-1">
+      <Avatar className="h-8 w-8 border flex-shrink-0 order-2">
         <AvatarFallback>
           <UserIcon className="h-5 w-5" />
         </AvatarFallback>
