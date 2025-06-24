@@ -12,6 +12,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useToast } from '@/hooks/use-toast';
 import { Code, FileText, Lightbulb, Mail, MessageSquare, Bot, Plus, Edit, Trash2 } from 'lucide-react';
+import { useLanguage } from '@/contexts/LanguageProvider';
 
 const PRESET_TEMPLATES_KEY = 'preset';
 const CUSTOM_TEMPLATES_KEY = 'bito-ai-custom-templates';
@@ -47,6 +48,7 @@ const presetTemplates: Record<string, Omit<Template, 'id' | 'isCustom'>[]> = {
 
 const TemplateCard = ({ template, onSelect, onEdit, onDelete }: { template: Template, onSelect: (prompt: string) => void, onEdit?: (template: Template) => void, onDelete?: (templateId: string) => void }) => {
     const Icon = template.icon || Lightbulb;
+    const { t } = useLanguage();
     return (
         <div className="p-4 border rounded-lg flex flex-col items-start gap-3 text-left h-full bg-card hover:border-primary/50 transition-colors shadow-sm hover:shadow-md">
             <div className="p-2 rounded-full bg-primary/10">
@@ -57,7 +59,7 @@ const TemplateCard = ({ template, onSelect, onEdit, onDelete }: { template: Temp
                 <p className="text-sm text-muted-foreground line-clamp-2 min-h-[40px]">{template.description}</p>
             </div>
             <div className="flex w-full justify-between items-center pt-2 border-t border-transparent">
-              <Button variant="ghost" size="sm" onClick={() => onSelect(template.prompt)}>Use Template</Button>
+              <Button variant="ghost" size="sm" onClick={() => onSelect(template.prompt)}>{t('useTemplate')}</Button>
               {template.isCustom && onEdit && onDelete && (
                 <div className="flex gap-1">
                   <Button variant="ghost" size="icon" className="h-8 w-8" onClick={() => onEdit(template)}>
@@ -71,12 +73,12 @@ const TemplateCard = ({ template, onSelect, onEdit, onDelete }: { template: Temp
                     </AlertDialogTrigger>
                     <AlertDialogContent>
                       <AlertDialogHeader>
-                        <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                        <AlertDialogDescription>This will permanently delete the "{template.title}" prompt. This action cannot be undone.</AlertDialogDescription>
+                        <AlertDialogTitle>{t('areYouSure')}</AlertDialogTitle>
+                        <AlertDialogDescription>{t('deletePromptConfirmation', { title: template.title })}</AlertDialogDescription>
                       </AlertDialogHeader>
                       <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => onDelete(template.id)}>Delete</AlertDialogAction>
+                        <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                        <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => onDelete(template.id)}>{t('delete')}</AlertDialogAction>
                       </AlertDialogFooter>
                     </AlertDialogContent>
                   </AlertDialog>
@@ -91,6 +93,7 @@ export default function TemplatesPage() {
     const router = useRouter();
     const { createProject, activeProjectId } = useProjects();
     const { toast } = useToast();
+    const { t } = useLanguage();
 
     const [customTemplates, setCustomTemplates] = useState<Template[]>([]);
     const [isMounted, setIsMounted] = useState(false);
@@ -106,10 +109,10 @@ export default function TemplatesPage() {
             }
         } catch (error) {
             console.error("Failed to load custom templates from localStorage", error);
-            toast({ variant: "destructive", title: "Error", description: "Could not load your custom prompts." });
+            toast({ variant: "destructive", title: t('error'), description: t('errorLoadCustomPrompts') });
         }
         setIsMounted(true);
-    }, [toast]);
+    }, [toast, t]);
 
     useEffect(() => {
         if(isMounted) {
@@ -146,7 +149,7 @@ export default function TemplatesPage() {
     
     const handleSaveTemplate = () => {
         if (!formData.title.trim() || !formData.prompt.trim()) {
-            toast({ variant: 'destructive', title: 'Error', description: 'Title and Prompt are required.' });
+            toast({ variant: 'destructive', title: t('error'), description: t('errorPromptTitleRequired') });
             return;
         }
 
@@ -154,7 +157,7 @@ export default function TemplatesPage() {
             // Update existing template
             const updatedTemplates = customTemplates.map(t => t.id === editingTemplate.id ? { ...t, ...formData } : t);
             setCustomTemplates(updatedTemplates);
-            toast({ title: 'Prompt Updated', description: `"${formData.title}" has been saved.` });
+            toast({ title: t('promptUpdated'), description: t('promptUpdatedDescription', { title: formData.title }) });
         } else {
             // Create new template
             const newTemplate: Template = {
@@ -165,14 +168,14 @@ export default function TemplatesPage() {
                 isCustom: true,
             };
             setCustomTemplates(prev => [...prev, newTemplate]);
-            toast({ title: 'Prompt Created', description: `"${formData.title}" has been added to your prompts.` });
+            toast({ title: t('promptCreated'), description: t('promptCreatedDescription', { title: formData.title }) });
         }
         setDialogOpen(false);
     }
 
     const handleDeleteTemplate = (id: string) => {
         setCustomTemplates(prev => prev.filter(t => t.id !== id));
-        toast({ variant: 'destructive', title: 'Prompt Deleted', description: 'The custom prompt has been removed.' });
+        toast({ variant: 'destructive', title: t('promptDeleted'), description: t('promptDeletedDescription') });
     }
 
     if (!isMounted) return null;
@@ -182,30 +185,30 @@ export default function TemplatesPage() {
             <Dialog open={isDialogOpen} onOpenChange={setDialogOpen}>
                 <DialogContent>
                     <DialogHeader>
-                        <DialogTitle>{editingTemplate ? 'Edit Prompt' : 'Create New Prompt'}</DialogTitle>
+                        <DialogTitle>{editingTemplate ? t('editPrompt') : t('createNewPrompt')}</DialogTitle>
                         <DialogDescription>
-                          {editingTemplate ? 'Modify the details of your custom prompt.' : 'Add a new prompt to your personal collection.'}
+                          {editingTemplate ? t('dialogEditPromptDescription') : t('dialogCreatePromptDescription')}
                         </DialogDescription>
                     </DialogHeader>
                     <div className="grid gap-4 py-4">
                         <div className="grid gap-2">
-                            <Label htmlFor="title">Title</Label>
-                            <Input id="title" value={formData.title} onChange={handleFormChange} placeholder="e.g., Social Media Post" />
+                            <Label htmlFor="title">{t('promptTitleLabel')}</Label>
+                            <Input id="title" value={formData.title} onChange={handleFormChange} placeholder={t('promptTitlePlaceholder')} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="description">Description (Optional)</Label>
-                            <Input id="description" value={formData.description} onChange={handleFormChange} placeholder="e.g., Generate a short, punchy post" />
+                            <Label htmlFor="description">{t('promptDescriptionLabel')}</Label>
+                            <Input id="description" value={formData.description} onChange={handleFormChange} placeholder={t('promptDescriptionPlaceholder')} />
                         </div>
                         <div className="grid gap-2">
-                            <Label htmlFor="prompt">Prompt</Label>
-                            <Textarea id="prompt" value={formData.prompt} onChange={handleFormChange} placeholder="Write a social media post for [Product]..." rows={5} />
+                            <Label htmlFor="prompt">{t('promptLabel')}</Label>
+                            <Textarea id="prompt" value={formData.prompt} onChange={handleFormChange} placeholder={t('promptPlaceholder')} rows={5} />
                         </div>
                     </div>
                     <DialogFooter>
                         <DialogClose asChild>
-                            <Button variant="ghost">Cancel</Button>
+                            <Button variant="ghost">{t('cancel')}</Button>
                         </DialogClose>
-                        <Button onClick={handleSaveTemplate}>Save Prompt</Button>
+                        <Button onClick={handleSaveTemplate}>{t('savePrompt')}</Button>
                     </DialogFooter>
                 </DialogContent>
             </Dialog>
@@ -213,15 +216,15 @@ export default function TemplatesPage() {
             <div className="max-w-7xl mx-auto space-y-6">
                 <div className="flex items-center justify-between">
                     <div>
-                        <h2 className="text-3xl font-bold tracking-tight">Prompt Templates</h2>
-                        <p className="text-muted-foreground">Browse prompts to kickstart conversations, or create your own.</p>
+                        <h2 className="text-3xl font-bold tracking-tight">{t('templatesTitle')}</h2>
+                        <p className="text-muted-foreground">{t('templatesDescription')}</p>
                     </div>
                 </div>
                 
                 <Tabs defaultValue={PRESET_TEMPLATES_KEY} className="w-full">
                     <TabsList>
-                        <TabsTrigger value={PRESET_TEMPLATES_KEY}>Preset</TabsTrigger>
-                        <TabsTrigger value={CUSTOM_TEMPLATES_KEY}>My Prompts</TabsTrigger>
+                        <TabsTrigger value={PRESET_TEMPLATES_KEY}>{t('preset')}</TabsTrigger>
+                        <TabsTrigger value={CUSTOM_TEMPLATES_KEY}>{t('myPrompts')}</TabsTrigger>
                     </TabsList>
                     <TabsContent value={PRESET_TEMPLATES_KEY} className="mt-6">
                         {Object.entries(presetTemplates).map(([category, templateList]) => (
@@ -237,9 +240,9 @@ export default function TemplatesPage() {
                     </TabsContent>
                      <TabsContent value={CUSTOM_TEMPLATES_KEY} className="mt-6 space-y-4">
                         <div className="flex items-center justify-between">
-                            <h3 className="text-xl font-semibold">Your Custom Prompts</h3>
+                            <h3 className="text-xl font-semibold">{t('yourCustomPrompts')}</h3>
                              <Button onClick={() => handleOpenDialog()}>
-                                <Plus className="mr-2 h-4 w-4" /> Create New Prompt
+                                <Plus className="mr-2 h-4 w-4" /> {t('createNewPrompt')}
                             </Button>
                         </div>
                         {customTemplates.length > 0 ? (
@@ -250,8 +253,8 @@ export default function TemplatesPage() {
                             </div>
                         ) : (
                             <div className="text-center py-12 border-2 border-dashed rounded-lg">
-                                <h3 className="text-xl font-semibold">No Custom Prompts Yet</h3>
-                                <p className="text-muted-foreground mt-2 mb-4">Click "Create New Prompt" above to add your first one!</p>
+                                <h3 className="text-xl font-semibold">{t('noCustomPrompts')}</h3>
+                                <p className="text-muted-foreground mt-2 mb-4">{t('noCustomPromptsDescription')}</p>
                             </div>
                         )}
                     </TabsContent>
