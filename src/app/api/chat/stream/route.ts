@@ -1,5 +1,2 @@
-/**
- * @fileOverview This file is intentionally left blank.
- * The streaming functionality has been removed due to instability.
- * Chat logic is now handled by the Genkit flow in `src/ai/flows/chat.ts`.
- */
+// This file is intentionally left blank.
+// The main chat logic is now handled by the RESTful API in `src/app/api/chat/route.ts`.

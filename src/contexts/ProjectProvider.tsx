@@ -2,14 +2,12 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useMemo } from 'react';
-
-const PROJECTS_KEY = 'bito-ai-projects';
-const ACTIVE_PROJECT_ID_KEY = 'bito-ai-active-project-id';
-const CHAT_HISTORY_KEY = 'bito-ai-chat-history'; // Old key for migration
-const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories'; // New key for project-based histories
+import { useToast } from '@/hooks/use-toast';
+import { useAuth } from './AuthProvider';
 
 export interface Project {
-  id: string;
+  _id: string;
+  id: string; // Add id for client-side compatibility
   name: string;
   summary: string;
   createdAt: number;
@@ -19,11 +17,12 @@ interface ProjectContextType {
   projects: Project[];
   activeProjectId: string | null;
   activeProject: Project | undefined;
-  createProject: () => void;
+  isLoading: boolean;
+  createProject: () => Promise<void>;
   switchProject: (id: string) => void;
-  updateActiveProjectSummary: (summary: string) => void;
-  updateProjectName: (id: string, name: string) => void;
-  deleteProject: (id: string) => void;
+  updateProjectName: (id: string, name: string) => Promise<void>;
+  deleteProject: (id: string) => Promise<void>;
+  refreshProjects: () => void;
 }
 
 const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
@@ -31,88 +30,70 @@ const ProjectContext = createContext<ProjectContextType | undefined>(undefined);
 export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [projects, setProjects] = useState<Project[]>([]);
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
-  const [isMounted, setIsMounted] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+  const { user } = useAuth();
 
-  const migrateOldChatHistory = useCallback(() => {
-    const oldHistoryRaw = localStorage.getItem(CHAT_HISTORY_KEY);
-    const newHistoriesRaw = localStorage.getItem(CHAT_HISTORIES_KEY);
-
-    if (oldHistoryRaw && !newHistoriesRaw) {
-      try {
-        const oldHistory = JSON.parse(oldHistoryRaw);
-        if (Array.isArray(oldHistory) && oldHistory.length > 0) {
-          const newProject: Project = {
-            id: `migrated-${Date.now()}`,
-            name: 'My First Chat',
-            summary: 'Migrated chat history.',
-            createdAt: Date.now(),
-          };
-          setProjects([newProject]);
-          setActiveProjectId(newProject.id);
-          localStorage.setItem(PROJECTS_KEY, JSON.stringify([newProject]));
-          localStorage.setItem(ACTIVE_PROJECT_ID_KEY, newProject.id);
-          localStorage.setItem(CHAT_HISTORIES_KEY, JSON.stringify({ [newProject.id]: oldHistory }));
-          localStorage.removeItem(CHAT_HISTORY_KEY);
-        } else {
-            localStorage.removeItem(CHAT_HISTORY_KEY);
-        }
-      } catch (error) {
-        console.error('Failed to migrate old chat history:', error);
-        localStorage.removeItem(CHAT_HISTORY_KEY); // Remove corrupted old history
-      }
-    }
-  }, []);
-
-  useEffect(() => {
-    try {
-        migrateOldChatHistory();
-        const savedProjectsRaw = localStorage.getItem(PROJECTS_KEY);
-        const savedProjects = savedProjectsRaw ? JSON.parse(savedProjectsRaw) : [];
-        const savedActiveId = localStorage.getItem(ACTIVE_PROJECT_ID_KEY);
-
-        if (savedProjects.length > 0) {
-            setProjects(savedProjects);
-            setActiveProjectId(savedActiveId && savedProjects.some((p: Project) => p.id === savedActiveId) ? savedActiveId : savedProjects[0].id);
-        } else if (!savedProjectsRaw) { // Only create a new project if there's nothing in storage
-            const newProject: Project = {
-                id: `project-${Date.now()}`,
-                name: 'Untitled Chat',
-                summary: 'Start a new conversation!',
-                createdAt: Date.now()
-            };
-            setProjects([newProject]);
-            setActiveProjectId(newProject.id);
-        }
-    } catch (error) {
-        console.error("Failed to load projects from localStorage", error);
-        localStorage.removeItem(PROJECTS_KEY);
-        localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
-    } finally {
-        setIsMounted(true);
-    }
-  }, [migrateOldChatHistory]);
-
-  useEffect(() => {
-    if (isMounted) {
-      localStorage.setItem(PROJECTS_KEY, JSON.stringify(projects));
-      if (activeProjectId) {
-        localStorage.setItem(ACTIVE_PROJECT_ID_KEY, activeProjectId);
-      } else {
-        localStorage.removeItem(ACTIVE_PROJECT_ID_KEY);
-      }
-    }
-  }, [projects, activeProjectId, isMounted]);
-
-  const createProject = useCallback(() => {
-    const newProject: Project = {
-        id: `project-${Date.now()}`,
-        name: 'Untitled Chat',
-        summary: 'A new conversation begins...',
-        createdAt: Date.now()
+  const fetchProjects = useCallback(async () => {
+    if (!user) {
+        setProjects([]);
+        setActiveProjectId(null);
+        setIsLoading(false);
+        return;
     };
-    setProjects(prev => [...prev, newProject]);
-    setActiveProjectId(newProject.id);
-  }, []);
+    setIsLoading(true);
+    try {
+      const response = await fetch('/api/projects');
+      if (!response.ok) {
+        throw new Error('Failed to fetch projects');
+      }
+      const data = await response.json();
+      const clientProjects = data.map((p: any) => ({ ...p, id: p._id }));
+      setProjects(clientProjects);
+      
+      const savedActiveId = localStorage.getItem('bito-ai-active-project-id');
+      if (savedActiveId && clientProjects.some((p: Project) => p.id === savedActiveId)) {
+          setActiveProjectId(savedActiveId);
+      } else if (clientProjects.length > 0) {
+          setActiveProjectId(clientProjects[0].id);
+      } else {
+          setActiveProjectId(null);
+      }
+
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not load your projects.' });
+      setProjects([]);
+      setActiveProjectId(null);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [user, toast]);
+
+  useEffect(() => {
+    fetchProjects();
+  }, [fetchProjects]);
+  
+  useEffect(() => {
+    if (activeProjectId) {
+      localStorage.setItem('bito-ai-active-project-id', activeProjectId);
+    } else {
+      localStorage.removeItem('bito-ai-active-project-id');
+    }
+  }, [activeProjectId]);
+
+
+  const createProject = useCallback(async () => {
+    try {
+      const response = await fetch('/api/projects', { method: 'POST' });
+      if (!response.ok) throw new Error('Failed to create project');
+      const newProjectData = await response.json();
+      const newProject = { ...newProjectData, id: newProjectData._id };
+      setProjects(prev => [newProject, ...prev]);
+      setActiveProjectId(newProject.id);
+    } catch (error) {
+      toast({ variant: 'destructive', title: 'Error', description: 'Could not create a new chat.' });
+    }
+  }, [toast]);
 
   const switchProject = useCallback((id: string) => {
     if (projects.some(p => p.id === id)) {
@@ -120,38 +101,43 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     }
   }, [projects]);
 
-  const updateProjectName = useCallback((id: string, name: string) => {
-    setProjects(prev =>
-        prev.map(p => (p.id === id ? { ...p, name } : p))
-    );
-  }, []);
-  
-  const updateActiveProjectSummary = useCallback((summary: string) => {
-    if (activeProjectId) {
+  const updateProjectName = useCallback(async (id: string, name: string) => {
+    try {
+      const response = await fetch(`/api/projects/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name }),
+      });
+      if (!response.ok) throw new Error('Failed to update project name');
+      const updatedProjectData = await response.json();
+      const updatedProject = { ...updatedProjectData, id: updatedProjectData._id };
+
       setProjects(prev =>
-        prev.map(p => (p.id === activeProjectId ? { ...p, summary } : p))
+        prev.map(p => (p.id === id ? updatedProject : p))
       );
+    } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not rename chat.' });
     }
-  }, [activeProjectId]);
+  }, [toast]);
+  
 
-  const deleteProject = useCallback((idToDelete: string) => {
-    const allHistories = JSON.parse(localStorage.getItem(CHAT_HISTORIES_KEY) || '{}');
-    delete allHistories[idToDelete];
-    localStorage.setItem(CHAT_HISTORIES_KEY, JSON.stringify(allHistories));
-
+  const deleteProject = useCallback(async (idToDelete: string) => {
+    const originalProjects = [...projects];
     const remainingProjects = projects.filter(p => p.id !== idToDelete);
-    
     setProjects(remainingProjects);
-
+    
     if (activeProjectId === idToDelete) {
-        if (remainingProjects.length > 0) {
-            const mostRecentProject = [...remainingProjects].sort((a,b) => b.createdAt - a.createdAt)[0];
-            setActiveProjectId(mostRecentProject.id);
-        } else {
-            setActiveProjectId(null);
-        }
+        setActiveProjectId(remainingProjects.length > 0 ? remainingProjects[0].id : null);
     }
-  }, [activeProjectId, projects]);
+
+    try {
+      const response = await fetch(`/api/projects/${idToDelete}`, { method: 'DELETE' });
+      if (!response.ok) throw new Error('Failed to delete project');
+    } catch (error) {
+        toast({ variant: 'destructive', title: 'Error', description: 'Could not delete chat.' });
+        setProjects(originalProjects); // Revert on failure
+    }
+  }, [activeProjectId, projects, toast]);
 
   const activeProject = useMemo(() => projects.find(p => p.id === activeProjectId), [projects, activeProjectId]);
 
@@ -159,20 +145,22 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     projects,
     activeProjectId,
     activeProject,
+    isLoading,
     createProject,
     switchProject,
-    updateActiveProjectSummary,
     updateProjectName,
-    deleteProject
+    deleteProject,
+    refreshProjects: fetchProjects,
   }), [
     projects, 
     activeProjectId, 
     activeProject, 
+    isLoading,
     createProject, 
     switchProject, 
-    updateActiveProjectSummary, 
     updateProjectName, 
-    deleteProject
+    deleteProject,
+    fetchProjects
   ]);
 
   return (

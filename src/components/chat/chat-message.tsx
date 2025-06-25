@@ -1,11 +1,11 @@
 'use client';
 import { useState } from 'react';
-import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Save, X, Clipboard, Check } from 'lucide-react';
+import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Clipboard, Check } from 'lucide-react';
 import { BitoIcon, UserIcon } from '@/components/icons';
 import { cn } from '@/lib/utils';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import { Button } from '@/components/ui/button';
-import { Textarea } from '@/components/ui/textarea';
+import { useToast } from '@/hooks/use-toast';
 import type { Message } from './chat-panel';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
@@ -17,11 +17,6 @@ interface ChatMessageProps {
   onFeedback: (messageId: string) => void;
   onRegenerate: (messageId: string) => void;
   onStartEdit: (messageId: string, content: string) => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (messageId: string, newContent: string) => void;
-  isEditing: boolean;
-  editedContent: string;
-  onEditedContentChange: (content: string) => void;
 }
 
 const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate'>) => {
@@ -100,46 +95,13 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
 const ChatMessageUser = ({ 
   message, 
   onStartEdit,
-  onCancelEdit,
-  onSaveEdit,
-  isEditing,
-  editedContent,
-  onEditedContentChange
-}: Pick<ChatMessageProps, 'message' | 'onStartEdit' | 'onCancelEdit' | 'onSaveEdit' | 'isEditing' | 'editedContent' | 'onEditedContentChange'>) => {
+}: Pick<ChatMessageProps, 'message' | 'onStartEdit'>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const { t } = useLanguage();
-
-  const handleSave = () => {
-    if (editedContent.trim()) {
-      onSaveEdit(message.id, editedContent);
-    }
-  };
-
+  
   return (
     <div className="group flex items-start gap-3 justify-end">
       <div className="flex flex-col items-end gap-1 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] order-1">
-        {isEditing ? (
-          <div className="w-full max-w-2xl space-y-2">
-            <Textarea 
-              value={editedContent}
-              onChange={(e) => onEditedContentChange(e.target.value)}
-              className="w-full"
-              rows={3}
-              autoFocus
-            />
-            <div className="flex justify-end gap-2">
-              <Button variant="ghost" size="sm" onClick={onCancelEdit}>
-                <X className="h-4 w-4 mr-1"/>
-                {t('cancel')}
-              </Button>
-              <Button size="sm" onClick={handleSave}>
-                <Save className="h-4 w-4 mr-1"/>
-                {t('saveAndSubmit')}
-              </Button>
-            </div>
-          </div>
-        ) : (
-          <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-full">
+        <div className="min-w-0 w-fit flex-shrink rounded-lg bg-secondary px-4 py-3 max-w-full">
             {message.content && (
               <div className="prose prose-sm dark:prose-invert max-w-none break-words">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
@@ -163,7 +125,6 @@ const ChatMessageUser = ({
               </>
             )}
           </div>
-        )}
         <div className="flex items-center self-end opacity-0 group-hover:opacity-100 transition-opacity">
           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
             <Pencil className="h-4 w-4" />
