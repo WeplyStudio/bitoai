@@ -174,7 +174,6 @@ export const ja = {
   communityLoading: 'メッセージを読み込んでいます...',
   communityNoMessages: 'まだメッセージはありません。最初に何か言ってみましょう！',
   communityTypeMessage: 'メッセージを入力してください...',
-  communityAuthorPlaceholder: 'あなたの名前（任意）',
   errorLoadCommunityMessages: 'コミュニティメッセージを読み込めませんでした。',
   errorSendCommunityMessage: 'メッセージを送信できませんでした。もう一度お試しください。',
 

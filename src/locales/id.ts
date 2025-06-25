@@ -174,7 +174,6 @@ export const id = {
   communityLoading: 'Memuat pesan...',
   communityNoMessages: 'Belum ada pesan. Jadilah yang pertama mengatakan sesuatu!',
   communityTypeMessage: 'Ketik pesan Anda...',
-  communityAuthorPlaceholder: 'Nama Anda (opsional)',
   errorLoadCommunityMessages: 'Tidak dapat memuat pesan komunitas.',
   errorSendCommunityMessage: 'Tidak dapat mengirim pesan Anda. Silakan coba lagi.',
   

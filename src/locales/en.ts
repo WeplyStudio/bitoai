@@ -174,7 +174,6 @@ export const en = {
   communityLoading: 'Loading messages...',
   communityNoMessages: 'No messages yet. Be the first to say something!',
   communityTypeMessage: 'Type your message...',
-  communityAuthorPlaceholder: 'Your name (optional)',
   errorLoadCommunityMessages: 'Could not load community messages.',
   errorSendCommunityMessage: 'Could not send your message. Please try again.',
   

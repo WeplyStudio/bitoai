@@ -174,7 +174,6 @@ export const zh = {
   communityLoading: '正在加载消息...',
   communityNoMessages: '还没有消息。成为第一个发言的人吧！',
   communityTypeMessage: '输入您的消息...',
-  communityAuthorPlaceholder: '您的名字（可选）',
   errorLoadCommunityMessages: '无法加载社区消息。',
   errorSendCommunityMessage: '无法发送您的消息。请重试。',
   
