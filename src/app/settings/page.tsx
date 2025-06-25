@@ -12,6 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
 import { Download, Mail, MessageCircle, Loader2 } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -22,19 +23,23 @@ export default function SettingsPage() {
   const [isUpdatingUsername, setIsUpdatingUsername] = useState(false);
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
-  const { user, updateUsername } = useAuth();
+  const { user, updateUsername, isLoading: isAuthLoading } = useAuth();
 
   useEffect(() => {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
-    // This ensures the username state is always a valid string,
-    // reflecting the logged-in user or an empty string if logged out.
-    // This fixes the controlled vs. uncontrolled input error.
-    setNewUsername(user?.username || '');
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setNewUsername(user.username || '');
+    }
   }, [user]);
 
   useEffect(() => {
-    localStorage.setItem(AI_MODE_KEY, aiMode);
+    if (isMounted) {
+      localStorage.setItem(AI_MODE_KEY, aiMode);
+    }
   }, [aiMode]);
 
   const handleModeChange = (value: string) => {
@@ -92,13 +97,77 @@ export default function SettingsPage() {
 
   const handleUpdateUsername = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || newUsername === user.username || newUsername.trim().length < 3) {
-      toast({ variant: 'destructive', title: t('error'), description: t('usernameError')});
-      return;
+    if (!user || newUsername.trim() === user.username) {
+        if (!user || newUsername.trim().length < 3) {
+            toast({ variant: 'destructive', title: t('error'), description: t('usernameError')});
+        }
+        return;
     }
     setIsUpdatingUsername(true);
     await updateUsername(newUsername.trim());
     setIsUpdatingUsername(false);
+  };
+
+  const [isMounted, setIsMounted] = useState(false);
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
+
+  const ProfileSettingsCard = () => {
+    if (!isMounted || isAuthLoading) {
+      return (
+        <Card>
+          <CardHeader>
+            <CardTitle>{t('profileSettings')}</CardTitle>
+            <CardDescription>{t('profileSettingsDescription')}</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="space-y-2">
+              <Skeleton className="h-5 w-24 mb-2" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Skeleton className="h-10 w-24" />
+          </CardFooter>
+        </Card>
+      );
+    }
+
+    if (!user) {
+      return null;
+    }
+    
+    return (
+      <Card>
+        <CardHeader>
+          <CardTitle>{t('profileSettings')}</CardTitle>
+          <CardDescription>{t('profileSettingsDescription')}</CardDescription>
+        </CardHeader>
+        <form onSubmit={handleUpdateUsername}>
+          <CardContent>
+            <div className="space-y-2">
+              <Label htmlFor="username">{t('username')}</Label>
+              <Input
+                id="username"
+                value={newUsername}
+                onChange={(e) => setNewUsername(e.target.value)}
+                disabled={isUpdatingUsername}
+                minLength={3}
+                maxLength={20}
+              />
+              <p className="text-sm text-muted-foreground">{t('usernameDescription')}</p>
+            </div>
+          </CardContent>
+          <CardFooter className="border-t px-6 py-4">
+            <Button type="submit" disabled={isUpdatingUsername || !newUsername.trim() || newUsername.trim() === user.username}>
+              {isUpdatingUsername && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+              {t('save')}
+            </Button>
+          </CardFooter>
+        </form>
+      </Card>
+    );
   };
 
   return (
@@ -108,36 +177,7 @@ export default function SettingsPage() {
       </div>
       <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
         <div className="flex flex-col gap-8">
-          {user && (
-            <Card>
-              <CardHeader>
-                <CardTitle>{t('profileSettings')}</CardTitle>
-                <CardDescription>{t('profileSettingsDescription')}</CardDescription>
-              </CardHeader>
-              <form onSubmit={handleUpdateUsername}>
-                <CardContent>
-                  <div className="space-y-2">
-                    <Label htmlFor="username">{t('username')}</Label>
-                    <Input
-                      id="username"
-                      value={newUsername}
-                      onChange={(e) => setNewUsername(e.target.value)}
-                      disabled={isUpdatingUsername}
-                      minLength={3}
-                      maxLength={20}
-                    />
-                    <p className="text-sm text-muted-foreground">{t('usernameDescription')}</p>
-                  </div>
-                </CardContent>
-                <CardFooter className="border-t px-6 py-4">
-                  <Button type="submit" disabled={isUpdatingUsername || !user || newUsername === user.username}>
-                    {isUpdatingUsername && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {t('save')}
-                  </Button>
-                </CardFooter>
-              </form>
-            </Card>
-          )}
+          <ProfileSettingsCard />
 
           <Card>
             <CardHeader>
