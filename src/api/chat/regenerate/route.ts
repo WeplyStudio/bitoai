@@ -55,12 +55,11 @@ export async function POST(request: Request) {
         }
 
         // **SAFETY NET**: Initialize fields for older accounts if they don't exist.
-        if (typeof user.credits !== 'number') {
-            user.credits = 0;
-        }
-        if (!Array.isArray(user.achievements)) {
-            user.achievements = [];
-        }
+        if (typeof user.credits !== 'number') user.credits = 0;
+        if (!Array.isArray(user.achievements)) user.achievements = [];
+        if (typeof user.creditsSpent !== 'number') user.creditsSpent = 0;
+
+        const achievementsToGrant: string[] = [];
 
         // --- Credit & Achievement Logic ---
         const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
@@ -69,9 +68,13 @@ export async function POST(request: Request) {
                 return NextResponse.json({ error: 'Insufficient credits to use this feature. Please contact admin to buy more.' }, { status: 403 });
             }
             user.credits -= 1;
-            // Grant achievement for first pro chat
+            user.creditsSpent += 1;
+
             if (!user.achievements.includes('first_pro_chat')) {
-                user.achievements.push('first_pro_chat');
+                achievementsToGrant.push('first_pro_chat');
+            }
+            if (user.creditsSpent >= 1000 && !user.achievements.includes('rich_people')) {
+                achievementsToGrant.push('rich_people');
             }
         }
         // --- End Credit & Achievement Logic ---
@@ -88,28 +91,39 @@ export async function POST(request: Request) {
             imageUrl: m.imageUrl
         }));
         
+        const startTime = performance.now();
         const aiResponse = await chat({
             messages: historyForApi,
             mode: mode || 'default',
             language: 'id', 
             username: user.username,
         });
+        const duration = performance.now() - startTime;
+
+        if (duration < 5000 && !user.achievements.includes('quick_thinker')) {
+            achievementsToGrant.push('quick_thinker');
+        }
 
         if (!aiResponse || !aiResponse.content) {
             throw new Error('AI did not return a response.');
         }
 
-        // Update the existing AI message
+        // Grant all new achievements
+        if (achievementsToGrant.length > 0) {
+            await User.findByIdAndUpdate(userId, { $addToSet: { achievements: { $each: achievementsToGrant } } });
+        }
+
         messageToRegenerate.content = aiResponse.content;
         await messageToRegenerate.save();
-        await user.save(); // Save the user with decremented credits and potential new achievement
+        await user.save();
         
         const plainAiMessage = messageToRegenerate.toObject();
+        const updatedUser = await User.findById(userId).select('achievements');
 
         return NextResponse.json({ 
             message: { ...plainAiMessage, id: plainAiMessage._id.toString() },
             userCredits: user.credits,
-            achievements: user.achievements,
+            newAchievements: updatedUser?.achievements || user.achievements,
         });
 
     } catch (error) {

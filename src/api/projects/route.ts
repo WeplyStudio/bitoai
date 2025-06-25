@@ -54,6 +54,11 @@ export async function POST() {
 
     await connectDB();
     
+    const user = await User.findById(decoded.id);
+    if (!user) {
+        return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+    
     const newProject = await Project.create({
       userId: decoded.id,
       name: 'Untitled Chat',
@@ -63,31 +68,31 @@ export async function POST() {
     // --- Achievement Logic ---
     const projectCount = await Project.countDocuments({ userId: decoded.id });
     const achievementsToGrant = [];
-    if (projectCount === 1) {
-        achievementsToGrant.push('first_chat');
-    }
-    if (projectCount === 10) {
-        achievementsToGrant.push('ten_chats');
-    }
-    if (projectCount === 100) {
-      achievementsToGrant.push('hundred_chats');
-    }
-    if (projectCount === 1000) {
-        achievementsToGrant.push('thousand_chats');
-    }
-    if (projectCount === 10000) {
-        achievementsToGrant.push('ten_thousand_chats');
-    }
-    if (projectCount === 100000) {
-        achievementsToGrant.push('hundred_thousand_chats');
-    }
+    if (projectCount === 1) achievementsToGrant.push('first_chat');
+    if (projectCount === 3) achievementsToGrant.push('three_streak');
+    if (projectCount === 10) achievementsToGrant.push('ten_chats');
+    if (projectCount === 100) achievementsToGrant.push('hundred_chats');
+    if (projectCount === 1000) achievementsToGrant.push('thousand_chats');
+    if (projectCount === 10000) achievementsToGrant.push('ten_thousand_chats');
+    if (projectCount === 100000) achievementsToGrant.push('hundred_thousand_chats');
 
+    let finalAchievements = user.achievements || [];
     if (achievementsToGrant.length > 0) {
-        await User.findByIdAndUpdate(decoded.id, { $addToSet: { achievements: { $each: achievementsToGrant } } });
+        const achievementsToAdd = achievementsToGrant.filter(ach => !(user.achievements?.includes(ach)));
+        if (achievementsToAdd.length > 0) {
+            const updatedUser = await User.findByIdAndUpdate(decoded.id, 
+                { $addToSet: { achievements: { $each: achievementsToAdd } } },
+                { new: true }
+            );
+            if (updatedUser) {
+                finalAchievements = updatedUser.achievements;
+            }
+        }
     }
     // --- End Achievement Logic ---
 
-    return NextResponse.json(newProject, { status: 201 });
+    return NextResponse.json({ project: newProject, newAchievements: finalAchievements }, { status: 201 });
+
   } catch (error) {
     console.error('Failed to create project:', error);
     return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });

@@ -5,45 +5,31 @@ import { useAuth } from '@/contexts/AuthProvider';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { MessageSquarePlus, Milestone, Sparkles, Users, Lock, Inbox, Archive, Crown, Trophy } from 'lucide-react';
+import { 
+    MessageSquarePlus, Milestone, Sparkles, Lock, Inbox, Archive, Crown, Trophy,
+    Award, Moon, Zap, SmilePlus, ScrollText, Gem, Star, Shield
+} from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const achievementMap = {
-  first_chat: {
-    icon: MessageSquarePlus,
-    titleKey: 'achFirstChatTitle',
-    descriptionKey: 'achFirstChatDesc',
-  },
-  ten_chats: {
-    icon: Milestone,
-    titleKey: 'achTenChatsTitle',
-    descriptionKey: 'achTenChatsDesc',
-  },
-  hundred_chats: {
-    icon: Inbox,
-    titleKey: 'achHundredChatsTitle',
-    descriptionKey: 'achHundredChatsDesc',
-  },
-  thousand_chats: {
-    icon: Archive,
-    titleKey: 'achThousandChatsTitle',
-    descriptionKey: 'achThousandChatsDesc',
-  },
-  ten_thousand_chats: {
-    icon: Crown,
-    titleKey: 'achTenThousandChatsTitle',
-    descriptionKey: 'achTenThousandChatsDesc',
-  },
-  hundred_thousand_chats: {
-    icon: Trophy,
-    titleKey: 'achHundredThousandChatsTitle',
-    descriptionKey: 'achHundredThousandChatsDesc',
-  },
-  first_pro_chat: {
-    icon: Sparkles,
-    titleKey: 'achFirstProChatTitle',
-    descriptionKey: 'achFirstProChatDesc',
-  },
+  first_chat: { icon: MessageSquarePlus, titleKey: 'achFirstChatTitle', descriptionKey: 'achFirstChatDesc' },
+  three_streak: { icon: Award, titleKey: 'achThreeStreakTitle', descriptionKey: 'achThreeStreakDesc' },
+  ten_chats: { icon: Milestone, titleKey: 'achTenChatsTitle', descriptionKey: 'achTenChatsDesc' },
+  hundred_chats: { icon: Inbox, titleKey: 'achHundredChatsTitle', descriptionKey: 'achHundredChatsDesc' },
+  thousand_chats: { icon: Archive, titleKey: 'achThousandChatsTitle', descriptionKey: 'achThousandChatsDesc' },
+  ten_thousand_chats: { icon: Crown, titleKey: 'achTenThousandChatsTitle', descriptionKey: 'achTenThousandChatsDesc' },
+  hundred_thousand_chats: { icon: Trophy, titleKey: 'achHundredThousandChatsTitle', descriptionKey: 'achHundredThousandChatsDesc' },
+  
+  first_pro_chat: { icon: Sparkles, titleKey: 'achFirstProChatTitle', descriptionKey: 'achFirstProChatDesc' },
+  rich_people: { icon: Gem, titleKey: 'achRichPeopleTitle', descriptionKey: 'achRichPeopleDesc' },
+  
+  important_people: { icon: Star, titleKey: 'achImportantPeopleTitle', descriptionKey: 'achImportantPeopleDesc' },
+  night_owl: { icon: Moon, titleKey: 'achNightOwlTitle', descriptionKey: 'achNightOwlDesc' },
+  
+  quick_thinker: { icon: Zap, titleKey: 'achQuickThinkerTitle', descriptionKey: 'achQuickThinkerDesc' },
+  prompt_crafter: { icon: ScrollText, titleKey: 'achPromptCrafterTitle', descriptionKey: 'achPromptCrafterDesc' },
+  memelord: { icon: SmilePlus, titleKey: 'achMemelordTitle', descriptionKey: 'achMemelordDesc' },
+  dark_hunter: { icon: Shield, titleKey: 'achDarkHunterTitle', descriptionKey: 'achDarkHunterDesc' },
 };
 
 const allAchievementKeys = Object.keys(achievementMap);
@@ -62,8 +48,8 @@ export function AchievementsDisplay() {
         <CardDescription>{t('achievementsDescription', { count: unlockedAchievements.length, total: allAchievementKeys.length })}</CardDescription>
       </CardHeader>
       <CardContent>
-        <TooltipProvider>
-          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-5 xl:grid-cols-6 gap-4">
+        <TooltipProvider delayDuration={100}>
+          <div className="grid grid-cols-4 sm:grid-cols-5 md:grid-cols-6 lg:grid-cols-7 xl:grid-cols-8 gap-4">
             {allAchievementKeys.map((key) => {
               const achievement = achievementMap[key as AchievementKey];
               const isUnlocked = unlockedAchievements.includes(key);

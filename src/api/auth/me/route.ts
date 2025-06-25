@@ -33,7 +33,10 @@ export async function GET() {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role, achievements: user.achievements || [] } });
+    // Ensure achievements is an array
+    const achievements = Array.isArray(user.achievements) ? user.achievements : [];
+
+    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role, achievements } });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });

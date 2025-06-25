@@ -24,6 +24,13 @@ async function getUserIdFromToken(): Promise<string | null> {
     }
 }
 
+function isSameDay(d1: Date, d2: Date) {
+    return d1.getFullYear() === d2.getFullYear() &&
+           d1.getMonth() === d2.getMonth() &&
+           d1.getDate() === d2.getDate();
+}
+
+
 export async function POST(request: Request) {
     const userId = await getUserIdFromToken();
     if (!userId) {
@@ -37,8 +44,7 @@ export async function POST(request: Request) {
         }
 
         await connectDB();
-
-        // 1. Verify user owns the project
+        
         const project = await Project.findOne({ _id: projectId, userId });
         if (!project) {
             return NextResponse.json({ error: 'Project not found or access denied' }, { status: 404 });
@@ -49,29 +55,31 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
         
-        // **SAFETY NET**: Initialize fields for older accounts if they don't exist.
-        if (typeof user.credits === 'undefined' || user.credits === null) {
-            user.credits = 0;
-        }
-        if (!Array.isArray(user.achievements)) {
-            user.achievements = [];
-        }
+        // **SAFETY NETS**: Initialize fields for older accounts if they don't exist.
+        if (typeof user.credits === 'undefined' || user.credits === null) user.credits = 0;
+        if (!Array.isArray(user.achievements)) user.achievements = [];
+        if (typeof user.creditsSpent !== 'number') user.creditsSpent = 0;
+        if (typeof user.messagesToday !== 'number') user.messagesToday = 0;
 
-        // --- Credit & Achievement Logic ---
+        const achievementsToGrant: string[] = [];
+
+        // --- Credit & Pro Mode Logic ---
         const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
         if (mode && proModes.includes(mode)) {
             if (user.credits < 1) {
                 return NextResponse.json({ error: 'Insufficient credits. Please contact admin to buy more.' }, { status: 403 });
             }
             user.credits -= 1;
-            // Grant achievement for first pro chat
+            user.creditsSpent += 1;
+            
             if (!user.achievements.includes('first_pro_chat')) {
-                user.achievements.push('first_pro_chat');
+                achievementsToGrant.push('first_pro_chat');
+            }
+            if (user.creditsSpent >= 1000 && !user.achievements.includes('rich_people')) {
+                achievementsToGrant.push('rich_people');
             }
         }
-        // --- End Credit & Achievement Logic ---
-
-        // 2. Save the user's message
+        
         const userMessage = await ChatMessage.create({
             projectId,
             userId,
@@ -80,38 +88,74 @@ export async function POST(request: Request) {
             imageUrl: message.imageUrl,
         });
 
-        // 3. Fetch recent chat history for the AI
+        // --- Achievement Logic ---
+        const now = new Date();
+        // Important People (10 messages in a day)
+        if (user.lastMessageDate && isSameDay(now, user.lastMessageDate)) {
+            user.messagesToday += 1;
+        } else {
+            user.messagesToday = 1;
+        }
+        user.lastMessageDate = now;
+        if (user.messagesToday > 10 && !user.achievements.includes('important_people')) {
+            achievementsToGrant.push('important_people');
+        }
+
+        // Night Owl (2-5 PM UTC)
+        const hourUTC = now.getUTCHours();
+        if (hourUTC >= 14 && hourUTC < 17 && !user.achievements.includes('night_owl')) {
+             achievementsToGrant.push('night_owl');
+        }
+
+        // Prompt Crafter (>35 words)
+        if (message.content.split(/\s+/).length > 35 && !user.achievements.includes('prompt_crafter')) {
+            achievementsToGrant.push('prompt_crafter');
+        }
+
+        // Memelord
+        if (message.content.toLowerCase().includes('meme') && !user.achievements.includes('memelord')) {
+            achievementsToGrant.push('memelord');
+        }
+        // --- End Achievement Logic ---
+
         const recentHistory = await ChatMessage.find({ projectId }).sort({ createdAt: -1 }).limit(10);
         const historyForApi: ApiChatMessage[] = recentHistory.reverse().map(m => ({
             role: m.role as 'user' | 'model',
             content: m.content,
             imageUrl: m.imageUrl
         }));
-
-        // 4. Call the Genkit chat flow
+        
+        const startTime = performance.now();
         const aiResponse = await chat({
             messages: historyForApi,
             mode: mode || 'default',
             language: 'id',
             username: user.username,
         });
+        const duration = performance.now() - startTime;
+
+        // Quick Thinker Achievement (<5 seconds)
+        if (duration < 5000 && !user.achievements.includes('quick_thinker')) {
+            achievementsToGrant.push('quick_thinker');
+        }
         
         if (!aiResponse || !aiResponse.content) {
             throw new Error('AI did not return a response.');
         }
 
-        // 5. Save the AI's response
         const aiMessage = await ChatMessage.create({
             projectId,
-            userId, // Attributing to the user who initiated the chat
+            userId,
             role: 'model',
             content: aiResponse.content,
         });
-        
-        // Also save user to commit credit and achievement changes
+
+        // Grant all new achievements
+        if (achievementsToGrant.length > 0) {
+            await User.findByIdAndUpdate(userId, { $addToSet: { achievements: { $each: achievementsToGrant } } });
+        }
         await user.save();
 
-        // 6. Check if project needs renaming (first user message)
         let updatedProjectName = null;
         const messageCount = await ChatMessage.countDocuments({ projectId });
         if (messageCount <= 2 && project.name === 'Untitled Chat') {
@@ -126,12 +170,13 @@ export async function POST(request: Request) {
         }
         
         const plainAiMessage = aiMessage.toObject();
+        const updatedUser = await User.findById(userId).select('achievements');
 
         return NextResponse.json({ 
             aiMessage: { ...plainAiMessage, id: plainAiMessage._id.toString() },
             updatedProjectName,
             userCredits: user.credits,
-            achievements: user.achievements,
+            newAchievements: updatedUser?.achievements || user.achievements,
         });
 
     } catch (error) {

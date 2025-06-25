@@ -9,6 +9,9 @@ export interface IUser extends Document {
   otpExpires?: Date;
   isVerified: boolean;
   credits: number;
+  creditsSpent: number;
+  messagesToday: number;
+  lastMessageDate?: Date;
   role: 'user' | 'admin';
   achievements: string[];
   createdAt: Date;
@@ -50,6 +53,17 @@ const UserSchema: Schema = new Schema({
   credits: {
     type: Number,
     default: 5,
+  },
+  creditsSpent: {
+    type: Number,
+    default: 0,
+  },
+  messagesToday: {
+    type: Number,
+    default: 0,
+  },
+  lastMessageDate: {
+    type: Date,
   },
   role: {
     type: String,

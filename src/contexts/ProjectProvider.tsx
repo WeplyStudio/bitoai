@@ -4,6 +4,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback, ReactNode, useMemo } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { useAuth } from './AuthProvider';
+import { useLanguage } from './LanguageProvider';
 
 export interface Project {
   _id: string;
@@ -33,6 +34,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
   const { user, updateUserInContext } = useAuth();
+  const { t } = useLanguage();
 
   const fetchProjects = useCallback(async () => {
     if (!user) {
@@ -96,18 +98,19 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       setProjects(prev => [newProject, ...prev].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
       setActiveProjectId(newProject.id);
 
-      if (data.newAchievements) {
-        const hasNewAchievement = data.newAchievements.length > user.achievements.length;
-        updateUserInContext({ achievements: data.newAchievements });
-        if(hasNewAchievement) {
-            toast({ title: "Achievement Unlocked!", description: "Check your new badge in the Settings page." });
+      if (data.newAchievements && data.newAchievements.length > (user.achievements?.length || 0)) {
+        const newAchievementId = data.newAchievements.find((ach: string) => !user.achievements.includes(ach));
+        if (newAchievementId) {
+          const titleKey = `ach${newAchievementId.charAt(0).toUpperCase() + newAchievementId.slice(1).replace(/_([a-z])/g, (g) => g[1].toUpperCase())}Title`;
+          toast({ title: "Achievement Unlocked!", description: t(titleKey as any) });
         }
+        updateUserInContext({ achievements: data.newAchievements });
       }
 
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not create a new chat.' });
     }
-  }, [toast, user, updateUserInContext]);
+  }, [toast, user, updateUserInContext, t]);
 
   const switchProject = useCallback((id: string) => {
     if (projects.some(p => p.id === id)) {

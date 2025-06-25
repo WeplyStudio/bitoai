@@ -1,19 +1,21 @@
+
 'use client';
 
 import { useTheme } from "next-themes";
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
 import { useAuth } from "@/contexts/AuthProvider";
 import { Skeleton } from "../ui/skeleton";
+import { useToast } from "@/hooks/use-toast";
 
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
@@ -37,11 +39,39 @@ export const LeftSidebarContent = () => {
     const [mounted, setMounted] = useState(false);
     const { createProject } = useProjects();
     const { t } = useLanguage();
-    const { user, isLoading, logout, setAuthDialogOpen } = useAuth();
+    const { user, isLoading, logout, setAuthDialogOpen, updateUserInContext } = useAuth();
+    const { toast } = useToast();
 
     useEffect(() => {
         setMounted(true);
     }, []);
+
+    const grantDarkHunterAchievement = useCallback(async () => {
+        if (user && !user.achievements.includes('dark_hunter')) {
+            try {
+                const response = await fetch('/api/user/grant-achievement', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ achievementId: 'dark_hunter' }),
+                });
+                const data = await response.json();
+                if (response.ok) {
+                    updateUserInContext({ achievements: data.newAchievements });
+                    toast({ title: t('achDarkHunterTitle'), description: t('achDarkHunterDesc') });
+                }
+            } catch (error) {
+                // Fail silently
+                console.error("Failed to grant Dark Hunter achievement", error);
+            }
+        }
+    }, [user, updateUserInContext, toast, t]);
+
+    useEffect(() => {
+        if (mounted && theme === 'dark') {
+            grantDarkHunterAchievement();
+        }
+    }, [theme, mounted, grantDarkHunterAchievement]);
+
 
     const handleNewProject = () => {
         if (!user) {

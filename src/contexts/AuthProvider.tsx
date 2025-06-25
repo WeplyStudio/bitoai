@@ -44,7 +44,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const response = await fetch('/api/auth/me');
       if (response.ok) {
         const data = await response.json();
-        setUser(data.user);
+        if (data.user) {
+          setUser(data.user);
+        } else {
+          setUser(null);
+        }
       } else {
         setUser(null);
       }
@@ -151,7 +155,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const updateUserInContext = useCallback((updates: Partial<User>) => {
-    setUser(prevUser => prevUser ? { ...prevUser, ...updates } : null);
+    setUser(prevUser => {
+        if (!prevUser) return null;
+        
+        // Handle achievement array updates carefully to avoid duplicates
+        const newAchievements = updates.achievements 
+            ? [...new Set([...(prevUser.achievements || []), ...updates.achievements])]
+            : prevUser.achievements;
+            
+        return { 
+            ...prevUser, 
+            ...updates,
+            achievements: newAchievements
+        };
+    });
   }, []);
 
   const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, updateUserInContext, isAuthDialogOpen, setAuthDialogOpen };
