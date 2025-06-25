@@ -211,6 +211,8 @@ export const zh = {
   feedbackSuccessDescription: '响应已更新。',
   feedbackIncorporateError: '未能采纳反馈。',
   copyCode: '复制代码',
+  messageUpdatedSuccessTitle: '消息已更新',
+  messageUpdatedSuccessDesc: '您的消息已成功保存。',
 
   // Feedback Dialog
   feedbackTitle: '提供反馈',

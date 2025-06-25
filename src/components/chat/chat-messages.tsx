@@ -15,6 +15,9 @@ interface ChatMessagesProps {
   onRegenerate: (messageId: string) => void;
   onStartEdit: (messageId: string, content: string) => void;
   regeneratingMessageId: string | null;
+  editingMessageId: string | null;
+  onCancelEdit: () => void;
+  onSaveEdit: (messageId: string, newContent: string) => void;
 }
 
 export function ChatMessages({ 
@@ -23,15 +26,18 @@ export function ChatMessages({
     onFeedback,
     onRegenerate,
     onStartEdit,
-    regeneratingMessageId
+    regeneratingMessageId,
+    editingMessageId,
+    onCancelEdit,
+    onSaveEdit
 }: ChatMessagesProps) {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (scrollViewportRef.current) {
+    if (scrollViewportRef.current && !editingMessageId) {
         scrollViewportRef.current.scrollTo({ top: scrollViewportRef.current.scrollHeight, behavior: 'smooth' });
     }
-  }, [messages, isLoading, regeneratingMessageId]);
+  }, [messages, isLoading, regeneratingMessageId, editingMessageId]);
 
   return (
     <ScrollArea className="h-full" viewportRef={scrollViewportRef}>
@@ -44,6 +50,9 @@ export function ChatMessages({
             onRegenerate={onRegenerate}
             onStartEdit={onStartEdit}
             isRegenerating={regeneratingMessageId === message.id}
+            editingMessageId={editingMessageId}
+            onCancelEdit={onCancelEdit}
+            onSaveEdit={onSaveEdit}
           />
         ))}
         {isLoading && (

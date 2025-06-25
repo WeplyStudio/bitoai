@@ -39,6 +39,8 @@ export function ChatPanel() {
   const [isLoading, setIsLoading] = useState(false); // For sending a new message
   const [isFetchingHistory, setIsFetchingHistory] = useState(true);
   const [regeneratingMessageId, setRegeneratingMessageId] = useState<string | null>(null);
+  const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
+
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -84,10 +86,10 @@ export function ChatPanel() {
         }
     };
     fetchMessages();
-  }, [activeProject, toast]);
+  }, [activeProject, toast, t]);
 
   const handleSend = async (text: string, file?: File) => {
-    if (isLoading || regeneratingMessageId || (!text.trim() && !file) || !activeProject) return;
+    if (isLoading || regeneratingMessageId || editingMessageId || (!text.trim() && !file) || !activeProject) return;
     setIsLoading(true);
 
     let imageUrl: string | undefined = undefined;
@@ -191,8 +193,44 @@ export function ChatPanel() {
     } finally {
       setRegeneratingMessageId(null);
     }
-  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext]);
+  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t]);
 
+
+  const handleStartEdit = (messageId: string) => {
+    setEditingMessageId(messageId);
+  };
+
+  const handleCancelEdit = () => {
+    setEditingMessageId(null);
+  };
+
+  const handleSaveEdit = async (messageId: string, newContent: string) => {
+    if (!newContent.trim() || editingMessageId !== messageId) return;
+
+    const originalMessages = [...messages];
+    const optimisticUpdate = messages.map(m =>
+      m.id === messageId ? { ...m, content: newContent } : m
+    );
+    setMessages(optimisticUpdate);
+    setEditingMessageId(null);
+
+    try {
+      const response = await fetch(`/api/chat/messages/${messageId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content: newContent }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to save message.');
+      }
+      toast({ title: t('messageUpdatedSuccessTitle'), description: t('messageUpdatedSuccessDesc') });
+    } catch (error: any) {
+      setMessages(originalMessages); // Revert on failure
+      toast({ variant: 'destructive', title: t('error'), description: error.message });
+    }
+  };
 
   const handleActionTemporarilyDisabled = () => {
     toast({
@@ -307,8 +345,11 @@ export function ChatPanel() {
         isLoading={isLoading} 
         onFeedback={handleActionTemporarilyDisabled}
         onRegenerate={handleRegenerate}
-        onStartEdit={handleActionTemporarilyDisabled}
+        onStartEdit={handleStartEdit}
         regeneratingMessageId={regeneratingMessageId}
+        editingMessageId={editingMessageId}
+        onCancelEdit={handleCancelEdit}
+        onSaveEdit={handleSaveEdit}
       />
     );
   };
@@ -330,7 +371,7 @@ export function ChatPanel() {
             <div className="mx-auto max-w-4xl">
               <ChatInput 
                 onSend={handleSend} 
-                isLoading={isLoading || !activeProject || !!regeneratingMessageId}
+                isLoading={isLoading || !activeProject || !!regeneratingMessageId || !!editingMessageId}
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}

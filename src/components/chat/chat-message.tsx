@@ -13,6 +13,7 @@ import remarkGfm from 'remark-gfm';
 import { ImagePreviewDialog } from './image-preview-dialog';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { Skeleton } from '../ui/skeleton';
+import { Textarea } from '../ui/textarea';
 
 interface ChatMessageProps {
   message: Message;
@@ -20,6 +21,9 @@ interface ChatMessageProps {
   onRegenerate: (messageId: string) => void;
   onStartEdit: (messageId: string, content: string) => void;
   isRegenerating?: boolean;
+  editingMessageId: string | null;
+  onCancelEdit: () => void;
+  onSaveEdit: (messageId: string, newContent: string) => void;
 }
 
 const ChatMessageModel = ({ message, onFeedback, onRegenerate, isRegenerating }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate' | 'isRegenerating'>) => {
@@ -103,12 +107,65 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate, isRegenerating }:
 };
 
 
+const ChatMessageUserEditor = ({ message, onSave, onCancel }: { message: Message; onSave: (newContent: string) => void; onCancel: () => void }) => {
+  const [editedContent, setEditedContent] = useState(message.content);
+  const { t } = useLanguage();
+
+  const handleSave = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (editedContent.trim()) {
+      onSave(editedContent);
+    }
+  };
+
+  return (
+    <form onSubmit={handleSave} className="w-full">
+      <div className="rounded-lg bg-secondary p-3 space-y-3">
+        <Textarea
+          value={editedContent}
+          onChange={(e) => setEditedContent(e.target.value)}
+          className="bg-background"
+          rows={4}
+          autoFocus
+        />
+        <div className="flex justify-end gap-2">
+          <Button type="button" variant="ghost" size="sm" onClick={onCancel}>{t('cancel')}</Button>
+          <Button type="submit" size="sm" disabled={!editedContent.trim()}>{t('save')}</Button>
+        </div>
+      </div>
+    </form>
+  );
+};
+
+
 const ChatMessageUser = ({ 
   message, 
   onStartEdit,
-}: Pick<ChatMessageProps, 'message' | 'onStartEdit'>) => {
+  editingMessageId,
+  onCancelEdit,
+  onSaveEdit
+}: Omit<ChatMessageProps, 'onFeedback' | 'onRegenerate' | 'isRegenerating'>) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
+  if (editingMessageId === message.id) {
+    return (
+      <div className="group flex items-start gap-3 justify-end">
+        <div className="flex flex-col items-end gap-1 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] order-1">
+          <ChatMessageUserEditor
+            message={message}
+            onCancel={onCancelEdit}
+            onSave={(newContent) => onSaveEdit(message.id, newContent)}
+          />
+        </div>
+        <Avatar className="h-8 w-8 border flex-shrink-0 order-2">
+          <AvatarFallback>
+            <UserIcon className="h-5 w-5" />
+          </AvatarFallback>
+        </Avatar>
+      </div>
+    );
+  }
+
   return (
     <div className="group flex items-start gap-3 justify-end">
       <div className="flex flex-col items-end gap-1 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[75%] order-1">
@@ -153,7 +210,7 @@ const ChatMessageUser = ({
 
 
 export function ChatMessage(props: ChatMessageProps) {
-  const { message } = props;
+  const { message, editingMessageId } = props;
 
   if (message.role === 'model') {
     return <ChatMessageModel {...props} />;

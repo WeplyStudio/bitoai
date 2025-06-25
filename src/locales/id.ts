@@ -211,6 +211,8 @@ export const id = {
   feedbackSuccessDescription: 'Respons telah diperbarui.',
   feedbackIncorporateError: 'Gagal memasukkan umpan balik.',
   copyCode: 'Salin kode',
+  messageUpdatedSuccessTitle: 'Pesan Diperbarui',
+  messageUpdatedSuccessDesc: 'Pesan Anda telah berhasil disimpan.',
 
   // Feedback Dialog
   feedbackTitle: 'Berikan Umpan Balik',

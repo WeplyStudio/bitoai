@@ -211,6 +211,8 @@ export const ja = {
   feedbackSuccessDescription: '応答が更新されました。',
   feedbackIncorporateError: 'フィードバックの反映に失敗しました。',
   copyCode: 'コードをコピー',
+  messageUpdatedSuccessTitle: 'メッセージが更新されました',
+  messageUpdatedSuccessDesc: 'メッセージが正常に保存されました。',
 
   // Feedback Dialog
   feedbackTitle: 'フィードバックを提供する',

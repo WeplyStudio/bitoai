@@ -211,6 +211,8 @@ export const en = {
   feedbackSuccessDescription: 'The response has been updated.',
   feedbackIncorporateError: 'Failed to incorporate feedback.',
   copyCode: 'Copy code',
+  messageUpdatedSuccessTitle: 'Message Updated',
+  messageUpdatedSuccessDesc: 'Your message has been saved successfully.',
 
   // Feedback Dialog
   feedbackTitle: 'Provide Feedback',
