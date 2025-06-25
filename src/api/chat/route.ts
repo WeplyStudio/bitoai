@@ -49,10 +49,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
         
-        // **SAFETY NET**: If an old user account has no credits field, initialize it to 0.
-        // The main fix is in verify-otp, this is a fallback.
+        // **SAFETY NET**: Initialize fields for older accounts if they don't exist.
         if (typeof user.credits === 'undefined' || user.credits === null) {
             user.credits = 0;
+        }
+        if (!Array.isArray(user.achievements)) {
+            user.achievements = [];
         }
 
         // --- Credit & Achievement Logic ---

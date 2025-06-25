@@ -70,6 +70,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Unauthorized: User not found.' }, { status: 401 });
     }
 
+    // **SAFETY NET**: If an old user account has no achievements field, initialize it.
+    if (!Array.isArray(user.achievements)) {
+        user.achievements = [];
+    }
+
     const { content } = await request.json();
     if (!content || typeof content !== 'string' || content.trim() === '') {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
