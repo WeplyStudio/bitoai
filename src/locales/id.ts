@@ -1,3 +1,4 @@
+
 export const id = {
   // Left Sidebar
   aiChat: 'AI Chat',
@@ -63,6 +64,15 @@ export const id = {
   exportSuccessfulMessage: 'Semua riwayat obrolan Anda telah diunduh.',
   error: 'Kesalahan',
   errorNoChatHistoryToExport: 'Tidak ada riwayat obrolan untuk diekspor.',
+  accountManagement: 'Manajemen Akun',
+  accountManagementDescription: 'Kelola pengaturan dan data akun Anda.',
+  deleteAccount: 'Hapus Akun',
+  deleteAccountDescription: 'Hapus akun Anda dan semua data terkait secara permanen.',
+  deleteAccountConfirmationTitle: 'Apakah Anda benar-benar yakin?',
+  deleteAccountConfirmationMessage: 'Tindakan ini tidak dapat dibatalkan. Ini akan menghapus akun Anda secara permanen, termasuk semua proyek dan riwayat obrolan Anda. Akun Anda akan segera keluar.',
+  deleteAccountSuccessTitle: 'Akun Dihapus',
+  deleteAccountSuccessDescription: 'Akun Anda telah berhasil dihapus. Kami sedih melihat Anda pergi.',
+  deleteAccountError: 'Gagal menghapus akun. Silakan coba lagi.',
 
   // FAQ Section
   faqBitoTitle: 'Apa itu Bito AI?',

@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -18,6 +19,7 @@ interface AuthContextType {
   register: (email: string, username: string, pass: string) => Promise<boolean>;
   verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
+  deleteAccount: () => Promise<void>;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
 }
@@ -127,7 +129,24 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = { user, isLoading, login, register, logout, verifyOtp, isAuthDialogOpen, setAuthDialogOpen };
+  const deleteAccount = async () => {
+    try {
+      const response = await fetch('/api/user/delete-account', {
+        method: 'DELETE',
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || t('deleteAccountError'));
+      }
+      setUser(null);
+      toast({ title: t('deleteAccountSuccessTitle'), description: t('deleteAccountSuccessDescription') });
+      router.push('/');
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('error'), description: error.message });
+    }
+  };
+
+  const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, isAuthDialogOpen, setAuthDialogOpen };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

@@ -9,7 +9,9 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle } from 'lucide-react';
+import { Download, Mail, MessageCircle, Trash2 } from 'lucide-react';
+import { useAuth } from '@/contexts/AuthProvider';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -18,6 +20,7 @@ export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
+  const { user, deleteAccount } = useAuth();
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -155,6 +158,48 @@ export default function SettingsPage() {
               </div>
             </CardContent>
           </Card>
+          
+          {user && (
+            <Card className="border-destructive">
+                <CardHeader>
+                    <CardTitle>{t('accountManagement')}</CardTitle>
+                    <CardDescription>{t('accountManagementDescription')}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                    <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                        <div className="space-y-0.5">
+                            <Label className="text-destructive">{t('deleteAccount')}</Label>
+                            <p className="text-sm text-destructive/80">
+                                {t('deleteAccountDescription')}
+                            </p>
+                        </div>
+                        <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                                <Button variant="destructive">
+                                    <Trash2 className="mr-2 h-4 w-4" />
+                                    {t('deleteAccount')}
+                                </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                                <AlertDialogHeader>
+                                    <AlertDialogTitle>{t('deleteAccountConfirmationTitle')}</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                        {t('deleteAccountConfirmationMessage')}
+                                    </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                    <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => deleteAccount()}>
+                                        {t('delete')}
+                                    </AlertDialogAction>
+                                </AlertDialogFooter>
+                            </AlertDialogContent>
+                        </AlertDialog>
+                    </div>
+                </CardContent>
+            </Card>
+          )}
+
         </div>
 
         <Card>

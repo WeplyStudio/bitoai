@@ -1,3 +1,4 @@
+
 export const zh = {
   // Left Sidebar
   aiChat: 'AI 聊天',
@@ -63,6 +64,15 @@ export const zh = {
   exportSuccessfulMessage: '您的所有聊天记录都已下载。',
   error: '错误',
   errorNoChatHistoryToExport: '没有可导出的聊天记录。',
+  accountManagement: '账户管理',
+  accountManagementDescription: '管理您的账户设置和数据。',
+  deleteAccount: '删除账户',
+  deleteAccountDescription: '永久删除您的账户和所有相关数据。',
+  deleteAccountConfirmationTitle: '您确定吗？',
+  deleteAccountConfirmationMessage: '此操作无法撤销。这将永久删除您的账户，包括所有项目和聊天记录。您的账户将立即登出。',
+  deleteAccountSuccessTitle: '账户已删除',
+  deleteAccountSuccessDescription: '您的账户已成功删除。很遗憾看到您离开。',
+  deleteAccountError: '删除账户失败。请重试。',
 
   // FAQ Section
   faqBitoTitle: '什么是 Bito AI？',

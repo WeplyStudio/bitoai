@@ -1,3 +1,4 @@
+
 export const ja = {
   // Left Sidebar
   aiChat: 'AIチャット',
@@ -63,6 +64,15 @@ export const ja = {
   exportSuccessfulMessage: 'すべてのチャット履歴がダウンロードされました。',
   error: 'エラー',
   errorNoChatHistoryToExport: 'エクスポートするチャット履歴がありません。',
+  accountManagement: 'アカウント管理',
+  accountManagementDescription: 'アカウント設定とデータを管理します。',
+  deleteAccount: 'アカウントを削除',
+  deleteAccountDescription: 'アカウントと関連するすべてのデータを永久に削除します。',
+  deleteAccountConfirmationTitle: '本当によろしいですか？',
+  deleteAccountConfirmationMessage: 'この操作は元に戻せません。これにより、アカウント、すべてのプロジェクト、チャット履歴が永久に削除されます。アカウントはすぐにログアウトされます。',
+  deleteAccountSuccessTitle: 'アカウントが削除されました',
+  deleteAccountSuccessDescription: 'アカウントが正常に削除されました。ご利用いただきありがとうございました。',
+  deleteAccountError: 'アカウントの削除に失敗しました。もう一度お試しください。',
   
   // FAQ Section
   faqBitoTitle: 'Bito AIとは何ですか？',

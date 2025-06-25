@@ -1,3 +1,4 @@
+
 export const en = {
   // Left Sidebar
   aiChat: 'AI Chat',
@@ -63,6 +64,15 @@ export const en = {
   exportSuccessfulMessage: 'All of your chat histories have been downloaded.',
   error: 'Error',
   errorNoChatHistoryToExport: 'No chat history to export.',
+  accountManagement: 'Account Management',
+  accountManagementDescription: 'Manage your account settings and data.',
+  deleteAccount: 'Delete Account',
+  deleteAccountDescription: 'Permanently delete your account and all associated data.',
+  deleteAccountConfirmationTitle: 'Are you absolutely sure?',
+  deleteAccountConfirmationMessage: 'This action cannot be undone. This will permanently delete your account, including all your projects and chat histories. Your account will be logged out immediately.',
+  deleteAccountSuccessTitle: 'Account Deleted',
+  deleteAccountSuccessDescription: 'Your account has been successfully deleted. We are sorry to see you go.',
+  deleteAccountError: 'Failed to delete account. Please try again.',
 
   // FAQ Section
   faqBitoTitle: 'What is Bito AI?',
