@@ -152,7 +152,7 @@ export function ChatPanel() {
             refreshProjects();
         }
         if (data.userCredits !== undefined) {
-            updateUserInContext({ credits: data.userCredits });
+            updateUserInContext({ credits: data.userCredits, achievements: data.achievements });
         }
     } catch (error: any) {
         setMessages(prev => prev.filter(m => m.id !== tempId));
@@ -229,7 +229,7 @@ export function ChatPanel() {
       const data = await response.json();
       const updatedMessage = data.message;
       if (data.userCredits !== undefined) {
-          updateUserInContext({ credits: data.userCredits });
+          updateUserInContext({ credits: data.userCredits, achievements: data.achievements });
       }
 
       setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, content: updatedMessage.content } : msg));
@@ -247,7 +247,7 @@ export function ChatPanel() {
   }, [user, activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t, aiMode]);
 
 
-  const handleStartEdit = (messageId: string) => {
+  const handleStartEdit = (messageId: string, content: string) => {
     if (!user) return;
     setEditingMessageId(messageId);
   };
