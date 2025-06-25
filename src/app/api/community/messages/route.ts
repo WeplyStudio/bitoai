@@ -2,6 +2,25 @@ import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import CommunityMessage from '@/models/CommunityMessage';
 
+/**
+ * Sanitizes a string by escaping HTML characters to prevent XSS attacks.
+ * @param text The input string to sanitize.
+ * @returns The sanitized string.
+ */
+function sanitize(text: string): string {
+  if (typeof text !== 'string') {
+    return '';
+  }
+  const map: { [key: string]: string } = {
+    '&': '&amp;',
+    '<': '&lt;',
+    '>': '&gt;',
+    '"': '&quot;',
+    "'": '&#x27;',
+  };
+  return text.replace(/[&<>"']/g, (m) => map[m as keyof typeof map]);
+}
+
 export async function GET() {
   await connectDB();
   try {
@@ -22,9 +41,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
+    // Sanitize user input before saving to the database to prevent XSS
+    const sanitizedContent = sanitize(content);
+    const sanitizedAuthor = sanitize(author || '');
+
     const newMessage = new CommunityMessage({
-      content,
-      author: author || 'Anonymous',
+      content: sanitizedContent,
+      author: sanitizedAuthor.trim() || 'Anonymous',
     });
 
     await newMessage.save();
