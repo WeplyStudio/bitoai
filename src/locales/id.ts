@@ -89,6 +89,19 @@ export const id = {
   getMoreCreditsDescription: "Kredit habis? Hubungi admin kami untuk membeli lebih banyak dan membuka fitur premium.",
   contactAdmin: 'Hubungi Admin',
 
+  // Achievements
+  achievementsTitle: 'Pencapaian',
+  achievementsDescription: 'Anda telah membuka {{count}} dari {{total}} pencapaian.',
+  achievementLocked: 'Terkunci',
+  achFirstChatTitle: 'Pemecah Es',
+  achFirstChatDesc: 'Memulai obrolan pertama Anda.',
+  achTenChatsTitle: 'Kolektor Obrolan',
+  achTenChatsDesc: 'Membuat 10 obrolan.',
+  achFirstProChatTitle: 'Penjelajah Pro',
+  achFirstProChatDesc: 'Menggunakan mode AI Pro untuk pertama kalinya.',
+  achFirstCommunityPostTitle: 'Anggota Komunitas',
+  achFirstCommunityPostDesc: 'Memposting pesan pertama Anda di komunitas.',
+
   // FAQ Section
   faqBitoTitle: 'Apa itu Bito AI?',
   faqBitoContent: 'Bito AI adalah asisten AI yang membantu dan ramah yang dikembangkan oleh JDev, dirancang untuk membantu tugas-tugas kreatif dan bisnis. Anda dapat mengajukan pertanyaan, mendapatkan bantuan menulis, melakukan brainstorming ide, dan banyak lagi.',

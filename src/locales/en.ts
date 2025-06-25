@@ -89,6 +89,19 @@ export const en = {
   getMoreCreditsDescription: "Run out of credits? Contact our admin to purchase more and unlock premium features.",
   contactAdmin: 'Contact Admin',
 
+  // Achievements
+  achievementsTitle: 'Achievements',
+  achievementsDescription: 'You have unlocked {{count}} of {{total}} achievements.',
+  achievementLocked: 'Locked',
+  achFirstChatTitle: 'Ice Breaker',
+  achFirstChatDesc: 'Started your first chat.',
+  achTenChatsTitle: 'Chat Collector',
+  achTenChatsDesc: 'Created 10 chats.',
+  achFirstProChatTitle: 'Pro Explorer',
+  achFirstProChatDesc: 'Used a Pro AI mode for the first time.',
+  achFirstCommunityPostTitle: 'Community Member',
+  achFirstCommunityPostDesc: 'Posted your first message in the community.',
+
   // FAQ Section
   faqBitoTitle: 'What is Bito AI?',
   faqBitoContent: 'Bito AI is a helpful and friendly AI assistant developed by JDev, designed to help with creative and business tasks. You can ask it questions, get help with writing, brainstorm ideas, and much more.',

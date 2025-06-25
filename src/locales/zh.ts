@@ -88,6 +88,19 @@ export const zh = {
   getMoreCredits: '获取更多积分',
   getMoreCreditsDescription: "积分用完了？联系我们的管理员购买更多积分并解锁高级功能。",
   contactAdmin: '联系管理员',
+  
+  // Achievements
+  achievementsTitle: '成就',
+  achievementsDescription: '您已解锁 {{count}} / {{total}} 个成就。',
+  achievementLocked: '已锁定',
+  achFirstChatTitle: '破冰者',
+  achFirstChatDesc: '开始了您的第一次聊天。',
+  achTenChatsTitle: '聊天收藏家',
+  achTenChatsDesc: '创建了10个聊天。',
+  achFirstProChatTitle: '专业探险家',
+  achFirstProChatDesc: '首次使用了专业AI模式。',
+  achFirstCommunityPostTitle: '社区成员',
+  achFirstCommunityPostDesc: '在社区中发布了您的第一条消息。',
 
   // FAQ Section
   faqBitoTitle: '什么是 Bito AI？',

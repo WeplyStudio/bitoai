@@ -14,6 +14,7 @@ import { useAuth } from '@/contexts/AuthProvider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
+import { AchievementsDisplay } from '@/components/settings/achievements-display';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -203,6 +204,8 @@ export default function SettingsPage() {
                       </div>
                   </CardContent>
               </Card>
+
+              <AchievementsDisplay />
 
               <Card>
                 <CardHeader>

@@ -1,3 +1,4 @@
+
 import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
@@ -9,6 +10,7 @@ export interface IUser extends Document {
   isVerified: boolean;
   credits: number;
   role: 'user' | 'admin';
+  achievements: string[];
   createdAt: Date;
 }
 
@@ -53,6 +55,10 @@ const UserSchema: Schema = new Schema({
     type: String,
     enum: ['user', 'admin'],
     default: 'user',
+  },
+  achievements: {
+    type: [String],
+    default: [],
   },
   createdAt: { 
     type: Date, 

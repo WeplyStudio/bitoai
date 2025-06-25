@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -11,6 +12,7 @@ interface User {
   username: string;
   credits: number;
   role: 'user' | 'admin';
+  achievements: string[];
 }
 
 interface AuthContextType {

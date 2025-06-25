@@ -89,6 +89,19 @@ export const ja = {
   getMoreCreditsDescription: "クレジットがなくなりましたか？管理者にご連絡の上、クレジットを追加購入し、プレミアム機能をご利用ください。",
   contactAdmin: '管理者に連絡',
   
+  // Achievements
+  achievementsTitle: '実績',
+  achievementsDescription: '{{total}}個中{{count}}個の実績を解除しました。',
+  achievementLocked: 'ロック中',
+  achFirstChatTitle: 'アイスブレーカー',
+  achFirstChatDesc: '最初のチャットを開始しました。',
+  achTenChatsTitle: 'チャットコレクター',
+  achTenChatsDesc: '10個のチャットを作成しました。',
+  achFirstProChatTitle: 'プロエクスプローラー',
+  achFirstProChatDesc: '初めてプロAIモードを使用しました。',
+  achFirstCommunityPostTitle: 'コミュニティメンバー',
+  achFirstCommunityPostDesc: 'コミュニティに最初のメッセージを投稿しました。',
+
   // FAQ Section
   faqBitoTitle: 'Bito AIとは何ですか？',
   faqBitoContent: 'Bito AIは、JDevによって開発された、クリエイティブおよびビジネスのタスクを支援するために設計された、親切でフレンドリーなAIアシスタントです。質問をしたり、執筆の助けを得たり、アイデアをブレインストーミングしたりすることができます。',
