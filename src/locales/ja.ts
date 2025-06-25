@@ -259,7 +259,7 @@ export const ja = {
   dontHaveAccount: 'アカウントをお持ちではありませんか？',
   alreadyHaveAccount: 'すでにアカウントをお持ちですか？',
   passwordMinLength: 'パスワードは6文字以上である必要があります。',
-  usernamePermanentInfo: 'これはあなたの永久的な名前となり、後で変更することはできません。',
+  usernamePermanentInfo: 'この名前は永続的なものであり、後で変更することはできません。',
   loginSuccessTitle: 'ログインに成功しました',
   loginSuccessDescription: 'おかえりなさい、{{email}}さん！',
   loginErrorTitle: 'ログインに失敗しました',
