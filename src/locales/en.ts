@@ -105,10 +105,11 @@ export const en = {
   achTenThousandChatsDesc: 'Created 10,000 chats.',
   achHundredThousandChatsTitle: 'Chat Deity',
   achHundredThousandChatsDesc: 'Created 100,000 chats.',
+  
   achFirstProChatTitle: 'Pro Explorer',
   achFirstProChatDesc: 'Used a Pro AI mode for the first time.',
-  achNightOwlTitle: 'Afternoon Thinker',
-  achNightOwlDesc: 'Used the AI between 2-5 PM.',
+  achNightOwlTitle: 'Night Owl',
+  achNightOwlDesc: 'Used the AI between 2-5 AM.',
   achQuickThinkerTitle: 'Quick Thinker',
   achQuickThinkerDesc: 'Got an AI response in less than 5 seconds.',
   achMemelordTitle: 'Memelord',

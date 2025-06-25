@@ -101,9 +101,9 @@ export async function POST(request: Request) {
             achievementsToGrant.push('important_people');
         }
 
-        // Night Owl (2-5 PM UTC)
+        // Night Owl (2-5 AM UTC)
         const hourUTC = now.getUTCHours();
-        if (hourUTC >= 14 && hourUTC < 17 && !user.achievements.includes('night_owl')) {
+        if (hourUTC >= 2 && hourUTC < 5 && !user.achievements.includes('night_owl')) {
              achievementsToGrant.push('night_owl');
         }
 

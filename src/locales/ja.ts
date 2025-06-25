@@ -105,10 +105,11 @@ export const ja = {
   achTenThousandChatsDesc: '10,000個のチャットを作成しました。',
   achHundredThousandChatsTitle: 'チャットの神',
   achHundredThousandChatsDesc: '100,000個のチャットを作成しました。',
+  
   achFirstProChatTitle: 'プロエクスプローラー',
   achFirstProChatDesc: '初めてプロAIモードを使用しました。',
-  achNightOwlTitle: '午後の思想家',
-  achNightOwlDesc: '午後2時から5時の間にAIを使用しました。',
+  achNightOwlTitle: '夜更かし',
+  achNightOwlDesc: '午前2時から5時の間にAIを使用しました。',
   achQuickThinkerTitle: 'クイックシンカー',
   achQuickThinkerDesc: '5秒未満でAIの応答を得ました。',
   achMemelordTitle: 'ミームロード',

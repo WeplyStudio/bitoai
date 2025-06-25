@@ -105,10 +105,11 @@ export const id = {
   achTenThousandChatsDesc: 'Membuat 10.000 obrolan.',
   achHundredThousandChatsTitle: 'Dewa Obrolan',
   achHundredThousandChatsDesc: 'Membuat 100.000 obrolan.',
+  
   achFirstProChatTitle: 'Penjelajah Pro',
   achFirstProChatDesc: 'Menggunakan mode AI Pro untuk pertama kalinya.',
-  achNightOwlTitle: 'Pemikir Sore',
-  achNightOwlDesc: 'Menggunakan AI antara jam 2-5 sore.',
+  achNightOwlTitle: 'Burung Hantu',
+  achNightOwlDesc: 'Menggunakan AI antara jam 2-5 pagi.',
   achQuickThinkerTitle: 'Pemikir Cepat',
   achQuickThinkerDesc: 'Mendapat balasan AI dalam waktu kurang dari 5 detik.',
   achMemelordTitle: 'Raja Meme',

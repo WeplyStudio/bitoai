@@ -105,10 +105,11 @@ export const zh = {
   achTenThousandChatsDesc: '创建了10,000个聊天。',
   achHundredThousandChatsTitle: '聊天之神',
   achHundredThousandChatsDesc: '创建了100,000个聊天。',
+  
   achFirstProChatTitle: '专业探险家',
   achFirstProChatDesc: '首次使用了专业AI模式。',
-  achNightOwlTitle: '下午茶思想家',
-  achNightOwlDesc: '在下午2-5点之间使用了AI。',
+  achNightOwlTitle: '夜猫子',
+  achNightOwlDesc: '在凌晨2-5点之间使用了AI。',
   achQuickThinkerTitle: '快速思考者',
   achQuickThinkerDesc: '在5秒内得到了AI的回复。',
   achMemelordTitle: '表情包之王',
