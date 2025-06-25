@@ -18,7 +18,7 @@ import { Skeleton } from "../ui/skeleton";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
-  const active = pathname === href || (href === "/" && pathname.startsWith("/?project=")) || (href.startsWith("/admin") && pathname.startsWith("/admin"));
+  const active = pathname === href || (href === "/" && pathname.startsWith("/?project=")) || (href.startsWith("/admin") && pathname.startsWith("/admin")) || (href.startsWith("/pricing") && pathname.startsWith("/pricing"));
 
 
   return (
@@ -77,6 +77,7 @@ export const LeftSidebarContent = () => {
                 <NavItem icon={Users} text={t('community')} href="/community" badge={t('live')} />
                 <NavItem icon={Folder} text={t('chats')} href="/projects" />
                 <NavItem icon={FileText} text={t('templates')} href="/templates" />
+                <NavItem icon={Coins} text={t('topUp')} href="/pricing" />
             </div>
             
             <div className="space-y-2 p-2 border-t">

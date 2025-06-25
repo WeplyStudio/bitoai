@@ -15,6 +15,7 @@ export const id = {
   logout: 'Keluar',
   creditsRemaining: 'Sisa Kredit',
   adminDashboard: 'Dasbor Admin',
+  topUp: 'Isi Ulang',
 
   // Right Sidebar
   chatsCount: 'Obrolan ({{count}})',
@@ -309,4 +310,15 @@ export const id = {
   accessDeniedDescription: 'Anda tidak memiliki izin untuk melihat halaman ini.',
   creditsAddedSuccess: 'Kredit berhasil ditambahkan!',
   creditsAddedSuccessDesc: '{{amount}} kredit telah ditambahkan ke {{username}}.',
+
+  // Pricing Page
+  pricingTitle: 'Harga Kredit',
+  pricingDescription: 'Pilih paket yang sesuai dengan kebutuhan Anda dan buka fitur premium.',
+  oneThousandCredits: '1.000 Kredit',
+  howToTopUp: 'Cara Isi Ulang',
+  howToTopUpDescription: 'Untuk mengisi ulang kredit Anda, silakan hubungi admin kami melalui WhatsApp atau Email. Sebutkan nama pengguna Anda dan paket yang diinginkan. Kami akan segera memproses permintaan Anda.',
+  proAccess: 'Akses ke semua fitur Pro',
+  lifetimeValidity: 'Masa aktif selamanya',
+  prioritySupport: 'Dukungan prioritas',
+  comingSoon: 'Segera Hadir',
 };

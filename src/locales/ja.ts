@@ -15,6 +15,7 @@ export const ja = {
   logout: 'ログアウト',
   creditsRemaining: '残りのクレジット',
   adminDashboard: '管理者ダッシュボード',
+  topUp: 'チャージ',
 
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',
@@ -309,4 +310,15 @@ export const ja = {
   accessDeniedDescription: 'このページを表示する権限がありません。',
   creditsAddedSuccess: 'クレジットが正常に追加されました！',
   creditsAddedSuccessDesc: '{{amount}}クレジットが{{username}}に追加されました。',
+
+  // Pricing Page
+  pricingTitle: 'クレジット価格',
+  pricingDescription: 'あなたのニーズに合ったパッケージを選択し、プレミアム機能のロックを解除してください。',
+  oneThousandCredits: '1,000クレジット',
+  howToTopUp: 'チャージ方法',
+  howToTopUpDescription: 'クレジットをチャージするには、WhatsAppまたはメールで管理者に連絡し、ユーザー名と希望のパッケージをお知らせください。すぐにリクエストを処理します。',
+  proAccess: 'すべてのプロ機能へのアクセス',
+  lifetimeValidity: '永久有効',
+  prioritySupport: '優先サポート',
+  comingSoon: '近日公開',
 };

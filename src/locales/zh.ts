@@ -15,6 +15,7 @@ export const zh = {
   logout: '登出',
   creditsRemaining: '剩余积分',
   adminDashboard: '管理员仪表盘',
+  topUp: '充值',
 
   // Right Sidebar
   chatsCount: '聊天 ({{count}})',
@@ -309,4 +310,15 @@ export const zh = {
   accessDeniedDescription: '您没有权限查看此页面。',
   creditsAddedSuccess: '积分添加成功！',
   creditsAddedSuccessDesc: '{{amount}} 积分已添加到 {{username}}。',
+
+  // Pricing Page
+  pricingTitle: '积分价格',
+  pricingDescription: '选择适合您需求的套餐并解锁高级功能。',
+  oneThousandCredits: '1,000 积分',
+  howToTopUp: '如何充值',
+  howToTopUpDescription: '要充值您的积分，请通过WhatsApp或电子邮件联系我们的管理员。提及您的用户名和所需的套餐。我们会尽快处理您的请求。',
+  proAccess: '访问所有专业版功能',
+  lifetimeValidity: '永久有效',
+  prioritySupport: '优先支持',
+  comingSoon: '即将推出',
 };
