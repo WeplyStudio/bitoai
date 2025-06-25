@@ -44,11 +44,6 @@ const achievementMap = {
     titleKey: 'achFirstProChatTitle',
     descriptionKey: 'achFirstProChatDesc',
   },
-  first_community_post: {
-    icon: Users,
-    titleKey: 'achFirstCommunityPostTitle',
-    descriptionKey: 'achFirstCommunityPostDesc',
-  },
 };
 
 const allAchievementKeys = Object.keys(achievementMap);

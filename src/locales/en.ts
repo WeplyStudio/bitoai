@@ -2,8 +2,6 @@
 export const en = {
   // Left Sidebar
   aiChat: 'AI Chat',
-  community: 'Community',
-  live: 'LIVE',
   chats: 'Chats',
   templates: 'Templates',
   settingsAndHelp: 'Settings & Help',
@@ -107,8 +105,6 @@ export const en = {
   achHundredThousandChatsDesc: 'Created 100,000 chats.',
   achFirstProChatTitle: 'Pro Explorer',
   achFirstProChatDesc: 'Used a Pro AI mode for the first time.',
-  achFirstCommunityPostTitle: 'Community Member',
-  achFirstCommunityPostDesc: 'Posted your first message in the community.',
 
   // FAQ Section
   faqBitoTitle: 'What is Bito AI?',
@@ -214,17 +210,6 @@ export const en = {
   templateCodeDescription2: 'Generate a function in any programming language.',
   templateCodePrompt2: "Write a function in [programming language] that takes [input] and returns [output].",
 
-  // Community Page
-  communityChatTitle: 'Community Chat',
-  communityChatDescription: 'Global anonymous chat room',
-  communityChatDescriptionUser: 'Logged in as {{username}}',
-  communityLoading: 'Loading messages...',
-  communityNoMessages: 'No messages yet. Be the first to say something!',
-  communityTypeMessage: 'Type your message...',
-  errorLoadCommunityMessages: 'Could not load community messages.',
-  errorSendCommunityMessage: 'Could not send your message. Please try again.',
-  communityLoginPrompt: 'Log in or register to join the chat.',
-  
   // Chat Panel & Toasts
   chatRenamed: 'Chat Renamed',
   chatRenamedDescription: 'This chat was automatically named "{{projectName}}".',

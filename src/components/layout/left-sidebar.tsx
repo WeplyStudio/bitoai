@@ -74,7 +74,6 @@ export const LeftSidebarContent = () => {
                 {user?.role === 'admin' && (
                   <NavItem icon={Shield} text={t('adminDashboard')} href="/admin" />
                 )}
-                <NavItem icon={Users} text={t('community')} href="/community" badge={t('live')} />
                 <NavItem icon={Folder} text={t('chats')} href="/projects" />
                 <NavItem icon={FileText} text={t('templates')} href="/templates" />
                 <NavItem icon={Coins} text={t('topUp')} href="/pricing" />

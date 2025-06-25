@@ -2,8 +2,6 @@
 export const id = {
   // Left Sidebar
   aiChat: 'AI Chat',
-  community: 'Komunitas',
-  live: 'LIVE',
   chats: 'Obrolan',
   templates: 'Template',
   settingsAndHelp: 'Pengaturan & Bantuan',
@@ -107,8 +105,6 @@ export const id = {
   achHundredThousandChatsDesc: 'Membuat 100.000 obrolan.',
   achFirstProChatTitle: 'Penjelajah Pro',
   achFirstProChatDesc: 'Menggunakan mode AI Pro untuk pertama kalinya.',
-  achFirstCommunityPostTitle: 'Anggota Komunitas',
-  achFirstCommunityPostDesc: 'Memposting pesan pertama Anda di komunitas.',
 
   // FAQ Section
   faqBitoTitle: 'Apa itu Bito AI?',
@@ -214,17 +210,6 @@ export const id = {
   templateCodeDescription2: 'Hasilkan fungsi dalam bahasa pemrograman apa pun.',
   templateCodePrompt2: "Tulis fungsi dalam [bahasa pemrograman] yang menerima [input] dan mengembalikan [output].",
 
-  // Community Page
-  communityChatTitle: 'Obrolan Komunitas',
-  communityChatDescription: 'Ruang obrolan anonim global',
-  communityChatDescriptionUser: 'Masuk sebagai {{username}}',
-  communityLoading: 'Memuat pesan...',
-  communityNoMessages: 'Belum ada pesan. Jadilah yang pertama mengatakan sesuatu!',
-  communityTypeMessage: 'Ketik pesan Anda...',
-  errorLoadCommunityMessages: 'Tidak dapat memuat pesan komunitas.',
-  errorSendCommunityMessage: 'Tidak dapat mengirim pesan Anda. Silakan coba lagi.',
-  communityLoginPrompt: 'Silakan masuk atau daftar untuk bergabung dalam obrolan.',
-  
   // Chat Panel & Toasts
   chatRenamed: 'Obrolan Dinamai Ulang',
   chatRenamedDescription: 'Obrolan ini secara otomatis dinamai "{{projectName}}".',

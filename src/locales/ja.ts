@@ -2,8 +2,6 @@
 export const ja = {
   // Left Sidebar
   aiChat: 'AIチャット',
-  community: 'コミュニティ',
-  live: 'ライブ',
   chats: 'チャット',
   templates: 'テンプレート',
   settingsAndHelp: '設定とヘルプ',
@@ -107,8 +105,6 @@ export const ja = {
   achHundredThousandChatsDesc: '100,000個のチャットを作成しました。',
   achFirstProChatTitle: 'プロエクスプローラー',
   achFirstProChatDesc: '初めてプロAIモードを使用しました。',
-  achFirstCommunityPostTitle: 'コミュニティメンバー',
-  achFirstCommunityPostDesc: 'コミュニティに最初のメッセージを投稿しました。',
 
   // FAQ Section
   faqBitoTitle: 'Bito AIとは何ですか？',
@@ -214,17 +210,6 @@ export const ja = {
   templateCodeDescription2: '任意のプログラミング言語で関数を生成します。',
   templateCodePrompt2: "[プログラミング言語]で、[入力]を受け取り[出力]を返す関数を書いてください。",
   
-  // Community Page
-  communityChatTitle: 'コミュニティチャット',
-  communityChatDescription: 'グローバルな匿名チャットルーム',
-  communityChatDescriptionUser: '{{username}}としてログイン中',
-  communityLoading: 'メッセージを読み込んでいます...',
-  communityNoMessages: 'まだメッセージはありません。最初に何か言ってみましょう！',
-  communityTypeMessage: 'メッセージを入力してください...',
-  errorLoadCommunityMessages: 'コミュニティメッセージを読み込めませんでした。',
-  errorSendCommunityMessage: 'メッセージを送信できませんでした。もう一度お試しください。',
-  communityLoginPrompt: 'チャットに参加するにはログインまたは登録してください。',
-
   // Chat Panel & Toasts
   chatRenamed: 'チャット名が変更されました',
   chatRenamedDescription: 'このチャットは自動的に「{{projectName}}」と名付けられました。',

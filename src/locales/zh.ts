@@ -2,8 +2,6 @@
 export const zh = {
   // Left Sidebar
   aiChat: 'AI 聊天',
-  community: '社区',
-  live: '直播',
   chats: '聊天',
   templates: '模板',
   settingsAndHelp: '设置与帮助',
@@ -107,8 +105,6 @@ export const zh = {
   achHundredThousandChatsDesc: '创建了100,000个聊天。',
   achFirstProChatTitle: '专业探险家',
   achFirstProChatDesc: '首次使用了专业AI模式。',
-  achFirstCommunityPostTitle: '社区成员',
-  achFirstCommunityPostDesc: '在社区中发布了您的第一条消息。',
 
   // FAQ Section
   faqBitoTitle: '什么是 Bito AI？',
@@ -214,17 +210,6 @@ export const zh = {
   templateCodeDescription2: '用任何编程语言生成一个函数。',
   templateCodePrompt2: "用[编程语言]编写一个函数，它接受[输入]并返回[输出]。",
   
-  // Community Page
-  communityChatTitle: '社区聊天',
-  communityChatDescription: '全球匿名聊天室',
-  communityChatDescriptionUser: '以 {{username}} 身份登录',
-  communityLoading: '正在加载消息...',
-  communityNoMessages: '还没有消息。成为第一个发言的人吧！',
-  communityTypeMessage: '输入您的消息...',
-  errorLoadCommunityMessages: '无法加载社区消息。',
-  errorSendCommunityMessage: '无法发送您的消息。请重试。',
-  communityLoginPrompt: '请登录或注册以加入聊天。',
-
   // Chat Panel & Toasts
   chatRenamed: '聊天已重命名',
   chatRenamedDescription: '此聊天已自动命名为“{{projectName}}”。',
