@@ -41,28 +41,35 @@ export async function POST(request: Request) {
     await connectDB();
     
     // Check if the username is already taken by another user
-    const existingUser = await User.findOne({ username: trimmedUsername, _id: { $ne: decoded.id } });
-    if (existingUser) {
+    const existingUserWithSameName = await User.findOne({ username: trimmedUsername, _id: { $ne: decoded.id } });
+    if (existingUserWithSameName) {
       return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
-
-    const updatedUser = await User.findByIdAndUpdate(
-      decoded.id, 
-      { username: trimmedUsername },
-      { new: true } // Return the updated document
-    );
-
-    if (!updatedUser) {
-        return NextResponse.json({ error: 'User not found. Update failed.' }, { status: 404 });
+    
+    // Explicitly find the user first
+    const userToUpdate = await User.findById(decoded.id);
+    if (!userToUpdate) {
+      return NextResponse.json({ error: 'User not found. Could not update.' }, { status: 404 });
     }
+    
+    // Set the new username and save the document
+    userToUpdate.username = trimmedUsername;
+    
+    // The save() method will trigger Mongoose's full validation, including checking the unique index.
+    const savedUser = await userToUpdate.save();
 
-    return NextResponse.json({ message: 'Username updated successfully.', user: { username: updatedUser.username } });
-  } catch (error) {
+    return NextResponse.json({ message: 'Username updated successfully.', user: { username: savedUser.username } });
+
+  } catch (error: any) {
     console.error('Update username error:', error);
-    // Handle potential duplicate key error from MongoDB if the unique check fails due to a race condition
-    if ((error as any).code === 11000) {
+    // Handle potential duplicate key error from MongoDB that might arise from a race condition
+    if (error.code === 11000) {
         return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
-    return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });
+    // Handle Mongoose validation errors more broadly
+    if (error.name === 'ValidationError') {
+      return NextResponse.json({ error: error.message || 'Validation failed.' }, { status: 400 });
+    }
+    return NextResponse.json({ error: 'An internal server error occurred while updating the username.' }, { status: 500 });
   }
 }
