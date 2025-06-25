@@ -77,6 +77,9 @@ export const zh = {
   deleteAccountSuccessTitle: '账户已删除',
   deleteAccountSuccessDescription: '您的账户已成功删除。很遗憾看到您离开。',
   deleteAccountError: '删除账户失败。请重试。',
+  getMoreCredits: '获取更多积分',
+  getMoreCreditsDescription: "积分用完了？联系我们的管理员购买更多积分并解锁高级功能。",
+  contactAdmin: '联系管理员',
 
   // FAQ Section
   faqBitoTitle: '什么是 Bito AI？',
@@ -96,16 +99,22 @@ export const zh = {
   faqAiModeDefaultTitle: '默认',
   faqAiModeDefaultContent: '平衡、乐于助人且友好的角色，适合一般任务。',
   faqAiModeCreativeTitle: '创意',
+  faqAiModeCreativeProTitle: '创意 (专业版)',
   faqAiModeCreativeContent: '充满热情和想象力的角色，非常适合头脑风暴和创意写作。使用较高的温度以获得更意想不到的答案。',
   faqAiModeProfessionalTitle: '专业',
+  faqAiModeProfessionalProTitle: '专业 (专业版)',
   faqAiModeProfessionalContent: '正式简洁的角色，非常适合商务或正式写作任务。',
   faqAiModeStorytellerTitle: '讲故事者',
+  faqAiModeStorytellerProTitle: '讲故事者 (专业版)',
   faqAiModeStorytellerContent: '根据您的提示编织引人入胜、富有想象力的叙述。',
   faqAiModeSarcasticTitle: '讽刺',
+  faqAiModeSarcasticProTitle: '讽刺 (专业版)',
   faqAiModeSarcasticContent: '一个机智、有点暴躁的助手，提供正确但带有讽刺意味的答案。',
   faqAiModeTechnicalTitle: '技术',
+  faqAiModeTechnicalProTitle: '技术 (专业版)',
   faqAiModeTechnicalContent: '提供高度精确、结构化和事实性的响应，就像技术文档一样。使用较低的温度以确保准确性。',
   faqAiModePhilosopherTitle: '哲学家',
+  faqAiModePhilosopherProTitle: '哲学家 (专业版)',
   faqAiModePhilosopherContent: '以深刻、深思熟虑和探究性的反思来回应您的提示。',
 
   // Templates Page

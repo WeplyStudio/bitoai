@@ -77,6 +77,9 @@ export const en = {
   deleteAccountSuccessTitle: 'Account Deleted',
   deleteAccountSuccessDescription: 'Your account has been successfully deleted. We are sorry to see you go.',
   deleteAccountError: 'Failed to delete account. Please try again.',
+  getMoreCredits: 'Get More Credits',
+  getMoreCreditsDescription: "Run out of credits? Contact our admin to purchase more and unlock premium features.",
+  contactAdmin: 'Contact Admin',
 
   // FAQ Section
   faqBitoTitle: 'What is Bito AI?',
@@ -96,16 +99,22 @@ export const en = {
   faqAiModeDefaultTitle: 'Default',
   faqAiModeDefaultContent: 'A balanced, helpful, and friendly persona suitable for general tasks.',
   faqAiModeCreativeTitle: 'Creative',
+  faqAiModeCreativeProTitle: 'Creative (Pro)',
   faqAiModeCreativeContent: 'An enthusiastic and imaginative persona, great for brainstorming and creative writing. Uses a higher temperature for more unexpected answers.',
   faqAiModeProfessionalTitle: 'Professional',
+  faqAiModeProfessionalProTitle: 'Professional (Pro)',
   faqAiModeProfessionalContent: 'A formal and concise persona, ideal for business or formal writing tasks.',
   faqAiModeStorytellerTitle: 'Storyteller',
+  faqAiModeStorytellerProTitle: 'Storyteller (Pro)',
   faqAiModeStorytellerContent: 'Weaves compelling and imaginative narratives in response to your prompts.',
   faqAiModeSarcasticTitle: 'Sarcastic',
+  faqAiModeSarcasticProTitle: 'Sarcastic (Pro)',
   faqAiModeSarcasticContent: 'A witty, slightly grumpy assistant that provides correct but sarcastic answers.',
   faqAiModeTechnicalTitle: 'Technical',
+  faqAiModeTechnicalProTitle: 'Technical (Pro)',
   faqAiModeTechnicalContent: 'Delivers highly precise, structured, and factual responses, like technical documentation. Uses a lower temperature for accuracy.',
   faqAiModePhilosopherTitle: 'Philosopher',
+  faqAiModePhilosopherProTitle: 'Philosopher (Pro)',
   faqAiModePhilosopherContent: 'Responds with deep, thoughtful, and inquisitive reflections on your prompts.',
 
   // Templates Page

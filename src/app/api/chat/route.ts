@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     }
 
     try {
-        const { projectId, message } = await request.json();
+        const { projectId, message, mode } = await request.json();
         if (!projectId || !message || !message.content) {
             return NextResponse.json({ error: 'Project ID and message content are required' }, { status: 400 });
         }
@@ -47,6 +47,16 @@ export async function POST(request: Request) {
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
+        
+        // --- Credit Deduction Logic ---
+        const proModes = ['creative', 'professional', 'storyteller', 'sarcastic', 'technical', 'philosopher'];
+        if (mode && proModes.includes(mode)) {
+            if (user.credits < 1) {
+                return NextResponse.json({ error: 'Insufficient credits. Please contact admin to buy more.' }, { status: 403 });
+            }
+            user.credits -= 1;
+        }
+        // --- End Credit Deduction Logic ---
 
         // 2. Save the user's message
         const userMessage = await ChatMessage.create({
@@ -68,8 +78,8 @@ export async function POST(request: Request) {
         // 4. Call the Genkit chat flow
         const aiResponse = await chat({
             messages: historyForApi,
-            mode: 'default', // This can be customized later
-            language: 'id', // This can be customized later
+            mode: mode || 'default',
+            language: 'id',
             username: user.username,
         });
         
@@ -84,8 +94,12 @@ export async function POST(request: Request) {
             role: 'model',
             content: aiResponse.content,
         });
+        
+        // Also save user to commit credit deduction
+        await user.save();
 
         // 6. Check if project needs renaming (first user message)
+        let updatedProjectName = null;
         const messageCount = await ChatMessage.countDocuments({ projectId });
         if (messageCount <= 2 && project.name === 'Untitled Chat') {
             const fullHistory = await ChatMessage.find({ projectId }).sort({ createdAt: 'asc' });
@@ -94,12 +108,17 @@ export async function POST(request: Request) {
             if (renameResult && renameResult.projectName) {
                 project.name = renameResult.projectName;
                 await project.save();
+                updatedProjectName = project.name;
             }
         }
         
         const plainAiMessage = aiMessage.toObject();
 
-        return NextResponse.json({ ...plainAiMessage, id: plainAiMessage._id.toString() });
+        return NextResponse.json({ 
+            aiMessage: { ...plainAiMessage, id: plainAiMessage._id.toString() },
+            updatedProjectName,
+            userCredits: user.credits,
+        });
 
     } catch (error) {
         console.error('Chat API error:', error);

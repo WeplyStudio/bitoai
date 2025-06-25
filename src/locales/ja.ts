@@ -77,6 +77,9 @@ export const ja = {
   deleteAccountSuccessTitle: 'アカウントが削除されました',
   deleteAccountSuccessDescription: 'アカウントが正常に削除されました。ご利用いただきありがとうございました。',
   deleteAccountError: 'アカウントの削除に失敗しました。もう一度お試しください。',
+  getMoreCredits: 'クレジットを追加取得',
+  getMoreCreditsDescription: "クレジットがなくなりましたか？管理者にご連絡の上、クレジットを追加購入し、プレミアム機能をご利用ください。",
+  contactAdmin: '管理者に連絡',
   
   // FAQ Section
   faqBitoTitle: 'Bito AIとは何ですか？',
@@ -96,16 +99,22 @@ export const ja = {
   faqAiModeDefaultTitle: 'デフォルト',
   faqAiModeDefaultContent: '一般的なタスクに適した、バランスの取れた、親切でフレンドリーなペルソナ。',
   faqAiModeCreativeTitle: 'クリエイティブ',
+  faqAiModeCreativeProTitle: 'クリエイティブ (プロ)',
   faqAiModeCreativeContent: '熱狂的で想像力豊かなペルソナ。ブレインストーミングやクリエイティブライティングに最適です。より予期せぬ回答を得るために高い温度を使用します。',
   faqAiModeProfessionalTitle: 'プロフェッショナル',
+  faqAiModeProfessionalProTitle: 'プロフェッショナル (プロ)',
   faqAiModeProfessionalContent: 'フォーマルで簡潔なペルソナ。ビジネスやフォーマルなライティングタスクに最適です。',
   faqAiModeStorytellerTitle: 'ストーリーテラー',
+  faqAiModeStorytellerProTitle: 'ストーリーテラー (プロ)',
   faqAiModeStorytellerContent: 'あなたのプロンプトに応じて、説得力のある想像力豊かな物語を織りなします。',
   faqAiModeSarcasticTitle: '皮肉屋',
+  faqAiModeSarcasticProTitle: '皮肉屋 (プロ)',
   faqAiModeSarcasticContent: '機知に富み、少し不機嫌なアシスタントで、正しいが皮肉な答えを提供します。',
   faqAiModeTechnicalTitle: 'テクニカル',
+  faqAiModeTechnicalProTitle: 'テクニカル (プロ)',
   faqAiModeTechnicalContent: '技術文書のように、非常に正確で構造化された事実に基づいた応答を提供します。精度を高めるために低い温度を使用します。',
   faqAiModePhilosopherTitle: '哲学者',
+  faqAiModePhilosopherProTitle: '哲学者 (プロ)',
   faqAiModePhilosopherContent: 'あなたのプロンプトに対して、深く、思慮深く、探求的な考察で応答します。',
 
   // Templates Page

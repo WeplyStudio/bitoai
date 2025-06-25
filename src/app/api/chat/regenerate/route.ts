@@ -54,6 +54,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
+        // --- Credit Deduction Logic ---
+        if (user.credits < 1) {
+            return NextResponse.json({ error: 'Insufficient credits to regenerate response. Please contact admin to buy more.' }, { status: 403 });
+        }
+        user.credits -= 1;
+        // --- End Credit Deduction Logic ---
+
         // Fetch chat history UP TO the message being regenerated
         const historyUpToMessage = await ChatMessage.find({ 
             projectId,
@@ -86,10 +93,14 @@ export async function POST(request: Request) {
         // Update the existing AI message
         messageToRegenerate.content = aiResponse.content;
         await messageToRegenerate.save();
+        await user.save(); // Save the user with decremented credits
         
         const plainAiMessage = messageToRegenerate.toObject();
 
-        return NextResponse.json({ ...plainAiMessage, id: plainAiMessage._id.toString() });
+        return NextResponse.json({ 
+            message: { ...plainAiMessage, id: plainAiMessage._id.toString() },
+            userCredits: user.credits 
+        });
 
     } catch (error) {
         console.error('Chat Regenerate API error:', error);

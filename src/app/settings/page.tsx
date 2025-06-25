@@ -116,12 +116,12 @@ export default function SettingsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
-                      <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
-                      <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
-                      <SelectItem value="storyteller">{t('faqAiModeStorytellerTitle')}</SelectItem>
-                      <SelectItem value="sarcastic">{t('faqAiModeSarcasticTitle')}</SelectItem>
-                      <SelectItem value="technical">{t('faqAiModeTechnicalTitle')}</SelectItem>
-                      <SelectItem value="philosopher">{t('faqAiModePhilosopherTitle')}</SelectItem>
+                      <SelectItem value="creative">{t('faqAiModeCreativeProTitle')}</SelectItem>
+                      <SelectItem value="professional">{t('faqAiModeProfessionalProTitle')}</SelectItem>
+                      <SelectItem value="storyteller">{t('faqAiModeStorytellerProTitle')}</SelectItem>
+                      <SelectItem value="sarcastic">{t('faqAiModeSarcasticProTitle')}</SelectItem>
+                      <SelectItem value="technical">{t('faqAiModeTechnicalProTitle')}</SelectItem>
+                      <SelectItem value="philosopher">{t('faqAiModePhilosopherProTitle')}</SelectItem>
                     </SelectContent>
                   </Select>
               </div>
@@ -160,44 +160,60 @@ export default function SettingsPage() {
           </Card>
           
           {user && (
-            <Card>
+            <div className="space-y-8">
+              <Card>
+                  <CardHeader>
+                      <CardTitle>{t('accountManagement')}</CardTitle>
+                      <CardDescription>{t('accountManagementDescription')}</CardDescription>
+                  </CardHeader>
+                  <CardContent className="space-y-4">
+                      <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
+                          <div className="space-y-0.5">
+                              <Label className="text-destructive">{t('deleteAccount')}</Label>
+                              <p className="text-sm text-destructive/80">
+                                  {t('deleteAccountDescription')}
+                              </p>
+                          </div>
+                          <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                  <Button variant="destructive">
+                                      <Trash2 className="mr-2 h-4 w-4" />
+                                      {t('deleteAccount')}
+                                  </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                      <AlertDialogTitle>{t('deleteAccountConfirmationTitle')}</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                          {t('deleteAccountConfirmationMessage')}
+                                      </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                      <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
+                                      <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => deleteAccount()}>
+                                          {t('delete')}
+                                      </AlertDialogAction>
+                                  </AlertDialogFooter>
+                              </AlertDialogContent>
+                          </AlertDialog>
+                      </div>
+                  </CardContent>
+              </Card>
+
+              <Card>
                 <CardHeader>
-                    <CardTitle>{t('accountManagement')}</CardTitle>
-                    <CardDescription>{t('accountManagementDescription')}</CardDescription>
+                    <CardTitle>{t('getMoreCredits')}</CardTitle>
+                    <CardDescription>{t('getMoreCreditsDescription')}</CardDescription>
                 </CardHeader>
-                <CardContent className="space-y-4">
-                    <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
-                        <div className="space-y-0.5">
-                            <Label className="text-destructive">{t('deleteAccount')}</Label>
-                            <p className="text-sm text-destructive/80">
-                                {t('deleteAccountDescription')}
-                            </p>
-                        </div>
-                        <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                                <Button variant="destructive">
-                                    <Trash2 className="mr-2 h-4 w-4" />
-                                    {t('deleteAccount')}
-                                </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                                <AlertDialogHeader>
-                                    <AlertDialogTitle>{t('deleteAccountConfirmationTitle')}</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                        {t('deleteAccountConfirmationMessage')}
-                                    </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                    <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                                    <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => deleteAccount()}>
-                                        {t('delete')}
-                                    </AlertDialogAction>
-                                </AlertDialogFooter>
-                            </AlertDialogContent>
-                        </AlertDialog>
-                    </div>
+                <CardContent>
+                    <Button asChild>
+                        <a href="mailto:admin@weplystudio.my.id">
+                            <Mail className="mr-2 h-4 w-4" /> {t('contactAdmin')}
+                        </a>
+                    </Button>
                 </CardContent>
-            </Card>
+              </Card>
+            </div>
           )}
 
         </div>
@@ -253,12 +269,12 @@ export default function SettingsPage() {
                     <p className="mb-2">{t('faqAiModesContent')}</p>
                     <ul className="list-disc pl-5 mt-2 space-y-2">
                         <li><b>{t('faqAiModeDefaultTitle')}:</b> {t('faqAiModeDefaultContent')}</li>
-                        <li><b>{t('faqAiModeCreativeTitle')}:</b> {t('faqAiModeCreativeContent')}</li>
-                        <li><b>{t('faqAiModeProfessionalTitle')}:</b> {t('faqAiModeProfessionalContent')}</li>
-                        <li><b>{t('faqAiModeStorytellerTitle')}:</b> {t('faqAiModeStorytellerContent')}</li>
-                        <li><b>{t('faqAiModeSarcasticTitle')}:</b> {t('faqAiModeSarcasticContent')}</li>
-                        <li><b>{t('faqAiModeTechnicalTitle')}:</b> {t('faqAiModeTechnicalContent')}</li>
-                        <li><b>{t('faqAiModePhilosopherTitle')}:</b> {t('faqAiModePhilosopherContent')}</li>
+                        <li><b>{t('faqAiModeCreativeProTitle')}:</b> {t('faqAiModeCreativeContent')}</li>
+                        <li><b>{t('faqAiModeProfessionalProTitle')}:</b> {t('faqAiModeProfessionalContent')}</li>
+                        <li><b>{t('faqAiModeStorytellerProTitle')}:</b> {t('faqAiModeStorytellerContent')}</li>
+                        <li><b>{t('faqAiModeSarcasticProTitle')}:</b> {t('faqAiModeSarcasticContent')}</li>
+                        <li><b>{t('faqAiModeTechnicalProTitle')}:</b> {t('faqAiModeTechnicalContent')}</li>
+                        <li><b>{t('faqAiModePhilosopherProTitle')}:</b> {t('faqAiModePhilosopherContent')}</li>
                     </ul>
                     </AccordionContent>
                 </AccordionItem>

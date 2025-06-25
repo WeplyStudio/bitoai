@@ -47,7 +47,7 @@ export function ChatPanel() {
 
   const { activeProject, createProject, isLoading: isProjectsLoading, refreshProjects } = useProjects();
   const { language, t } = useLanguage();
-  const { user, setAuthDialogOpen } = useAuth();
+  const { user, setAuthDialogOpen, updateUserInContext } = useAuth();
 
   useEffect(() => {
     setIsMounted(true);
@@ -121,30 +121,36 @@ export function ChatPanel() {
         const response = await fetch('/api/chat', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ projectId: activeProject.id, message: { content: text, imageUrl } }),
+            body: JSON.stringify({ 
+                projectId: activeProject.id, 
+                message: { content: text, imageUrl },
+                mode: aiMode 
+            }),
         });
 
         if (!response.ok) {
             const errorData = await response.json();
+            setMessages(prev => prev.filter(m => m.id !== tempId)); // Remove optimistic message on error
             throw new Error(errorData.error || 'Failed to get a response from the server.');
         }
 
-        const aiMessage = await response.json();
+        const data = await response.json();
         
         // Refetch history to get the proper IDs and order.
-        // This is safer than manipulating state manually and avoids key errors.
         const historyResponse = await fetch(`/api/projects/${activeProject.id}/messages`);
         const freshMessages = await historyResponse.json();
         setMessages(freshMessages);
-
-
-        // If project name was 'Untitled Chat', it might have been renamed.
-        if (activeProject.name === 'Untitled Chat') {
+        
+        if (data.updatedProjectName) {
             refreshProjects();
         }
+        if (data.userCredits !== undefined) {
+            updateUserInContext({ credits: data.userCredits });
+        }
+
 
     } catch (error: any) {
-        setMessages(prev => prev.filter(m => m.id !== tempId)); // Remove optimistic message on error
+        setMessages(prev => prev.filter(m => m.id !== tempId)); // Revert optimistic UI update
         toast({ variant: 'destructive', title: t('error'), description: error.message || 'Failed to get a response from Bito AI.' });
     } finally {
         setIsLoading(false);
@@ -167,7 +173,11 @@ export function ChatPanel() {
         throw new Error(errorData.error || 'Failed to regenerate response.');
       }
 
-      const updatedMessage = await response.json();
+      const data = await response.json();
+      const updatedMessage = data.message;
+      if (data.userCredits !== undefined) {
+          updateUserInContext({ credits: data.userCredits });
+      }
 
       setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, content: updatedMessage.content } : msg));
       
@@ -181,7 +191,7 @@ export function ChatPanel() {
     } finally {
       setRegeneratingMessageId(null);
     }
-  }, [activeProject, regeneratingMessageId, isLoading, toast]);
+  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext]);
 
 
   const handleActionTemporarilyDisabled = () => {

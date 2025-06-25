@@ -21,6 +21,7 @@ interface AuthContextType {
   verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
   deleteAccount: () => Promise<void>;
+  updateUserInContext: (updates: Partial<User>) => void;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
 }
@@ -146,8 +147,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       toast({ variant: 'destructive', title: t('error'), description: error.message });
     }
   };
+  
+  const updateUserInContext = useCallback((updates: Partial<User>) => {
+    setUser(prevUser => prevUser ? { ...prevUser, ...updates } : null);
+  }, []);
 
-  const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, isAuthDialogOpen, setAuthDialogOpen };
+  const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, updateUserInContext, isAuthDialogOpen, setAuthDialogOpen };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

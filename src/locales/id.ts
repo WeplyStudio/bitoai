@@ -77,6 +77,9 @@ export const id = {
   deleteAccountSuccessTitle: 'Akun Dihapus',
   deleteAccountSuccessDescription: 'Akun Anda telah berhasil dihapus. Kami sedih melihat Anda pergi.',
   deleteAccountError: 'Gagal menghapus akun. Silakan coba lagi.',
+  getMoreCredits: 'Dapatkan Kredit Lebih',
+  getMoreCreditsDescription: "Kredit habis? Hubungi admin kami untuk membeli lebih banyak dan membuka fitur premium.",
+  contactAdmin: 'Hubungi Admin',
 
   // FAQ Section
   faqBitoTitle: 'Apa itu Bito AI?',
@@ -96,16 +99,22 @@ export const id = {
   faqAiModeDefaultTitle: 'Default',
   faqAiModeDefaultContent: 'Persona seimbang, membantu, dan ramah yang cocok untuk tugas umum.',
   faqAiModeCreativeTitle: 'Kreatif',
+  faqAiModeCreativeProTitle: 'Kreatif (Pro)',
   faqAiModeCreativeContent: 'Persona yang antusias dan imajinatif, bagus untuk brainstorming dan penulisan kreatif. Menggunakan suhu yang lebih tinggi untuk jawaban yang lebih tak terduga.',
   faqAiModeProfessionalTitle: 'Profesional',
+  faqAiModeProfessionalProTitle: 'Profesional (Pro)',
   faqAiModeProfessionalContent: 'Persona formal dan ringkas, ideal untuk tugas bisnis atau penulisan formal.',
   faqAiModeStorytellerTitle: 'Pendongeng',
+  faqAiModeStorytellerProTitle: 'Pendongeng (Pro)',
   faqAiModeStorytellerContent: 'Menenun narasi yang menarik dan imajinatif sebagai respons atas prompt Anda.',
   faqAiModeSarcasticTitle: 'Sarkastis',
+  faqAiModeSarcasticProTitle: 'Sarkastis (Pro)',
   faqAiModeSarcasticContent: 'Asisten yang cerdas, sedikit pemarah yang memberikan jawaban yang benar tetapi sarkastis.',
   faqAiModeTechnicalTitle: 'Teknis',
+  faqAiModeTechnicalProTitle: 'Teknis (Pro)',
   faqAiModeTechnicalContent: 'Memberikan respons yang sangat presisi, terstruktur, dan faktual, seperti dokumentasi teknis. Menggunakan suhu yang lebih rendah untuk akurasi.',
   faqAiModePhilosopherTitle: 'Filsuf',
+  faqAiModePhilosopherProTitle: 'Filsuf (Pro)',
   faqAiModePhilosopherContent: 'Merespons dengan refleksi yang dalam, bijaksana, dan penuh pertanyaan atas prompt Anda.',
 
   // Templates Page
