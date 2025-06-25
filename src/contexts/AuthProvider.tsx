@@ -22,6 +22,7 @@ interface AuthContextType {
   deleteAccount: () => Promise<void>;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
+  updateUserInContext: (newUserData: Partial<User>) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -146,7 +147,11 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, isAuthDialogOpen, setAuthDialogOpen };
+  const updateUserInContext = (newUserData: Partial<User>) => {
+    setUser(prevUser => prevUser ? { ...prevUser, ...newUserData } : null);
+  };
+
+  const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, isAuthDialogOpen, setAuthDialogOpen, updateUserInContext };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
