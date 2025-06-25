@@ -83,7 +83,7 @@ export const LeftSidebarContent = () => {
                         <Skeleton className="h-9 w-full" />
                     </div>
                 ) : user ? (
-                    <div className="flex items-center justify-between p-2">
+                    <div className="flex items-center justify-end gap-2 p-2">
                         <span className="text-sm font-medium text-muted-foreground truncate" title={user.username}>{user.username}</span>
                         <Tooltip>
                             <TooltipTrigger asChild>
