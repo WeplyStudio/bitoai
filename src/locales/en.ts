@@ -14,6 +14,7 @@ export const en = {
   loginRegister: 'Login / Register',
   logout: 'Logout',
   creditsRemaining: 'Credits Remaining',
+  adminDashboard: 'Admin Dashboard',
 
   // Right Sidebar
   chatsCount: 'Chats ({{count}})',
@@ -298,4 +299,14 @@ export const en = {
   otpVerifiedTitle: 'Code Verified',
   enterNewPasswordPrompt: 'Your code is correct. Please enter your new password.',
   verifyOtp: 'Verify Code',
+  
+  // Admin
+  manageUsersAndCredits: 'Manage users and their credits.',
+  totalUsers: 'Total Users',
+  addCredits: 'Add Credits',
+  add: 'Add',
+  accessDenied: 'Access Denied',
+  accessDeniedDescription: 'You do not have permission to view this page.',
+  creditsAddedSuccess: 'Credits added successfully!',
+  creditsAddedSuccessDesc: '{{amount}} credits have been added to {{username}}.',
 };

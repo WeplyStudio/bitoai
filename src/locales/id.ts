@@ -14,6 +14,7 @@ export const id = {
   loginRegister: 'Masuk / Daftar',
   logout: 'Keluar',
   creditsRemaining: 'Sisa Kredit',
+  adminDashboard: 'Dasbor Admin',
 
   // Right Sidebar
   chatsCount: 'Obrolan ({{count}})',
@@ -298,4 +299,14 @@ export const id = {
   otpVerifiedTitle: 'Kode Terverifikasi',
   enterNewPasswordPrompt: 'Kode Anda benar. Silakan masukkan kata sandi baru Anda.',
   verifyOtp: 'Verifikasi Kode',
+
+  // Admin
+  manageUsersAndCredits: 'Kelola pengguna dan kredit mereka.',
+  totalUsers: 'Total Pengguna',
+  addCredits: 'Tambah Kredit',
+  add: 'Tambah',
+  accessDenied: 'Akses Ditolak',
+  accessDeniedDescription: 'Anda tidak memiliki izin untuk melihat halaman ini.',
+  creditsAddedSuccess: 'Kredit berhasil ditambahkan!',
+  creditsAddedSuccessDesc: '{{amount}} kredit telah ditambahkan ke {{username}}.',
 };

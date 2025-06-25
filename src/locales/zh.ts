@@ -14,6 +14,7 @@ export const zh = {
   loginRegister: '登录 / 注册',
   logout: '登出',
   creditsRemaining: '剩余积分',
+  adminDashboard: '管理员仪表盘',
 
   // Right Sidebar
   chatsCount: '聊天 ({{count}})',
@@ -298,4 +299,14 @@ export const zh = {
   otpVerifiedTitle: '代码已验证',
   enterNewPasswordPrompt: '您的代码正确。请输入您的新密码。',
   verifyOtp: '验证代码',
+
+  // Admin
+  manageUsersAndCredits: '管理用户及其积分。',
+  totalUsers: '总用户数',
+  addCredits: '添加积分',
+  add: '添加',
+  accessDenied: '访问被拒绝',
+  accessDeniedDescription: '您没有权限查看此页面。',
+  creditsAddedSuccess: '积分添加成功！',
+  creditsAddedSuccessDesc: '{{amount}} 积分已添加到 {{username}}。',
 };

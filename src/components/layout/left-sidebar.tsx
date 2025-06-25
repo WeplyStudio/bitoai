@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
@@ -18,7 +18,7 @@ import { Skeleton } from "../ui/skeleton";
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
-  const active = pathname === href || (href === "/" && pathname.startsWith("/?project="));
+  const active = pathname === href || (href === "/" && pathname.startsWith("/?project=")) || (href.startsWith("/admin") && pathname.startsWith("/admin"));
 
 
   return (
@@ -71,6 +71,9 @@ export const LeftSidebarContent = () => {
 
             <div className="flex-1 space-y-2 p-2 overflow-y-auto">
                 <NavItem icon={MessageSquare} text={t('aiChat')} href="/" />
+                {user?.role === 'admin' && (
+                  <NavItem icon={Shield} text={t('adminDashboard')} href="/admin" />
+                )}
                 <NavItem icon={Users} text={t('community')} href="/community" badge={t('live')} />
                 <NavItem icon={Folder} text={t('chats')} href="/projects" />
                 <NavItem icon={FileText} text={t('templates')} href="/templates" />

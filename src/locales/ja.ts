@@ -14,6 +14,7 @@ export const ja = {
   loginRegister: 'ログイン / 登録',
   logout: 'ログアウト',
   creditsRemaining: '残りのクレジット',
+  adminDashboard: '管理者ダッシュボード',
 
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',
@@ -298,4 +299,14 @@ export const ja = {
   otpVerifiedTitle: 'コード認証済み',
   enterNewPasswordPrompt: 'コードは正しいです。新しいパスワードを入力してください。',
   verifyOtp: 'コードを認証',
+  
+  // Admin
+  manageUsersAndCredits: 'ユーザーとそのクレジットを管理します。',
+  totalUsers: '総ユーザー数',
+  addCredits: 'クレジットを追加',
+  add: '追加',
+  accessDenied: 'アクセスが拒否されました',
+  accessDeniedDescription: 'このページを表示する権限がありません。',
+  creditsAddedSuccess: 'クレジットが正常に追加されました！',
+  creditsAddedSuccessDesc: '{{amount}}クレジットが{{username}}に追加されました。',
 };
