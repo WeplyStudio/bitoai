@@ -1,3 +1,4 @@
+
 'use server';
 
 import { NextResponse } from 'next/server';
@@ -40,33 +41,42 @@ export async function POST(request: Request) {
 
     await connectDB();
     
-    // Check if the username is already taken by another user
-    const existingUserWithSameName = await User.findOne({ username: trimmedUsername, _id: { $ne: decoded.id } });
+    // 1. Explicitly check if the username is already taken by ANOTHER user
+    const existingUserWithSameName = await User.findOne({ 
+        username: trimmedUsername, 
+        _id: { $ne: decoded.id } 
+    });
     if (existingUserWithSameName) {
       return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
     
-    // Explicitly find the user first
-    const userToUpdate = await User.findById(decoded.id);
-    if (!userToUpdate) {
-      return NextResponse.json({ error: 'User not found. Could not update.' }, { status: 404 });
+    // 2. Use findByIdAndUpdate for a more robust, atomic update operation.
+    const updatedUser = await User.findByIdAndUpdate(
+        decoded.id,
+        { $set: { username: trimmedUsername } },
+        // Options:
+        // - new: true -> returns the document AFTER the update is applied.
+        // - runValidators: true -> ensures Mongoose schema validations (e.g., minlength) are run.
+        { new: true, runValidators: true }
+    );
+    
+    // 3. Explicitly verify that the update was successful.
+    if (!updatedUser) {
+        return NextResponse.json({ error: 'User not found. Could not perform update.' }, { status: 404 });
     }
-    
-    // Set the new username and save the document
-    userToUpdate.username = trimmedUsername;
-    
-    // The save() method will trigger Mongoose's full validation, including checking the unique index.
-    const savedUser = await userToUpdate.save();
 
-    return NextResponse.json({ message: 'Username updated successfully.', user: { username: savedUser.username } });
+    // 4. Sanity check to ensure the returned username matches what we tried to set.
+    if (updatedUser.username !== trimmedUsername) {
+        return NextResponse.json({ error: 'An unexpected error occurred and the username was not updated.'}, { status: 500 });
+    }
+
+    return NextResponse.json({ message: 'Username updated successfully.', user: { username: updatedUser.username } });
 
   } catch (error: any) {
     console.error('Update username error:', error);
-    // Handle potential duplicate key error from MongoDB that might arise from a race condition
     if (error.code === 11000) {
         return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
-    // Handle Mongoose validation errors more broadly
     if (error.name === 'ValidationError') {
       return NextResponse.json({ error: error.message || 'Validation failed.' }, { status: 400 });
     }
