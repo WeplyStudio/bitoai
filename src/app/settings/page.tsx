@@ -12,6 +12,7 @@ import { useToast } from '@/hooks/use-toast';
 import { Download, Mail, MessageCircle, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { UsernameForm } from '@/components/settings/username-form';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -116,8 +117,8 @@ export default function SettingsPage() {
                     </SelectTrigger>
                     <SelectContent>
                       <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
-                      <SelectItem value="creative">{t('faqAiModeCreativeProTitle')}</SelectItem>
-                      <SelectItem value="professional">{t('faqAiModeProfessionalProTitle')}</SelectItem>
+                      <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
+                      <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
                       <SelectItem value="storyteller">{t('faqAiModeStorytellerProTitle')}</SelectItem>
                       <SelectItem value="sarcastic">{t('faqAiModeSarcasticProTitle')}</SelectItem>
                       <SelectItem value="technical">{t('faqAiModeTechnicalProTitle')}</SelectItem>
@@ -167,6 +168,7 @@ export default function SettingsPage() {
                       <CardDescription>{t('accountManagementDescription')}</CardDescription>
                   </CardHeader>
                   <CardContent className="space-y-4">
+                      <UsernameForm />
                       <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
                           <div className="space-y-0.5">
                               <Label className="text-destructive">{t('deleteAccount')}</Label>
@@ -269,8 +271,8 @@ export default function SettingsPage() {
                     <p className="mb-2">{t('faqAiModesContent')}</p>
                     <ul className="list-disc pl-5 mt-2 space-y-2">
                         <li><b>{t('faqAiModeDefaultTitle')}:</b> {t('faqAiModeDefaultContent')}</li>
-                        <li><b>{t('faqAiModeCreativeProTitle')}:</b> {t('faqAiModeCreativeContent')}</li>
-                        <li><b>{t('faqAiModeProfessionalProTitle')}:</b> {t('faqAiModeProfessionalContent')}</li>
+                        <li><b>{t('faqAiModeCreativeTitle')}:</b> {t('faqAiModeCreativeContent')}</li>
+                        <li><b>{t('faqAiModeProfessionalTitle')}:</b> {t('faqAiModeProfessionalContent')}</li>
                         <li><b>{t('faqAiModeStorytellerProTitle')}:</b> {t('faqAiModeStorytellerContent')}</li>
                         <li><b>{t('faqAiModeSarcasticProTitle')}:</b> {t('faqAiModeSarcasticContent')}</li>
                         <li><b>{t('faqAiModeTechnicalProTitle')}:</b> {t('faqAiModeTechnicalContent')}</li>

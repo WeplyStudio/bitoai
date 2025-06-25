@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
@@ -49,7 +50,7 @@ export async function POST(request: Request) {
         }
         
         // --- Credit Deduction Logic ---
-        const proModes = ['creative', 'professional', 'storyteller', 'sarcastic', 'technical', 'philosopher'];
+        const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
         if (mode && proModes.includes(mode)) {
             if (user.credits < 1) {
                 return NextResponse.json({ error: 'Insufficient credits. Please contact admin to buy more.' }, { status: 403 });
