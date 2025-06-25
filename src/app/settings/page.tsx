@@ -13,6 +13,7 @@ import { Download, Mail, MessageCircle, Trash2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
+import { ChangePasswordForm } from '@/components/settings/change-password-form';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -169,6 +170,7 @@ export default function SettingsPage() {
                   </CardHeader>
                   <CardContent className="space-y-4">
                       <UsernameForm />
+                      <ChangePasswordForm />
                       <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
                           <div className="space-y-0.5">
                               <Label className="text-destructive">{t('deleteAccount')}</Label>
