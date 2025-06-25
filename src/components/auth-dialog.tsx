@@ -15,13 +15,20 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
 
 const LoginForm = ({ onSwitchToRegister }: { onSwitchToRegister: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, setAuthDialogOpen } = useAuth();
   const { t } = useLanguage();
+  const router = useRouter();
+
+  const handleForgotPassword = () => {
+    setAuthDialogOpen(false);
+    router.push('/forgot-password');
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -52,6 +59,11 @@ const LoginForm = ({ onSwitchToRegister }: { onSwitchToRegister: () => void }) =
           onChange={(e) => setPassword(e.target.value)}
           required
         />
+        <div className="text-right text-sm">
+          <Button type="button" variant="link" className="p-0 h-auto font-normal text-muted-foreground" onClick={handleForgotPassword}>
+            {t('forgotPassword')}
+          </Button>
+        </div>
       </div>
       <Button type="submit" className="w-full" disabled={isLoading}>
         {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}

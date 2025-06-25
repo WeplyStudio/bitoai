@@ -38,15 +38,15 @@ function OtpForm() {
     <div className="flex items-center justify-center min-h-screen bg-muted/30">
       <Card className="w-full max-w-sm">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl">Email Verification</CardTitle>
+          <CardTitle className="text-2xl">{t('emailVerificationTitle')}</CardTitle>
           <CardDescription>
-            We've sent a 6-digit code to <strong>{email}</strong>. Please enter it below.
+            {t('emailVerificationDescription', { email: email || 'your email' })}
           </CardDescription>
         </CardHeader>
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="otp">One-Time Password (OTP)</Label>
+              <Label htmlFor="otp">{t('oneTimePassword')}</Label>
               <Input
                 id="otp"
                 type="text"
@@ -61,11 +61,11 @@ function OtpForm() {
               />
             </div>
             <p className="text-sm text-center text-muted-foreground">
-              Didn't receive the code? Please check your spam folder.
+              {t('checkSpam')}
             </p>
             <Button type="submit" className="w-full" disabled={isLoading || otp.length !== 6}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-              Verify and Continue
+              {t('verifyAndContinue')}
             </Button>
           </form>
         </CardContent>
