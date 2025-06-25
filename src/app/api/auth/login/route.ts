@@ -1,15 +1,12 @@
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { cookies } from 'next/headers';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { sendOtpEmail } from '@/lib/nodemailer';
 
-const JWT_SECRET = process.env.JWT_SECRET;
-
-if (!JWT_SECRET) {
-  throw new Error('JWT_SECRET is not defined in the environment variables');
-}
+const generateOtp = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
 
 export async function POST(request: Request) {
   try {
@@ -30,26 +27,21 @@ export async function POST(request: Request) {
     if (!isPasswordMatch) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
+    
+    // If user is not verified, ask them to register/verify first
+    if (!user.isVerified) {
+       return NextResponse.json({ error: 'Please verify your email first. Check your inbox for an OTP.' }, { status: 403 });
+    }
 
-    const tokenPayload = {
-      id: user._id,
-      email: user.email,
-    };
+    const otp = generateOtp();
+    user.otp = await bcrypt.hash(otp, 10);
+    user.otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
+    await user.save();
 
-    const token = jwt.sign(tokenPayload, JWT_SECRET, { expiresIn: '7d' });
+    await sendOtpEmail(email, otp);
 
-    cookies().set('token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV !== 'development',
-      sameSite: 'strict',
-      path: '/',
-      maxAge: 60 * 60 * 24 * 7, // 1 week
-    });
+    return NextResponse.json({ message: 'OTP sent to your email for verification.' });
 
-    return NextResponse.json({ 
-        id: user._id,
-        email: user.email,
-    });
   } catch (error) {
     console.error('Login error:', error);
     return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });

@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
+import { useRouter } from 'next/navigation';
 import { useToast } from '@/hooks/use-toast';
 import { useLanguage } from './LanguageProvider';
 
@@ -14,6 +15,7 @@ interface AuthContextType {
   isLoading: boolean;
   login: (email: string, pass: string) => Promise<boolean>;
   register: (email: string, pass: string) => Promise<boolean>;
+  verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
@@ -25,10 +27,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isAuthDialogOpen, setAuthDialogOpen] = useState(false);
+  const router = useRouter();
   const { toast } = useToast();
   const { t } = useLanguage();
 
   const fetchUser = useCallback(async () => {
+    setIsLoading(true);
     try {
       const response = await fetch('/api/auth/me');
       if (response.ok) {
@@ -59,8 +63,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!response.ok) {
         throw new Error(data.error || 'Login failed');
       }
-      setUser(data);
-      toast({ title: t('loginSuccessTitle'), description: t('loginSuccessDescription', { email: data.email }) });
+      toast({ title: 'OTP Sent', description: data.message });
+      router.push(`/otp?email=${encodeURIComponent(email)}`);
       setAuthDialogOpen(false);
       return true;
     } catch (error: any) {
@@ -80,11 +84,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         if (!response.ok) {
             throw new Error(data.error || 'Registration failed');
         }
-        toast({ title: t('registerSuccessTitle'), description: t('registerSuccessDescription') });
+        toast({ title: 'Registration Step 1 Complete', description: data.message });
+        router.push(`/otp?email=${encodeURIComponent(email)}`);
+        setAuthDialogOpen(false);
         return true;
     } catch (error: any) {
         toast({ variant: 'destructive', title: t('registerErrorTitle'), description: error.message });
         return false;
+    }
+  };
+  
+  const verifyOtp = async (email: string, otp: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/auth/verify-otp', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, otp }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'OTP verification failed.');
+      }
+      setUser(data);
+      toast({ title: t('loginSuccessTitle'), description: t('loginSuccessDescription', { email: data.email }) });
+      router.push('/');
+      return true;
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Verification Failed', description: error.message });
+      return false;
     }
   };
 
@@ -93,12 +120,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       await fetch('/api/auth/logout', { method: 'POST' });
       setUser(null);
       toast({ title: t('logoutSuccessTitle') });
+      router.push('/'); // Redirect to home page on logout
     } catch (error) {
       toast({ variant: 'destructive', title: t('error'), description: 'Logout failed.' });
     }
   };
 
-  const value = { user, isLoading, login, register, logout, isAuthDialogOpen, setAuthDialogOpen };
+  const value = { user, isLoading, login, register, logout, verifyOtp, isAuthDialogOpen, setAuthDialogOpen };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

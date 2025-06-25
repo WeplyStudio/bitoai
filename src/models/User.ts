@@ -3,6 +3,9 @@ import mongoose, { Schema, Document } from 'mongoose';
 export interface IUser extends Document {
   email: string;
   password?: string;
+  otp?: string;
+  otpExpires?: Date;
+  isVerified: boolean;
   createdAt: Date;
 }
 
@@ -19,6 +22,18 @@ const UserSchema: Schema = new Schema({
     type: String, 
     required: [true, 'Password is required.'],
     select: false 
+  },
+  otp: {
+    type: String,
+    select: false,
+  },
+  otpExpires: {
+    type: Date,
+    select: false,
+  },
+  isVerified: {
+    type: Boolean,
+    default: false,
   },
   createdAt: { 
     type: Date, 
