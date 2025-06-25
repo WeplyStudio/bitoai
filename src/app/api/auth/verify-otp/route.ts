@@ -61,6 +61,8 @@ export async function POST(request: Request) {
       id: user._id,
       email: user.email,
       username: user.username,
+      credits: user.credits,
+      role: user.role,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);

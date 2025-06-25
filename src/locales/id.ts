@@ -13,6 +13,7 @@ export const id = {
   dark: 'Gelap',
   loginRegister: 'Masuk / Daftar',
   logout: 'Keluar',
+  creditsRemaining: 'Sisa Kredit',
 
   // Right Sidebar
   chatsCount: 'Obrolan ({{count}})',

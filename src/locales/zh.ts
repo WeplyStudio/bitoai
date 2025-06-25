@@ -13,6 +13,7 @@ export const zh = {
   dark: '深色',
   loginRegister: '登录 / 注册',
   logout: '登出',
+  creditsRemaining: '剩余积分',
 
   // Right Sidebar
   chatsCount: '聊天 ({{count}})',

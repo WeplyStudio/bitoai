@@ -8,7 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus, LogIn, LogOut } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Users, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
@@ -83,18 +83,31 @@ export const LeftSidebarContent = () => {
                         <Skeleton className="h-9 w-full" />
                     </div>
                 ) : user ? (
-                    <div className="flex items-center justify-end gap-2 p-2">
+                    <div className="flex items-center justify-between gap-2 p-2">
                         <span className="text-sm font-medium text-muted-foreground truncate" title={user.username}>{user.username}</span>
-                        <Tooltip>
-                            <TooltipTrigger asChild>
-                                <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
-                                    <LogOut className="h-4 w-4" />
-                                </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right">
-                                <p>{t('logout')}</p>
-                            </TooltipContent>
-                        </Tooltip>
+                        <div className="flex items-center gap-2">
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <div className="flex items-center gap-1 text-sm font-medium text-amber-500">
+                                        <Coins className="h-4 w-4" />
+                                        {user.credits}
+                                    </div>
+                                </TooltipTrigger>
+                                <TooltipContent side="top">
+                                    <p>{t('creditsRemaining')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
+                                        <LogOut className="h-4 w-4" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent side="right">
+                                    <p>{t('logout')}</p>
+                                </TooltipContent>
+                            </Tooltip>
+                        </div>
                     </div>
                 ) : (
                     <div className="p-2">

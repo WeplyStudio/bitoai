@@ -13,6 +13,7 @@ export const ja = {
   dark: 'ダーク',
   loginRegister: 'ログイン / 登録',
   logout: 'ログアウト',
+  creditsRemaining: '残りのクレジット',
 
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',

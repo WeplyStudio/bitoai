@@ -7,6 +7,8 @@ export interface IUser extends Document {
   otp?: string;
   otpExpires?: Date;
   isVerified: boolean;
+  credits: number;
+  role: 'user' | 'admin';
   createdAt: Date;
 }
 
@@ -42,6 +44,15 @@ const UserSchema: Schema = new Schema({
   isVerified: {
     type: Boolean,
     default: false,
+  },
+  credits: {
+    type: Number,
+    default: 5,
+  },
+  role: {
+    type: String,
+    enum: ['user', 'admin'],
+    default: 'user',
   },
   createdAt: { 
     type: Date, 
