@@ -136,8 +136,8 @@ function AdminDashboard() {
                             <TableBody>
                                 {users.map((u) => (
                                 <TableRow key={u._id}>
-                                    <TableCell className="font-medium">{u.username}</TableCell>
-                                    <TableCell>{u.email}</TableCell>
+                                    <TableCell className="font-medium whitespace-nowrap">{u.username}</TableCell>
+                                    <TableCell className="whitespace-nowrap">{u.email}</TableCell>
                                     <TableCell>{u.credits}</TableCell>
                                     <TableCell className="text-right">
                                         <form className="flex items-center justify-end gap-2" onSubmit={(e) => { e.preventDefault(); handleAddCredits(u._id, u.username)}}>
