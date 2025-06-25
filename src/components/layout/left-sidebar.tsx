@@ -14,7 +14,6 @@ import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
 import { useAuth } from "@/contexts/AuthProvider";
 import { Skeleton } from "../ui/skeleton";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "../ui/tooltip";
 
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
@@ -53,7 +52,7 @@ export const LeftSidebarContent = () => {
     };
 
     return (
-        <TooltipProvider>
+        <div className="flex flex-col h-full">
             <div className="flex items-center gap-1.5 px-4 pt-4 pb-2">
                 <BitoIcon className="w-8 h-8" />
                 <h1 className="text-xl font-bold">Bito</h1>
@@ -79,34 +78,25 @@ export const LeftSidebarContent = () => {
             
             <div className="space-y-2 p-2 border-t">
                 {isLoading ? (
-                    <div className="p-2">
-                        <Skeleton className="h-9 w-full" />
+                    <div className="p-2 space-y-2">
+                        <Skeleton className="h-8 w-full" />
+                        <Skeleton className="h-8 w-full" />
                     </div>
                 ) : user ? (
-                    <div className="flex items-center justify-between gap-2 p-2">
-                        <span className="text-sm font-medium text-muted-foreground truncate" title={user.username}>{user.username}</span>
-                        <div className="flex items-center gap-2">
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <div className="flex items-center gap-1 text-sm font-medium text-amber-500">
-                                        <Coins className="h-4 w-4" />
-                                        {user.credits}
-                                    </div>
-                                </TooltipTrigger>
-                                <TooltipContent side="top">
-                                    <p>{t('creditsRemaining')}</p>
-                                </TooltipContent>
-                            </Tooltip>
-                            <Tooltip>
-                                <TooltipTrigger asChild>
-                                    <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
-                                        <LogOut className="h-4 w-4" />
-                                    </Button>
-                                </TooltipTrigger>
-                                <TooltipContent side="right">
-                                    <p>{t('logout')}</p>
-                                </TooltipContent>
-                            </Tooltip>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex items-center justify-between text-sm">
+                            <span className="font-medium text-foreground truncate" title={user.username}>{user.username}</span>
+                            <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
+                                <LogOut className="h-4 w-4" />
+                                <span className="sr-only">{t('logout')}</span>
+                            </Button>
+                        </div>
+                        <div className="flex items-center justify-between text-sm px-2 py-1.5 rounded-md bg-muted">
+                            <span className="text-muted-foreground">{t('creditsRemaining')}</span>
+                            <div className="flex items-center gap-1 font-semibold text-amber-500">
+                                <Coins className="h-4 w-4" />
+                                {user.credits}
+                            </div>
                         </div>
                     </div>
                 ) : (
@@ -141,6 +131,6 @@ export const LeftSidebarContent = () => {
                     )}
                 </div>
             </div>
-        </TooltipProvider>
-    )
+        </div>
+    );
 };
