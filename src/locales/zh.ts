@@ -10,6 +10,8 @@ export const zh = {
   search: '搜索...',
   light: '浅色',
   dark: '深色',
+  loginRegister: '登录 / 注册',
+  logout: '登出',
 
   // Right Sidebar
   chatsCount: '聊天 ({{count}})',
@@ -70,7 +72,7 @@ export const zh = {
   faqTemplatesTitle: '我可以创建自己的提示模板吗？',
   faqTemplatesContent: '是的！从左侧边栏导航到“模板”页面。在那里，您可以切换到“我的提示”选项卡来创建、编辑和删除您自己的自定义提示。它们会保存在您浏览器的本地存储中，以便于访问。',
   faqPrivacyTitle: '我的数据是私密的吗？',
-  faqPrivacyContent: '是的。您的聊天记录、自定义提示模板和设置都存储在您浏览器的本地存储中。除了当前对话会发送给 AI 模型进行处理且不会长期存储外，这些数据不会发送到我们的服务器进行存储。',
+  faqPrivacyContent: '是的。您的聊天记录、自定义提示模板和设置都存储在您浏览器的本地存储中。用户账户信息安全地存储在我们的数据库中。对话会被发送到AI模型进行处理，不会被长期存储。',
   faqImageTitle: '为什么 AI 无法生成图像？',
   faqImageContent: '图像生成功能当前已禁用。这使我们能够专注于提供最佳的基于文本的对话和任务辅助体验。但是，Bito AI 可以分析您上传的图像。',
   faqAiModesTitle: '不同的 AI 模式是什么？',
@@ -211,6 +213,9 @@ export const zh = {
   delete: '删除',
   areYouSure: '您确定吗？',
   saveAndSubmit: '保存并提交',
+  password: '密码',
+  register: '注册',
+  login: '登录',
 
   // Settings Page Dropdowns
   selectAiModePlaceholder: '选择模式',
@@ -231,4 +236,19 @@ export const zh = {
   initialPrompt2Action: '帮我为新的环保订阅盒业务构思三个创意。',
   initialPrompt3Action: '为一个幻想角色创建头像。她是一个精灵游侠，有长长的银发、绿色的眼睛和皮甲。她带着弓箭。',
   initialPrompt4Action: '用React编写一个简单的待办事项列表应用代码，使用功能组件和钩子。它应该允许添加和删除任务。',
+
+  // Auth
+  loginToBito: '登录到 Bito',
+  createBitoAccount: '创建您的 Bito 账户',
+  authDescription: '登录或创建账户以开始新的聊天。',
+  dontHaveAccount: '没有账户？',
+  alreadyHaveAccount: '已经有账户了？',
+  passwordMinLength: '密码必须至少为6个字符。',
+  loginSuccessTitle: '登录成功',
+  loginSuccessDescription: '欢迎回来，{{email}}！',
+  loginErrorTitle: '登录失败',
+  registerSuccessTitle: '注册成功',
+  registerSuccessDescription: '您现在可以用您的新账户登录了。',
+  registerErrorTitle: '注册失败',
+  logoutSuccessTitle: '已登出',
 };

@@ -4,6 +4,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from '@/components/theme-provider';
 import { ProjectProvider } from '@/contexts/ProjectProvider';
 import { LanguageProvider } from '@/contexts/LanguageProvider';
+import { AuthProvider } from '@/contexts/AuthProvider';
+import { AuthDialog } from '@/components/auth-dialog';
 
 export const metadata: Metadata = {
   title: 'Bito AI',
@@ -30,9 +32,12 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <LanguageProvider>
-            <ProjectProvider>
-              {children}
-            </ProjectProvider>
+            <AuthProvider>
+              <ProjectProvider>
+                {children}
+                <AuthDialog />
+              </ProjectProvider>
+            </AuthProvider>
           </LanguageProvider>
           <Toaster />
         </ThemeProvider>

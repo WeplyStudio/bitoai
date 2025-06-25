@@ -134,16 +134,16 @@ export default function SettingsPage() {
                 </Select>
             </div>
             <div className="flex flex-col items-start gap-3 rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label>{t('exportData')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('exportDataDescription')}
-                  </p>
-                </div>
-                <Button variant="outline" onClick={handleExportChat}>
-                  <Download className="mr-2 h-4 w-4" />
-                  {t('exportAllChats')}
-                </Button>
+              <div className="space-y-0.5">
+                <Label>{t('exportData')}</Label>
+                <p className="text-sm text-muted-foreground">
+                  {t('exportDataDescription')}
+                </p>
+              </div>
+              <Button variant="outline" onClick={handleExportChat}>
+                <Download className="mr-2 h-4 w-4" />
+                {t('exportAllChats')}
+              </Button>
             </div>
           </CardContent>
         </Card>

@@ -5,6 +5,7 @@ import { MoreHorizontal, Plus, MessageSquare } from 'lucide-react';
 import { useProjects, type Project } from '@/contexts/ProjectProvider';
 import { formatDistanceToNow } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageProvider';
+import { useAuth } from '@/contexts/AuthProvider';
 
 const ProjectItem = ({ project, active=false, onSwitch }: { project: Project, active?: boolean, onSwitch: (id: string) => void }) => (
     <button 
@@ -23,7 +24,16 @@ const ProjectItem = ({ project, active=false, onSwitch }: { project: Project, ac
 export const RightSidebarContent = () => {
   const { projects, activeProjectId, createProject, switchProject } = useProjects();
   const { t } = useLanguage();
+  const { user, setAuthDialogOpen } = useAuth();
   
+  const handleNewProject = () => {
+    if (!user) {
+      setAuthDialogOpen(true);
+    } else {
+      createProject();
+    }
+  };
+
   return (
     <>
         <div className="flex justify-between items-center p-4">
@@ -33,7 +43,7 @@ export const RightSidebarContent = () => {
           </Button>
         </div>
         <div className="px-4">
-          <Button variant="outline" className="w-full justify-start" onClick={() => createProject()}>
+          <Button variant="outline" className="w-full justify-start" onClick={handleNewProject}>
               <Plus className="mr-2 h-4 w-4" />
               {t('newChat')}
           </Button>

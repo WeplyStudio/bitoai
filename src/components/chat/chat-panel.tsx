@@ -8,6 +8,7 @@ import type { ChatMessage } from '@/ai/schemas';
 import { useToast } from '@/hooks/use-toast';
 import { useProjects } from '@/contexts/ProjectProvider';
 import { useLanguage } from '@/contexts/LanguageProvider';
+import { useAuth } from '@/contexts/AuthProvider';
 
 import { ChatMessages } from './chat-messages';
 import { ChatInput } from './chat-input';
@@ -52,6 +53,7 @@ export function ChatPanel() {
 
   const { activeProject, createProject, updateProjectName } = useProjects();
   const { language, t } = useLanguage();
+  const { user, setAuthDialogOpen } = useAuth();
 
   useEffect(() => {
     const templatePrompt = localStorage.getItem(TEMPLATE_PROMPT_KEY);
@@ -300,6 +302,14 @@ export function ChatPanel() {
     }
   };
 
+  const handleCreateProject = () => {
+    if (!user) {
+        setAuthDialogOpen(true);
+    } else {
+        createProject();
+    }
+  };
+
   const WelcomeScreen = () => {
     const welcomePrompts = [
         { displayKey: 'initialPrompt1', actionKey: 'initialPrompt1Action' },
@@ -344,7 +354,7 @@ export function ChatPanel() {
         <div className="flex flex-col items-center justify-center h-full text-center p-4 md:p-8">
             <h1 className="text-3xl md:text-4xl font-bold mb-2">{t('noActiveChat')}</h1>
             <p className="text-muted-foreground mb-8 max-w-md">{t('noActiveChatMessage')}</p>
-            <Button onClick={createProject}>
+            <Button onClick={handleCreateProject}>
                 <Plus className="mr-2 h-4 w-4" />
                 {t('createNewChat')}
             </Button>

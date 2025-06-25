@@ -10,6 +10,8 @@ export const ja = {
   search: '検索...',
   light: 'ライト',
   dark: 'ダーク',
+  loginRegister: 'ログイン / 登録',
+  logout: 'ログアウト',
 
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',
@@ -70,7 +72,7 @@ export const ja = {
   faqTemplatesTitle: '独自のプロンプトテンプレートを作成できますか？',
   faqTemplatesContent: 'はい！左のサイドバーから「テンプレート」ページに移動します。そこで、「私のプロンプト」タブに切り替えて、独自のカスタムプロンプトを作成、編集、削除できます。それらは簡単にアクセスできるようにブラウザにローカルに保存されます。',
   faqPrivacyTitle: '私のデータはプライベートですか？',
-  faqPrivacyContent: 'はい。チャット履歴、カスタムプロンプトテンプレート、および設定は、ブラウザのストレージにローカルに保存されます。このデータは、処理のためにAIモデルに送信される現在の会話を除き、保存のために当社のサーバーに送信されることはありません。',
+  faqPrivacyContent: 'はい。チャット履歴、カスタムプロンプトテンプレート、設定は、ブラウザのストレージにローカルに保存されます。ユーザーアカウント情報はデータベースに安全に保存されます。会話は処理のためにAIモデルに送信され、長期保存されることはありません。',
   faqImageTitle: 'なぜAIは画像を生成できないのですか？',
   faqImageContent: '画像生成は現在無効になっています。これにより、最高のテキストベースの会話とタスク支援体験を提供することに集中できます。ただし、Bito AIはアップロードした画像を分析できます。',
   faqAiModesTitle: '異なるAIモードとは何ですか？',
@@ -211,6 +213,9 @@ export const ja = {
   delete: '削除',
   areYouSure: '本当によろしいですか？',
   saveAndSubmit: '保存して送信',
+  password: 'パスワード',
+  register: '登録',
+  login: 'ログイン',
 
   // Settings Page Dropdowns
   selectAiModePlaceholder: 'モードを選択',
@@ -231,4 +236,19 @@ export const ja = {
   initialPrompt2Action: '新しい環境に優しいサブスクリプションボックスビジネスのアイデアを3つブレインストーミングするのを手伝ってください。',
   initialPrompt3Action: 'ファンタジーキャラクターのアバターを作成してください。彼女はエルフのレンジャーで、長い銀髪、緑色の目、革の鎧を着ています。弓矢を持っています。',
   initialPrompt4Action: 'Reactで、関数コンポーネントとフックを使用して簡単なToDoリストアプリのコードを書いてください。タスクの追加と削除ができるようにする必要があります。',
+
+  // Auth
+  loginToBito: 'Bitoにログイン',
+  createBitoAccount: 'Bitoアカウントを作成',
+  authDescription: 'ログインまたはアカウントを作成して新しいチャットを開始します。',
+  dontHaveAccount: 'アカウントをお持ちではありませんか？',
+  alreadyHaveAccount: 'すでにアカウントをお持ちですか？',
+  passwordMinLength: 'パスワードは6文字以上である必要があります。',
+  loginSuccessTitle: 'ログインに成功しました',
+  loginSuccessDescription: 'おかえりなさい、{{email}}さん！',
+  loginErrorTitle: 'ログインに失敗しました',
+  registerSuccessTitle: '登録に成功しました',
+  registerSuccessDescription: '新しいアカウントでログインできます。',
+  registerErrorTitle: '登録に失敗しました',
+  logoutSuccessTitle: 'ログアウトしました',
 };

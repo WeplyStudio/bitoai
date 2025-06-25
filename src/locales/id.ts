@@ -10,6 +10,8 @@ export const id = {
   search: 'Cari...',
   light: 'Terang',
   dark: 'Gelap',
+  loginRegister: 'Masuk / Daftar',
+  logout: 'Keluar',
 
   // Right Sidebar
   chatsCount: 'Obrolan ({{count}})',
@@ -70,7 +72,7 @@ export const id = {
   faqTemplatesTitle: 'Dapatkah saya membuat template prompt saya sendiri?',
   faqTemplatesContent: 'Ya! Navigasikan ke halaman "Template" dari bilah sisi kiri. Di sana, Anda dapat beralih ke tab "Prompt Saya" untuk membuat, mengedit, dan menghapus prompt kustom Anda sendiri. Prompt tersebut disimpan secara lokal di peramban Anda untuk akses mudah.',
   faqPrivacyTitle: 'Apakah data saya pribadi?',
-  faqPrivacyContent: "Ya. Riwayat obrolan, template prompt kustom, dan pengaturan Anda disimpan secara lokal di penyimpanan peramban Anda. Data ini tidak dikirim ke server kami untuk disimpan, kecuali untuk percakapan saat ini yang dikirim ke model AI untuk diproses dan tidak disimpan dalam jangka panjang.",
+  faqPrivacyContent: "Ya. Riwayat obrolan, templat prompt kustom, dan pengaturan Anda disimpan secara lokal di penyimpanan peramban Anda. Informasi akun pengguna disimpan dengan aman di basis data kami. Percakapan dikirim ke model AI untuk diproses dan tidak disimpan dalam jangka panjang.",
   faqImageTitle: "Mengapa AI tidak dapat menghasilkan gambar?",
   faqImageContent: "Pembuatan gambar saat ini dinonaktifkan. Ini memungkinkan kami untuk fokus memberikan pengalaman percakapan dan bantuan tugas berbasis teks terbaik. Namun, Bito AI dapat menganalisis gambar yang Anda unggah.",
   faqAiModesTitle: 'Apa saja Mode AI yang berbeda?',
@@ -211,6 +213,9 @@ export const id = {
   delete: 'Hapus',
   areYouSure: 'Apakah Anda benar-benar yakin?',
   saveAndSubmit: 'Simpan & Kirim',
+  password: 'Kata Sandi',
+  register: 'Daftar',
+  login: 'Masuk',
 
   // Settings Page Dropdowns
   selectAiModePlaceholder: 'Pilih mode',
@@ -231,4 +236,19 @@ export const id = {
   initialPrompt2Action: 'Bantu saya brainstorming tiga ide untuk bisnis kotak langganan ramah lingkungan yang baru.',
   initialPrompt3Action: 'Buat avatar untuk karakter fantasi. Dia adalah seorang ranger peri, dengan rambut perak panjang, mata hijau, dan baju zirah kulit. Dia membawa busur dan panah.',
   initialPrompt4Action: 'Tulis kode untuk aplikasi daftar tugas sederhana di React menggunakan komponen fungsional dan hook. Aplikasi harus memungkinkan penambahan dan penghapusan tugas.',
+  
+  // Auth
+  loginToBito: 'Masuk ke Bito',
+  createBitoAccount: 'Buat Akun Bito Anda',
+  authDescription: 'Masuk atau buat akun untuk memulai obrolan baru.',
+  dontHaveAccount: 'Belum punya akun?',
+  alreadyHaveAccount: 'Sudah punya akun?',
+  passwordMinLength: 'Kata sandi minimal 6 karakter.',
+  loginSuccessTitle: 'Berhasil Masuk',
+  loginSuccessDescription: 'Selamat datang kembali, {{email}}!',
+  loginErrorTitle: 'Gagal Masuk',
+  registerSuccessTitle: 'Pendaftaran Berhasil',
+  registerSuccessDescription: 'Anda sekarang dapat masuk dengan akun baru Anda.',
+  registerErrorTitle: 'Pendaftaran Gagal',
+  logoutSuccessTitle: 'Berhasil Keluar',
 };

@@ -10,6 +10,8 @@ export const en = {
   search: 'Search...',
   light: 'Light',
   dark: 'Dark',
+  loginRegister: 'Login / Register',
+  logout: 'Logout',
 
   // Right Sidebar
   chatsCount: 'Chats ({{count}})',
@@ -70,7 +72,7 @@ export const en = {
   faqTemplatesTitle: 'Can I create my own prompt templates?',
   faqTemplatesContent: 'Yes! Navigate to the "Templates" page from the left sidebar. There, you can switch to the "My Prompts" tab to create, edit, and delete your own custom prompts. They are saved locally in your browser for easy access.',
   faqPrivacyTitle: 'Is my data private?',
-  faqPrivacyContent: "Yes. Your chat histories, custom prompt templates, and settings are stored locally in your browser's storage. This data is not sent to our servers for storage, except for the current conversation which is sent to the AI model for processing and is not stored long-term.",
+  faqPrivacyContent: "Yes. Your chat histories, custom prompt templates, and settings are stored locally in your browser's storage. User account information is stored securely in our database. Conversations are sent to the AI model for processing and are not stored long-term.",
   faqImageTitle: "Why can't the AI generate images?",
   faqImageContent: "Image generation is currently disabled. This allows us to focus on providing the best possible text-based conversation and task assistance experience. Bito AI can, however, analyze images that you upload.",
   faqAiModesTitle: 'What are the different AI Modes?',
@@ -211,6 +213,9 @@ export const en = {
   delete: 'Delete',
   areYouSure: 'Are you absolutely sure?',
   saveAndSubmit: 'Save & Submit',
+  password: 'Password',
+  register: 'Register',
+  login: 'Login',
 
   // Settings Page Dropdowns
   selectAiModePlaceholder: 'Select a mode',
@@ -231,4 +236,19 @@ export const en = {
   initialPrompt2Action: 'Help me brainstorm three ideas for a new eco-friendly subscription box business.',
   initialPrompt3Action: 'Create an avatar for a fantasy character. She is an elven ranger, with long silver hair, green eyes, and leather armor. She carries a bow and arrow.',
   initialPrompt4Action: 'Write the code for a simple to-do list app in React using functional components and hooks. It should allow adding and removing tasks.',
+
+  // Auth
+  loginToBito: 'Login to Bito',
+  createBitoAccount: 'Create your Bito Account',
+  authDescription: 'Login or create an account to start new chats.',
+  dontHaveAccount: "Don't have an account?",
+  alreadyHaveAccount: 'Already have an account?',
+  passwordMinLength: 'Password must be at least 6 characters.',
+  loginSuccessTitle: 'Login Successful',
+  loginSuccessDescription: 'Welcome back, {{email}}!',
+  loginErrorTitle: 'Login Failed',
+  registerSuccessTitle: 'Registration Successful',
+  registerSuccessDescription: 'You can now log in with your new account.',
+  registerErrorTitle: 'Registration Failed',
+  logoutSuccessTitle: 'Logged Out',
 };
