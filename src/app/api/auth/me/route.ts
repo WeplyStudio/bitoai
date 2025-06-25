@@ -32,7 +32,7 @@ export async function GET() {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits, role: user.role } });
+    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role } });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });
