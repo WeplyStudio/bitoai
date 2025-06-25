@@ -28,9 +28,11 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
     }
     
-    // The check for verified users is removed.
-    // Both verified and unverified users will now proceed to OTP verification.
-    // The verification logic in /verify-otp will handle setting isVerified to true.
+    // A user must be verified to log in. 
+    // If not verified, they should go through the registration flow again to get a new OTP.
+    if (!user.isVerified) {
+      return NextResponse.json({ error: 'Account not verified. Please check your email for the verification link or register again to receive a new OTP.' }, { status: 403 });
+    }
 
     const otp = generateOtp();
     user.otp = await bcrypt.hash(otp, 10);
