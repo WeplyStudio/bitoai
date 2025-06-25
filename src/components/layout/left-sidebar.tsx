@@ -83,20 +83,17 @@ export const LeftSidebarContent = () => {
                         <Skeleton className="h-8 w-full" />
                     </div>
                 ) : user ? (
-                    <div className="flex flex-col gap-2">
-                        <div className="flex items-center justify-between text-sm">
-                            <span className="font-medium text-foreground truncate" title={user.username}>{user.username}</span>
+                    <div className="flex items-center justify-between text-sm p-2">
+                        <span className="font-medium text-foreground truncate" title={user.username}>{user.username}</span>
+                        <div className="flex items-center gap-2">
+                            <div className="flex items-center gap-1 font-semibold text-amber-500" title={`${user.credits} ${t('creditsRemaining')}`}>
+                                <Coins className="h-4 w-4" />
+                                {user.credits}
+                            </div>
                             <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
                                 <LogOut className="h-4 w-4" />
                                 <span className="sr-only">{t('logout')}</span>
                             </Button>
-                        </div>
-                        <div className="flex items-center justify-between text-sm px-2 py-1.5 rounded-md bg-muted">
-                            <span className="text-muted-foreground">{t('creditsRemaining')}</span>
-                            <div className="flex items-center gap-1 font-semibold text-amber-500">
-                                <Coins className="h-4 w-4" />
-                                {user.credits}
-                            </div>
                         </div>
                     </div>
                 ) : (
