@@ -369,55 +369,6 @@ export function ChatPanel() {
     </div>
   );
   
-  const ChatContent = () => {
-    if (isFetchingHistory) {
-      return (
-        <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
-          <div className="flex items-start space-x-4">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <div className="space-y-2 flex-1 pt-1">
-                  <Skeleton className="h-4 w-12" />
-                  <Skeleton className="h-4 w-3/4" />
-              </div>
-          </div>
-           <div className="flex items-start space-x-4 justify-end">
-              <div className="space-y-2 flex-1 pt-1 max-w-[80%] items-end flex flex-col">
-                  <Skeleton className="h-4 w-12" />
-                  <Skeleton className="h-4 w-1/2" />
-              </div>
-              <Skeleton className="h-8 w-8 rounded-full" />
-          </div>
-          <div className="flex items-start space-x-4">
-              <Skeleton className="h-8 w-8 rounded-full" />
-              <div className="space-y-2 flex-1 pt-1">
-                  <Skeleton className="h-4 w-12" />
-                  <Skeleton className="h-4 w-3/4" />
-                   <Skeleton className="h-4 w-1/2" />
-              </div>
-          </div>
-        </div>
-      );
-    }
-
-    if (messages.length === 0 && !isLoading) {
-      return <WelcomeScreen />;
-    }
-
-    return (
-      <ChatMessages 
-        messages={messages} 
-        isLoading={isLoading} 
-        onFeedback={handleActionTemporarilyDisabled}
-        onRegenerate={handleRegenerate}
-        onStartEdit={handleStartEdit}
-        regeneratingMessageId={regeneratingMessageId}
-        editingMessageId={editingMessageId}
-        onCancelEdit={onCancelEdit}
-        onSaveEdit={handleSaveEdit}
-      />
-    );
-  };
-  
   return (
     <div className="flex flex-col flex-1 min-h-0">
         <header className="hidden lg:flex items-center p-4 border-b">
@@ -436,8 +387,45 @@ export function ChatPanel() {
               </div>
             ) : user && !activeProject ? (
                 <NoChatsScreen />
+            ) : isFetchingHistory ? (
+              <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
+                <div className="flex items-start space-x-4">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <div className="space-y-2 flex-1 pt-1">
+                        <Skeleton className="h-4 w-12" />
+                        <Skeleton className="h-4 w-3/4" />
+                    </div>
+                </div>
+                 <div className="flex items-start space-x-4 justify-end">
+                    <div className="space-y-2 flex-1 pt-1 max-w-[80%] items-end flex flex-col">
+                        <Skeleton className="h-4 w-12" />
+                        <Skeleton className="h-4 w-1/2" />
+                    </div>
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                </div>
+                <div className="flex items-start space-x-4">
+                    <Skeleton className="h-8 w-8 rounded-full" />
+                    <div className="space-y-2 flex-1 pt-1">
+                        <Skeleton className="h-4 w-12" />
+                        <Skeleton className="h-4 w-3/4" />
+                         <Skeleton className="h-4 w-1/2" />
+                    </div>
+                </div>
+              </div>
+            ) : messages.length === 0 && !isLoading ? (
+              <WelcomeScreen />
             ) : (
-                <ChatContent />
+              <ChatMessages
+                messages={messages}
+                isLoading={isLoading}
+                onFeedback={handleActionTemporarilyDisabled}
+                onRegenerate={handleRegenerate}
+                onStartEdit={handleStartEdit}
+                regeneratingMessageId={regeneratingMessageId}
+                editingMessageId={editingMessageId}
+                onCancelEdit={handleCancelEdit}
+                onSaveEdit={handleSaveEdit}
+              />
             )}
         </div>
         
