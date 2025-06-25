@@ -3,7 +3,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { useToast } from '@/hooks/use-toast';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -11,6 +10,7 @@ import { SendHorizonal } from 'lucide-react';
 import { UserIcon } from '@/components/icons';
 import { formatDistanceToNow } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageProvider';
+import { useAuth } from '@/contexts/AuthProvider';
 
 interface Message {
   _id: string;
@@ -22,12 +22,12 @@ interface Message {
 export default function CommunityPage() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [newMessage, setNewMessage] = useState('');
-  const [author, setAuthor] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSending, setIsSending] = useState(false);
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
+  const { user } = useAuth();
 
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -68,19 +68,22 @@ export default function CommunityPage() {
       const response = await fetch('/api/community/messages', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ content: newMessage, author: author.trim() }),
+        body: JSON.stringify({ content: newMessage }),
       });
 
-      if (!response.ok) throw new Error('Failed to send message');
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to send message');
+      }
       
       const savedMessage = await response.json();
       setMessages(prev => [...prev, savedMessage]);
       setNewMessage('');
-    } catch (error) {
+    } catch (error: any) {
       toast({
         variant: 'destructive',
         title: t('error'),
-        description: t('errorSendCommunityMessage'),
+        description: error.message || t('errorSendCommunityMessage'),
       });
     } finally {
       setIsSending(false);
@@ -92,7 +95,7 @@ export default function CommunityPage() {
       <header className="flex items-center p-4 border-b bg-card">
         <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
           <h2 className="text-lg font-semibold">{t('communityChatTitle')}</h2>
-          <span className="text-sm text-muted-foreground">{t('communityChatDescription')}</span>
+          <span className="text-sm text-muted-foreground">{user ? t('communityChatDescriptionUser', { username: user.username }) : t('communityChatDescription')}</span>
         </div>
       </header>
 
@@ -138,30 +141,22 @@ export default function CommunityPage() {
                 placeholder={t('communityTypeMessage')}
                 rows={2}
                 maxLength={1000}
-                className="pr-12 resize-none"
+                className="pr-20 resize-none"
                 disabled={isSending}
                 required
               />
-              <Button
-                type="submit"
-                size="icon"
-                className="h-8 w-8 absolute top-3 right-3 bg-accent hover:bg-accent/90"
-                disabled={isSending || !newMessage.trim()}
-              >
-                <SendHorizonal className="h-4 w-4" />
-                <span className="sr-only">{t('send')}</span>
-              </Button>
-            </div>
-            <div className='flex items-center gap-2'>
-              <Input
-                value={author}
-                onChange={(e) => setAuthor(e.target.value)}
-                placeholder={t('communityAuthorPlaceholder')}
-                maxLength={30}
-                className="h-9"
-                disabled={isSending}
-              />
-              <p className="text-xs text-muted-foreground whitespace-nowrap">{newMessage.length} / 1000</p>
+              <div className="absolute top-3 right-3 flex items-center gap-2">
+                <span className="text-xs text-muted-foreground">{newMessage.length} / 1000</span>
+                <Button
+                  type="submit"
+                  size="icon"
+                  className="h-8 w-8 bg-accent hover:bg-accent/90"
+                  disabled={isSending || !newMessage.trim()}
+                >
+                  <SendHorizonal className="h-4 w-4" />
+                  <span className="sr-only">{t('send')}</span>
+                </Button>
+              </div>
             </div>
           </form>
         </div>

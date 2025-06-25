@@ -26,13 +26,13 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id');
+    const user = await User.findById(decoded.id).select('email _id username');
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    return NextResponse.json({ user: { id: user._id, email: user.email } });
+    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username } });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });

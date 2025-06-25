@@ -2,6 +2,7 @@ import mongoose, { Schema, Document } from 'mongoose';
 
 export interface IUser extends Document {
   email: string;
+  username: string;
   password?: string;
   otp?: string;
   otpExpires?: Date;
@@ -17,6 +18,12 @@ const UserSchema: Schema = new Schema({
     trim: true,
     lowercase: true,
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address.']
+  },
+  username: {
+    type: String,
+    required: [true, 'Username is required.'],
+    unique: true,
+    trim: true,
   },
   password: { 
     type: String, 

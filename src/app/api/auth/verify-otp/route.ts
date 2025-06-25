@@ -60,6 +60,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ 
       id: user._id,
       email: user.email,
+      username: user.username,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);

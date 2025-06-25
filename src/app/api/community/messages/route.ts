@@ -1,6 +1,11 @@
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import CommunityMessage from '@/models/CommunityMessage';
+import { cookies } from 'next/headers';
+import jwt from 'jsonwebtoken';
+import User from '@/models/User';
+
+const JWT_SECRET = process.env.JWT_SECRET;
 
 /**
  * Sanitizes a string by escaping HTML characters to prevent XSS attacks.
@@ -35,19 +40,42 @@ export async function GET() {
 export async function POST(request: Request) {
   await connectDB();
   try {
-    const { content, author } = await request.json();
+    const { content } = await request.json();
 
     if (!content) {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
 
+    let authorName = 'Anonymous';
+
+    // Check for user token to get their username
+    if (JWT_SECRET) {
+        const cookieStore = cookies();
+        const token = cookieStore.get('token')?.value;
+
+        if (token) {
+            try {
+                const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+                if (decoded) {
+                    const user = await User.findById(decoded.id).select('username');
+                    if (user) {
+                        authorName = user.username;
+                    }
+                }
+            } catch (e) {
+                // Token is invalid or expired, user remains anonymous
+                console.log("Community post with invalid token, user is Anonymous.");
+            }
+        }
+    }
+
+
     // Sanitize user input before saving to the database to prevent XSS
     const sanitizedContent = sanitize(content);
-    const sanitizedAuthor = sanitize(author || '');
 
     const newMessage = new CommunityMessage({
       content: sanitizedContent,
-      author: sanitizedAuthor.trim() || 'Anonymous',
+      author: authorName,
     });
 
     await newMessage.save();

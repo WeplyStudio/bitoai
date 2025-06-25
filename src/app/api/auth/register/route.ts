@@ -41,9 +41,17 @@ export async function POST(request: Request) {
       existingUser.otpExpires = otpExpires;
       await existingUser.save();
     } else {
-      // Create new user
+      // Create new user with a unique default username
+      let username = `User${Math.floor(100000 + Math.random() * 900000)}`;
+      let isUsernameTaken = await User.findOne({ username });
+      while(isUsernameTaken) {
+        username = `User${Math.floor(100000 + Math.random() * 900000)}`;
+        isUsernameTaken = await User.findOne({ username });
+      }
+
       await User.create({
         email,
+        username,
         password: hashedPassword,
         otp: hashedOtp,
         otpExpires,
@@ -55,6 +63,9 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'OTP has been sent to your email. Please verify to complete registration.' }, { status: 200 });
 
   } catch (error: any) {
+    if (error.code === 11000 && error.keyPattern?.username) {
+        return NextResponse.json({ error: 'Username is already taken' }, { status: 409 });
+    }
     if (error.name === 'ValidationError') {
         let errors: { [key: string]: string } = {};
         Object.keys(error.errors).forEach(key => {

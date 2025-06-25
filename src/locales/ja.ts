@@ -39,7 +39,14 @@ export const ja = {
 
   // Settings Page
   settingsTitle: '設定とヘルプ',
-  settingsDescription: 'Bito AI体験をカスタマイズします。',
+  profileSettings: 'プロフィール設定',
+  profileSettingsDescription: '名前を更新します。これはチャットやコミュニティで使用されます。',
+  username: 'ユーザー名',
+  usernameDescription: 'これはあなたの公開表示名です。',
+  usernameError: 'ユーザー名は3文字から20文字の間でなければなりません。',
+  usernameUpdatedTitle: 'ユーザー名が更新されました',
+  appSettings: 'アプリケーション設定',
+  appSettingsDescription: 'Bito AI体験をカスタマイズします。',
   aiMode: 'AIモード',
   aiModeDescription: 'Bito AIの応答のパーソナリティを選択します。',
   language: '言語',
@@ -163,6 +170,7 @@ export const ja = {
   // Community Page
   communityChatTitle: 'コミュニティチャット',
   communityChatDescription: 'グローバルな匿名チャットルーム',
+  communityChatDescriptionUser: '{{username}}としてログイン中',
   communityLoading: 'メッセージを読み込んでいます...',
   communityNoMessages: 'まだメッセージはありません。最初に何か言ってみましょう！',
   communityTypeMessage: 'メッセージを入力してください...',

@@ -39,7 +39,14 @@ export const zh = {
 
   // Settings Page
   settingsTitle: '设置与帮助',
-  settingsDescription: '自定义您的 Bito AI 体验。',
+  profileSettings: '个人资料设置',
+  profileSettingsDescription: '更新您的姓名。这将用于聊天和社区。',
+  username: '用户名',
+  usernameDescription: '这是您的公开显示名称。',
+  usernameError: '用户名必须介于3到20个字符之间。',
+  usernameUpdatedTitle: '用户名已更新',
+  appSettings: '应用设置',
+  appSettingsDescription: '自定义您的 Bito AI 体验。',
   aiMode: 'AI 模式',
   aiModeDescription: '为 Bito AI 响应选择个性。',
   language: '语言',
@@ -163,6 +170,7 @@ export const zh = {
   // Community Page
   communityChatTitle: '社区聊天',
   communityChatDescription: '全球匿名聊天室',
+  communityChatDescriptionUser: '以 {{username}} 身份登录',
   communityLoading: '正在加载消息...',
   communityNoMessages: '还没有消息。成为第一个发言的人吧！',
   communityTypeMessage: '输入您的消息...',

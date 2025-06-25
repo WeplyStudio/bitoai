@@ -8,6 +8,7 @@ import { useLanguage } from './LanguageProvider';
 interface User {
   id: string;
   email: string;
+  username: string;
 }
 
 interface AuthContextType {
@@ -17,6 +18,7 @@ interface AuthContextType {
   register: (email: string, pass: string) => Promise<boolean>;
   verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
+  updateUsername: (newUsername: string) => Promise<boolean>;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
 }
@@ -126,7 +128,27 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const value = { user, isLoading, login, register, logout, verifyOtp, isAuthDialogOpen, setAuthDialogOpen };
+  const updateUsername = async (newUsername: string): Promise<boolean> => {
+    try {
+      const response = await fetch('/api/user/update-username', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username: newUsername }),
+      });
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to update username.');
+      }
+      setUser(prev => prev ? { ...prev, username: newUsername } : null);
+      toast({ title: t('usernameUpdatedTitle'), description: data.message });
+      return true;
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: 'Error', description: error.message });
+      return false;
+    }
+  };
+
+  const value = { user, isLoading, login, register, logout, verifyOtp, updateUsername, isAuthDialogOpen, setAuthDialogOpen };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

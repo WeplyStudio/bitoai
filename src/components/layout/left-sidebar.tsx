@@ -84,7 +84,7 @@ export const LeftSidebarContent = () => {
                     </div>
                 ) : user ? (
                     <div className="flex items-center justify-between p-2">
-                        <span className="text-sm font-medium text-muted-foreground truncate" title={user.email}>{user.email}</span>
+                        <span className="text-sm font-medium text-muted-foreground truncate" title={user.username}>{user.username}</span>
                         <Tooltip>
                             <TooltipTrigger asChild>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>

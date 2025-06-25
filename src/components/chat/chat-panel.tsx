@@ -159,6 +159,7 @@ export function ChatPanel() {
         messages: historyForApi,
         mode: aiMode as any,
         language: language as any,
+        username: user?.username,
       });
 
       if (!response || !response.content) {
@@ -182,7 +183,7 @@ export function ChatPanel() {
     } finally {
       setIsLoading(false);
     }
-  }, [aiMode, language, toast, t]);
+  }, [aiMode, language, toast, t, user]);
 
   const handleSend = async (text: string, file?: File) => {
     if (isLoading || (!text.trim() && !file) || !activeProject) return;

@@ -2,26 +2,34 @@
 
 import { useState, useEffect } from 'react';
 import { useLanguage } from '@/contexts/LanguageProvider';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/contexts/AuthProvider';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle, CardFooter } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
+import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle } from 'lucide-react';
+import { Download, Mail, MessageCircle, Loader2 } from 'lucide-react';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
 
 export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
+  const [newUsername, setNewUsername] = useState('');
+  const [isUpdatingUsername, setIsUpdatingUsername] = useState(false);
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
+  const { user, updateUsername } = useAuth();
 
   useEffect(() => {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
-  }, []);
+    if (user) {
+      setNewUsername(user.username);
+    }
+  }, [user]);
 
   useEffect(() => {
     localStorage.setItem(AI_MODE_KEY, aiMode);
@@ -80,73 +88,117 @@ export default function SettingsPage() {
     }
   };
 
+  const handleUpdateUsername = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!user || newUsername === user.username || newUsername.trim().length < 3) {
+      toast({ variant: 'destructive', title: t('error'), description: t('usernameError')});
+      return;
+    }
+    setIsUpdatingUsername(true);
+    await updateUsername(newUsername.trim());
+    setIsUpdatingUsername(false);
+  };
+
   return (
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2 mb-4">
         <h2 className="text-3xl font-bold tracking-tight">{t('settingsTitle')}</h2>
       </div>
       <div className="grid gap-8 md:grid-cols-1 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Settings</CardTitle>
-            <CardDescription>{t('settingsDescription')}</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="ai-mode">{t('aiMode')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('aiModeDescription')}
-                  </p>
-                </div>
-                <Select value={aiMode} onValueChange={handleModeChange}>
-                  <SelectTrigger id="ai-mode" className="w-[180px]">
-                    <SelectValue placeholder={t('selectAiModePlaceholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
-                    <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
-                    <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
-                    <SelectItem value="storyteller">{t('faqAiModeStorytellerTitle')}</SelectItem>
-                    <SelectItem value="sarcastic">{t('faqAiModeSarcasticTitle')}</SelectItem>
-                    <SelectItem value="technical">{t('faqAiModeTechnicalTitle')}</SelectItem>
-                    <SelectItem value="philosopher">{t('faqAiModePhilosopherTitle')}</SelectItem>
-                  </SelectContent>
-                </Select>
-            </div>
-             <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label htmlFor="language">{t('language')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('languageDescription')}
-                  </p>
-                </div>
-                <Select value={language} onValueChange={handleLanguageChange}>
-                  <SelectTrigger id="language" className="w-[180px]">
-                    <SelectValue placeholder={t('selectLanguagePlaceholder')} />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="id">{t('lang_id')}</SelectItem>
-                    <SelectItem value="en">{t('lang_en')}</SelectItem>
-                    <SelectItem value="zh">{t('lang_zh')}</SelectItem>
-                    <SelectItem value="ja">{t('lang_ja')}</SelectItem>
-                  </SelectContent>
-                </Select>
-            </div>
-            <div className="flex flex-col items-start gap-3 rounded-lg border p-4">
-              <div className="space-y-0.5">
-                <Label>{t('exportData')}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {t('exportDataDescription')}
-                </p>
+        <div className="flex flex-col gap-8">
+          {user && (
+            <Card>
+              <CardHeader>
+                <CardTitle>{t('profileSettings')}</CardTitle>
+                <CardDescription>{t('profileSettingsDescription')}</CardDescription>
+              </CardHeader>
+              <form onSubmit={handleUpdateUsername}>
+                <CardContent>
+                  <div className="space-y-2">
+                    <Label htmlFor="username">{t('username')}</Label>
+                    <Input
+                      id="username"
+                      value={newUsername}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      disabled={isUpdatingUsername}
+                      minLength={3}
+                      maxLength={20}
+                    />
+                    <p className="text-sm text-muted-foreground">{t('usernameDescription')}</p>
+                  </div>
+                </CardContent>
+                <CardFooter className="border-t px-6 py-4">
+                  <Button type="submit" disabled={isUpdatingUsername || !user || newUsername === user.username}>
+                    {isUpdatingUsername && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {t('save')}
+                  </Button>
+                </CardFooter>
+              </form>
+            </Card>
+          )}
+
+          <Card>
+            <CardHeader>
+              <CardTitle>{t('appSettings')}</CardTitle>
+              <CardDescription>{t('appSettingsDescription')}</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="ai-mode">{t('aiMode')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('aiModeDescription')}
+                    </p>
+                  </div>
+                  <Select value={aiMode} onValueChange={handleModeChange}>
+                    <SelectTrigger id="ai-mode" className="w-[180px]">
+                      <SelectValue placeholder={t('selectAiModePlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
+                      <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
+                      <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
+                      <SelectItem value="storyteller">{t('faqAiModeStorytellerTitle')}</SelectItem>
+                      <SelectItem value="sarcastic">{t('faqAiModeSarcasticTitle')}</SelectItem>
+                      <SelectItem value="technical">{t('faqAiModeTechnicalTitle')}</SelectItem>
+                      <SelectItem value="philosopher">{t('faqAiModePhilosopherTitle')}</SelectItem>
+                    </SelectContent>
+                  </Select>
               </div>
-              <Button variant="outline" onClick={handleExportChat}>
-                <Download className="mr-2 h-4 w-4" />
-                {t('exportAllChats')}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label htmlFor="language">{t('language')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('languageDescription')}
+                    </p>
+                  </div>
+                  <Select value={language} onValueChange={handleLanguageChange}>
+                    <SelectTrigger id="language" className="w-[180px]">
+                      <SelectValue placeholder={t('selectLanguagePlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="id">{t('lang_id')}</SelectItem>
+                      <SelectItem value="en">{t('lang_en')}</SelectItem>
+                      <SelectItem value="zh">{t('lang_zh')}</SelectItem>
+                      <SelectItem value="ja">{t('lang_ja')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+              </div>
+              <div className="flex flex-col items-start gap-3 rounded-lg border p-4">
+                <div className="space-y-0.5">
+                  <Label>{t('exportData')}</Label>
+                  <p className="text-sm text-muted-foreground">
+                    {t('exportDataDescription')}
+                  </p>
+                </div>
+                <Button variant="outline" onClick={handleExportChat}>
+                  <Download className="mr-2 h-4 w-4" />
+                  {t('exportAllChats')}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         <Card>
           <CardHeader>

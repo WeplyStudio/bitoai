@@ -39,7 +39,14 @@ export const en = {
 
   // Settings Page
   settingsTitle: 'Settings & Help',
-  settingsDescription: 'Customize your Bito AI experience.',
+  profileSettings: 'Profile Settings',
+  profileSettingsDescription: "Update your name. This will be used in chats and the community.",
+  username: 'Username',
+  usernameDescription: 'This is your public display name.',
+  usernameError: 'Username must be between 3 and 20 characters.',
+  usernameUpdatedTitle: 'Username Updated',
+  appSettings: 'Application Settings',
+  appSettingsDescription: 'Customize your Bito AI experience.',
   aiMode: 'AI Mode',
   aiModeDescription: 'Choose the personality for Bito AI responses.',
   language: 'Language',
@@ -163,6 +170,7 @@ export const en = {
   // Community Page
   communityChatTitle: 'Community Chat',
   communityChatDescription: 'Global anonymous chat room',
+  communityChatDescriptionUser: 'Logged in as {{username}}',
   communityLoading: 'Loading messages...',
   communityNoMessages: 'No messages yet. Be the first to say something!',
   communityTypeMessage: 'Type your message...',

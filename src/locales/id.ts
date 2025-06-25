@@ -39,7 +39,14 @@ export const id = {
 
   // Settings Page
   settingsTitle: 'Pengaturan & Bantuan',
-  settingsDescription: 'Sesuaikan pengalaman Bito AI Anda.',
+  profileSettings: 'Pengaturan Profil',
+  profileSettingsDescription: "Perbarui nama Anda. Nama ini akan digunakan dalam obrolan dan komunitas.",
+  username: 'Nama Pengguna',
+  usernameDescription: 'Ini adalah nama tampilan publik Anda.',
+  usernameError: 'Nama pengguna harus antara 3 dan 20 karakter.',
+  usernameUpdatedTitle: 'Nama Pengguna Diperbarui',
+  appSettings: 'Pengaturan Aplikasi',
+  appSettingsDescription: 'Sesuaikan pengalaman Bito AI Anda.',
   aiMode: 'Mode AI',
   aiModeDescription: 'Pilih kepribadian untuk respons Bito AI.',
   language: 'Bahasa',
@@ -163,6 +170,7 @@ export const id = {
   // Community Page
   communityChatTitle: 'Obrolan Komunitas',
   communityChatDescription: 'Ruang obrolan anonim global',
+  communityChatDescriptionUser: 'Masuk sebagai {{username}}',
   communityLoading: 'Memuat pesan...',
   communityNoMessages: 'Belum ada pesan. Jadilah yang pertama mengatakan sesuatu!',
   communityTypeMessage: 'Ketik pesan Anda...',
