@@ -30,7 +30,7 @@ function sanitize(text: string): string {
 export async function GET() {
   await connectDB();
   try {
-    const messages = await CommunityMessage.find({}).sort({ createdAt: -1 }).limit(100);
+    const messages = await CommunityMessage.find({}).sort({ createdAt: 1 }).limit(100);
     return NextResponse.json(messages);
   } catch (error) {
     console.error('Failed to fetch messages:', error);
@@ -89,14 +89,21 @@ export async function POST(request: Request) {
     });
 
     await newMessage.save();
-
+    
+    let finalAchievements = user.achievements;
     // --- Achievement Logic ---
     if (!user.achievements.includes('first_community_post')) {
-      await User.findByIdAndUpdate(user._id, { $addToSet: { achievements: 'first_community_post' } });
+      const updatedUser = await User.findByIdAndUpdate(user._id, 
+        { $addToSet: { achievements: 'first_community_post' } },
+        { new: true }
+      );
+      if (updatedUser) {
+        finalAchievements = updatedUser.achievements;
+      }
     }
     // --- End Achievement Logic ---
 
-    return NextResponse.json(newMessage, { status: 201 });
+    return NextResponse.json({ message: newMessage, newAchievements: finalAchievements }, { status: 201 });
   } catch (error) {
     console.error('Failed to post message:', error);
     return NextResponse.json({ error: 'Failed to post message' }, { status: 500 });
