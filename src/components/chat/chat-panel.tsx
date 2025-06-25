@@ -128,7 +128,9 @@ export function ChatPanel() {
         }
 
         const aiMessage = await response.json();
-        setMessages(prev => prev.map(m => m.id === tempId ? { ...m, _id: aiMessage._id, id: aiMessage._id } : m)); // Replace temp user message with real one later if needed, for now just add AI message
+        
+        // The previous state `prev` already includes the optimistically added user message.
+        // We just need to add the new AI message.
         setMessages(prev => [...prev, aiMessage]);
 
         // If project name was 'Untitled Chat', it might have been renamed.
