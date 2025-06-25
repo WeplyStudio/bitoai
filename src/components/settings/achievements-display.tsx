@@ -5,7 +5,7 @@ import { useAuth } from '@/contexts/AuthProvider';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
-import { MessageSquarePlus, Milestone, Sparkles, Users, Lock } from 'lucide-react';
+import { MessageSquarePlus, Milestone, Sparkles, Users, Lock, Inbox, Archive, Crown, Trophy } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 const achievementMap = {
@@ -18,6 +18,26 @@ const achievementMap = {
     icon: Milestone,
     titleKey: 'achTenChatsTitle',
     descriptionKey: 'achTenChatsDesc',
+  },
+  hundred_chats: {
+    icon: Inbox,
+    titleKey: 'achHundredChatsTitle',
+    descriptionKey: 'achHundredChatsDesc',
+  },
+  thousand_chats: {
+    icon: Archive,
+    titleKey: 'achThousandChatsTitle',
+    descriptionKey: 'achThousandChatsDesc',
+  },
+  ten_thousand_chats: {
+    icon: Crown,
+    titleKey: 'achTenThousandChatsTitle',
+    descriptionKey: 'achTenThousandChatsDesc',
+  },
+  hundred_thousand_chats: {
+    icon: Trophy,
+    titleKey: 'achHundredThousandChatsTitle',
+    descriptionKey: 'achHundredThousandChatsDesc',
   },
   first_pro_chat: {
     icon: Sparkles,

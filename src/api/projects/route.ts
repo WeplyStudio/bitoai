@@ -69,6 +69,19 @@ export async function POST() {
     if (projectCount === 10) {
         achievementsToGrant.push('ten_chats');
     }
+    if (projectCount === 100) {
+      achievementsToGrant.push('hundred_chats');
+    }
+    if (projectCount === 1000) {
+        achievementsToGrant.push('thousand_chats');
+    }
+    if (projectCount === 10000) {
+        achievementsToGrant.push('ten_thousand_chats');
+    }
+    if (projectCount === 100000) {
+        achievementsToGrant.push('hundred_thousand_chats');
+    }
+
     if (achievementsToGrant.length > 0) {
         await User.findByIdAndUpdate(decoded.id, { $addToSet: { achievements: { $each: achievementsToGrant } } });
     }
