@@ -36,8 +36,9 @@ const toDataUri = (file: File): Promise<string> => {
 
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // For sending a message
+  const [isLoading, setIsLoading] = useState(false); // For sending a new message
   const [isFetchingHistory, setIsFetchingHistory] = useState(true);
+  const [regeneratingMessageId, setRegeneratingMessageId] = useState<string | null>(null);
   const { toast } = useToast();
   const [isMounted, setIsMounted] = useState(false);
   const [inputText, setInputText] = useState('');
@@ -86,7 +87,7 @@ export function ChatPanel() {
   }, [activeProject, toast]);
 
   const handleSend = async (text: string, file?: File) => {
-    if (isLoading || (!text.trim() && !file) || !activeProject) return;
+    if (isLoading || regeneratingMessageId || (!text.trim() && !file) || !activeProject) return;
     setIsLoading(true);
 
     let imageUrl: string | undefined = undefined;
@@ -124,14 +125,18 @@ export function ChatPanel() {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to get a response from the server.');
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to get a response from the server.');
         }
 
         const aiMessage = await response.json();
         
-        // The previous state `prev` already includes the optimistically added user message.
-        // We just need to add the new AI message.
-        setMessages(prev => [...prev, aiMessage]);
+        // Refetch history to get the proper IDs and order.
+        // This is safer than manipulating state manually and avoids key errors.
+        const historyResponse = await fetch(`/api/projects/${activeProject.id}/messages`);
+        const freshMessages = await historyResponse.json();
+        setMessages(freshMessages);
+
 
         // If project name was 'Untitled Chat', it might have been renamed.
         if (activeProject.name === 'Untitled Chat') {
@@ -146,10 +151,43 @@ export function ChatPanel() {
     }
   };
   
+  const handleRegenerate = useCallback(async (messageId: string) => {
+    if (!activeProject || regeneratingMessageId || isLoading) return;
+
+    setRegeneratingMessageId(messageId);
+    try {
+      const response = await fetch('/api/chat/regenerate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ projectId: activeProject.id, messageId: messageId }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Failed to regenerate response.');
+      }
+
+      const updatedMessage = await response.json();
+
+      setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, content: updatedMessage.content } : msg));
+      
+      toast({
+        title: "Respons diperbarui",
+        description: "Bito AI telah menghasilkan respons baru.",
+      });
+
+    } catch (error: any) {
+      toast({ variant: 'destructive', title: t('error'), description: error.message });
+    } finally {
+      setRegeneratingMessageId(null);
+    }
+  }, [activeProject, regeneratingMessageId, isLoading, toast]);
+
+
   const handleActionTemporarilyDisabled = () => {
     toast({
         title: "Feature Temporarily Disabled",
-        description: "This feature is being reworked to support database storage.",
+        description: "This feature is being reworked.",
     });
   };
 
@@ -258,13 +296,9 @@ export function ChatPanel() {
         messages={messages} 
         isLoading={isLoading} 
         onFeedback={handleActionTemporarilyDisabled}
-        onRegenerate={handleActionTemporarilyDisabled}
+        onRegenerate={handleRegenerate}
         onStartEdit={handleActionTemporarilyDisabled}
-        onCancelEdit={() => {}}
-        onSaveEdit={() => {}}
-        editingMessageId={null}
-        editedContent=""
-        onEditedContentChange={() => {}}
+        regeneratingMessageId={regeneratingMessageId}
       />
     );
   };
@@ -286,7 +320,7 @@ export function ChatPanel() {
             <div className="mx-auto max-w-4xl">
               <ChatInput 
                 onSend={handleSend} 
-                isLoading={isLoading || !activeProject}
+                isLoading={isLoading || !activeProject || !!regeneratingMessageId}
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}

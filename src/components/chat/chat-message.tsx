@@ -1,3 +1,4 @@
+
 'use client';
 import { useState } from 'react';
 import { ThumbsUp, ThumbsDown, RefreshCw, Pencil, Clipboard, Check } from 'lucide-react';
@@ -11,15 +12,17 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { ImagePreviewDialog } from './image-preview-dialog';
 import { useLanguage } from '@/contexts/LanguageProvider';
+import { Skeleton } from '../ui/skeleton';
 
 interface ChatMessageProps {
   message: Message;
   onFeedback: (messageId: string) => void;
   onRegenerate: (messageId: string) => void;
   onStartEdit: (messageId: string, content: string) => void;
+  isRegenerating?: boolean;
 }
 
-const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate'>) => {
+const ChatMessageModel = ({ message, onFeedback, onRegenerate, isRegenerating }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate' | 'isRegenerating'>) => {
   const { t } = useLanguage();
   
   const CodeBlock = ({ node, ...props }: any) => {
@@ -62,20 +65,28 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate }: Pick<ChatMessag
       </Avatar>
       <div className="flex flex-col items-start gap-2 w-full max-w-[85%] sm:max-w-[80%] lg:max-w-[85%]">
         <div className="min-w-0 w-full flex-shrink rounded-lg bg-secondary px-4 py-3">
-          {message.content && (
-            <div className="prose prose-sm dark:prose-invert max-w-none">
-              <ReactMarkdown
-                remarkPlugins={[remarkGfm]}
-                components={{
-                  pre: CodeBlock,
-                }}
-              >
-                {message.content}
-              </ReactMarkdown>
+          {isRegenerating ? (
+            <div className="space-y-2 py-1">
+              <Skeleton className="h-4 w-3/4" />
+              <Skeleton className="h-4 w-full" />
+              <Skeleton className="h-4 w-1/2" />
             </div>
+          ) : (
+            message.content && (
+              <div className="prose prose-sm dark:prose-invert max-w-none">
+                <ReactMarkdown
+                  remarkPlugins={[remarkGfm]}
+                  components={{
+                    pre: CodeBlock,
+                  }}
+                >
+                  {message.content}
+                </ReactMarkdown>
+              </div>
+            )
           )}
         </div>
-        <div className="opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 self-start">
+        <div className={cn("opacity-0 group-hover:opacity-100 transition-opacity flex items-center gap-1 self-start", isRegenerating && "hidden")}>
           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground">
             <ThumbsUp className="h-4 w-4" />
           </Button>

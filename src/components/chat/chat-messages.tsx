@@ -1,3 +1,4 @@
+
 'use client';
 import { useEffect, useRef } from 'react';
 import { ScrollArea } from '@/components/ui/scroll-area';
@@ -13,11 +14,7 @@ interface ChatMessagesProps {
   onFeedback: (messageId: string) => void;
   onRegenerate: (messageId: string) => void;
   onStartEdit: (messageId: string, content: string) => void;
-  onCancelEdit: () => void;
-  onSaveEdit: (messageId: string, newContent: string) => void;
-  editingMessageId: string | null;
-  editedContent: string;
-  onEditedContentChange: (content: string) => void;
+  regeneratingMessageId: string | null;
 }
 
 export function ChatMessages({ 
@@ -26,11 +23,7 @@ export function ChatMessages({
     onFeedback,
     onRegenerate,
     onStartEdit,
-    onCancelEdit,
-    onSaveEdit,
-    editingMessageId,
-    editedContent,
-    onEditedContentChange
+    regeneratingMessageId
 }: ChatMessagesProps) {
   const scrollViewportRef = useRef<HTMLDivElement>(null);
 
@@ -38,7 +31,7 @@ export function ChatMessages({
     if (scrollViewportRef.current) {
         scrollViewportRef.current.scrollTo({ top: scrollViewportRef.current.scrollHeight, behavior: 'smooth' });
     }
-  }, [messages, isLoading]);
+  }, [messages, isLoading, regeneratingMessageId]);
 
   return (
     <ScrollArea className="h-full" viewportRef={scrollViewportRef}>
@@ -50,11 +43,7 @@ export function ChatMessages({
             onFeedback={onFeedback}
             onRegenerate={onRegenerate}
             onStartEdit={onStartEdit}
-            onCancelEdit={onCancelEdit}
-            onSaveEdit={onSaveEdit}
-            isEditing={editingMessageId === message.id}
-            editedContent={editedContent}
-            onEditedContentChange={onEditedContentChange}
+            isRegenerating={regeneratingMessageId === message.id}
           />
         ))}
         {isLoading && (
