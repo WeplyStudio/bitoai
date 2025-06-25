@@ -22,35 +22,47 @@ export async function POST(request: Request) {
     }
     
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-    if (!decoded) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    if (!decoded || !decoded.id) {
+      return NextResponse.json({ error: 'Invalid token.' }, { status: 401 });
     }
 
     const { username } = await request.json();
+    const trimmedUsername = username.trim();
 
-    if (!username || username.trim().length < 3 || username.trim().length > 20) {
+    if (!trimmedUsername || trimmedUsername.length < 3 || trimmedUsername.length > 20) {
       return NextResponse.json({ error: 'Username must be between 3 and 20 characters.' }, { status: 400 });
     }
     
-    // Basic validation to prevent users from using "admin", "support", etc.
-    const forbiddenUsernames = ['admin', 'support', 'bito', 'system', 'root'];
-    if (forbiddenUsernames.includes(username.toLowerCase())) {
+    const forbiddenUsernames = ['admin', 'support', 'bito', 'system', 'root', 'anonymous'];
+    if (forbiddenUsernames.includes(trimmedUsername.toLowerCase())) {
         return NextResponse.json({ error: 'This username is not allowed.' }, { status: 400 });
     }
 
     await connectDB();
     
     // Check if the username is already taken by another user
-    const existingUser = await User.findOne({ username, _id: { $ne: decoded.id } });
+    const existingUser = await User.findOne({ username: trimmedUsername, _id: { $ne: decoded.id } });
     if (existingUser) {
       return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
     }
 
-    await User.findByIdAndUpdate(decoded.id, { username });
+    const updatedUser = await User.findByIdAndUpdate(
+      decoded.id, 
+      { username: trimmedUsername },
+      { new: true } // Return the updated document
+    );
 
-    return NextResponse.json({ message: 'Username updated successfully.' });
+    if (!updatedUser) {
+        return NextResponse.json({ error: 'User not found. Update failed.' }, { status: 404 });
+    }
+
+    return NextResponse.json({ message: 'Username updated successfully.', user: { username: updatedUser.username } });
   } catch (error) {
     console.error('Update username error:', error);
+    // Handle potential duplicate key error from MongoDB if the unique check fails due to a race condition
+    if ((error as any).code === 11000) {
+        return NextResponse.json({ error: 'Username is already taken.' }, { status: 409 });
+    }
     return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });
   }
 }

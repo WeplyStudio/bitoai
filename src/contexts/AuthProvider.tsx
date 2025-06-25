@@ -139,7 +139,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       if (!response.ok) {
         throw new Error(data.error || 'Failed to update username.');
       }
-      setUser(prev => prev ? { ...prev, username: newUsername } : null);
+      setUser(prev => (prev && data.user) ? { ...prev, username: data.user.username } : null);
       toast({ title: t('usernameUpdatedTitle'), description: data.message });
       return true;
     } catch (error: any) {
