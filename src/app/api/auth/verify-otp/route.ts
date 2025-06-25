@@ -21,7 +21,8 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and OTP are required' }, { status: 400 });
     }
 
-    const user = await User.findOne({ email }).select('+otp +otpExpires');
+    // Explicitly select all fields needed for patching and the response.
+    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -41,9 +42,9 @@ export async function POST(request: Request) {
     user.otpExpires = undefined;
     user.isVerified = true;
 
-    // **DEFINITIVE FIX**: If an older account doesn't have the credits field,
-    // this patch initializes it upon successful login.
-    if (typeof user.credits === 'undefined' || user.credits === null) {
+    // *** GUARANTEED PATCH FOR EXISTING ACCOUNTS ***
+    // If an older account is missing the credits field, this initializes it.
+    if (typeof user.credits !== 'number') {
       user.credits = 5;
     }
     
@@ -65,6 +66,7 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
+    // Return the fresh, patched user data
     return NextResponse.json({ 
       id: user._id,
       email: user.email,

@@ -45,14 +45,18 @@ export async function POST(request: Request) {
     const hashedOtp = await bcrypt.hash(otp, 10);
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-    await User.create({
+    // Explicitly create the new user with 5 credits to GUARANTEE it's in MongoDB
+    const newUser = new User({
       email,
       username: trimmedUsername,
       password: hashedPassword,
       otp: hashedOtp,
       otpExpires,
       credits: 5,
+      isVerified: false,
     });
+
+    await newUser.save();
 
     await sendOtpEmail(email, otp);
 
