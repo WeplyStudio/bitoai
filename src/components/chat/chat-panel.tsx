@@ -36,7 +36,7 @@ const toDataUri = (file: File): Promise<string> => {
 
 export function ChatPanel() {
   const [messages, setMessages] = useState<Message[]>([]);
-  const [isLoading, setIsLoading] = useState(false); // For sending a new message
+  const [isLoading, setIsLoading] = useState(false);
   const [isFetchingHistory, setIsFetchingHistory] = useState(true);
   const [regeneratingMessageId, setRegeneratingMessageId] = useState<string | null>(null);
   const [editingMessageId, setEditingMessageId] = useState<string | null>(null);
@@ -65,13 +65,11 @@ export function ChatPanel() {
 
   useEffect(() => {
     const fetchMessages = async () => {
-        if (activeProject) {
+        if (activeProject) { // This only exists for logged-in users.
             setIsFetchingHistory(true);
             try {
                 const response = await fetch(`/api/projects/${activeProject.id}/messages`);
-                if (!response.ok) {
-                    throw new Error('Failed to fetch messages');
-                }
+                if (!response.ok) throw new Error('Failed to fetch messages');
                 const data = await response.json();
                 setMessages(data);
             } catch (error) {
@@ -81,15 +79,23 @@ export function ChatPanel() {
                 setIsFetchingHistory(false);
             }
         } else {
+            // No active project means it's a guest, or a logged-in user with no chats.
+            // In both cases, the chat history should be empty.
             setMessages([]);
             setIsFetchingHistory(false);
         }
     };
-    fetchMessages();
-  }, [activeProject, toast, t]);
 
-  const handleSend = async (text: string, file?: File) => {
-    if (isLoading || regeneratingMessageId || editingMessageId || (!text.trim() && !file) || !activeProject) return;
+    if (isProjectsLoading && user) {
+        // Wait for projects to load before deciding
+        setIsFetchingHistory(true);
+    } else {
+        fetchMessages();
+    }
+  }, [activeProject, isProjectsLoading, user, toast, t]);
+
+  const handleUserSend = async (text: string, file?: File) => {
+    if (!activeProject) return;
     setIsLoading(true);
 
     let imageUrl: string | undefined = undefined;
@@ -132,13 +138,12 @@ export function ChatPanel() {
 
         if (!response.ok) {
             const errorData = await response.json();
-            setMessages(prev => prev.filter(m => m.id !== tempId)); // Remove optimistic message on error
+            setMessages(prev => prev.filter(m => m.id !== tempId));
             throw new Error(errorData.error || 'Failed to get a response from the server.');
         }
 
         const data = await response.json();
         
-        // Refetch history to get the proper IDs and order.
         const historyResponse = await fetch(`/api/projects/${activeProject.id}/messages`);
         const freshMessages = await historyResponse.json();
         setMessages(freshMessages);
@@ -149,18 +154,64 @@ export function ChatPanel() {
         if (data.userCredits !== undefined) {
             updateUserInContext({ credits: data.userCredits });
         }
-
-
     } catch (error: any) {
-        setMessages(prev => prev.filter(m => m.id !== tempId)); // Revert optimistic UI update
+        setMessages(prev => prev.filter(m => m.id !== tempId));
         toast({ variant: 'destructive', title: t('error'), description: error.message || 'Failed to get a response from Bito AI.' });
     } finally {
         setIsLoading(false);
     }
   };
   
+  const handleGuestSend = async (text: string) => {
+    setIsLoading(true);
+    const tempId = `user-${Date.now()}`;
+    const newUserMessage: Message = { _id: tempId, id: tempId, role: 'user', content: text };
+
+    const currentMessages = [...messages, newUserMessage];
+    setMessages(currentMessages);
+    setInputText('');
+
+    try {
+        const historyForApi = currentMessages.map(m => ({ role: m.role, content: m.content }));
+
+        const response = await fetch('/api/chat/guest', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ messages: historyForApi, mode: aiMode }),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || 'Failed to get a response.');
+        }
+
+        const data = await response.json();
+        const aiMessage: Message = { ...data.aiMessage, _id: data.aiMessage.id };
+        setMessages(prev => [...prev, aiMessage]);
+    } catch (error: any) {
+        setMessages(prev => prev.filter(m => m.id !== tempId));
+        toast({ variant: 'destructive', title: t('error'), description: error.message });
+    } finally {
+        setIsLoading(false);
+    }
+  };
+
+  const handleSend = async (text: string, file?: File) => {
+    if (isLoading || regeneratingMessageId || editingMessageId || (!text.trim() && !file)) return;
+    
+    if (user) {
+        await handleUserSend(text, file);
+    } else {
+        if (file) {
+            toast({ variant: 'destructive', title: t('loginRequired'), description: t('loginToUpload') });
+            return;
+        }
+        await handleGuestSend(text);
+    }
+  };
+  
   const handleRegenerate = useCallback(async (messageId: string) => {
-    if (!activeProject || regeneratingMessageId || isLoading) return;
+    if (!user || !activeProject || regeneratingMessageId || isLoading) return;
 
     setRegeneratingMessageId(messageId);
     try {
@@ -193,10 +244,11 @@ export function ChatPanel() {
     } finally {
       setRegeneratingMessageId(null);
     }
-  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t, aiMode]);
+  }, [user, activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t, aiMode]);
 
 
   const handleStartEdit = (messageId: string) => {
+    if (!user) return;
     setEditingMessageId(messageId);
   };
 
@@ -205,7 +257,7 @@ export function ChatPanel() {
   };
 
   const handleSaveEdit = async (messageId: string, newContent: string) => {
-    if (!newContent.trim() || editingMessageId !== messageId) return;
+    if (!user || !newContent.trim() || editingMessageId !== messageId) return;
 
     const originalMessages = [...messages];
     const messageIndex = originalMessages.findIndex(m => m.id === messageId);
@@ -229,10 +281,8 @@ export function ChatPanel() {
       }
       
       const data = await response.json();
-      // Update the user message in state with the definitive version from server
       setMessages(prev => prev.map(m => m.id === messageId ? { ...data.message, id: data.message._id.toString() } : m));
       
-      // Check if the next message should be regenerated
       if (messageIndex !== -1 && messageIndex + 1 < originalMessages.length) {
           const nextMessage = originalMessages[messageIndex + 1];
           if (nextMessage && nextMessage.role === 'model') {
@@ -241,7 +291,7 @@ export function ChatPanel() {
       }
 
     } catch (error: any) {
-      setMessages(originalMessages); // Revert on failure
+      setMessages(originalMessages);
       toast({ variant: 'destructive', title: t('error'), description: error.message });
     }
   };
@@ -362,7 +412,7 @@ export function ChatPanel() {
         onStartEdit={handleStartEdit}
         regeneratingMessageId={regeneratingMessageId}
         editingMessageId={editingMessageId}
-        onCancelEdit={handleCancelEdit}
+        onCancelEdit={onCancelEdit}
         onSaveEdit={handleSaveEdit}
       />
     );
@@ -372,20 +422,30 @@ export function ChatPanel() {
     <div className="flex flex-col flex-1 min-h-0">
         <header className="hidden lg:flex items-center p-4 border-b">
           <div className="flex items-center justify-between w-full max-w-4xl mx-auto">
-            <h2 className="text-lg font-semibold">{activeProject?.name || 'AI Chat'}</h2>
-            <Button>{t('upgrade')}</Button>
+            <h2 className="text-lg font-semibold">{user ? (activeProject?.name || 'AI Chat') : t('aiChat')}</h2>
+            <Button onClick={() => user ? {} : setAuthDialogOpen(true)}>{user ? t('upgrade') : t('loginRegister')}</Button>
           </div>
         </header>
 
         <div className="flex-1 overflow-y-auto">
-            {!activeProject ? <NoChatsScreen /> : <ChatContent />}
+            { (isProjectsLoading && user) ? (
+              <div className="max-w-4xl mx-auto space-y-6 p-4 md:p-6">
+                <div className="flex items-start space-x-4"><Skeleton className="h-8 w-8 rounded-full" /><div className="space-y-2 flex-1 pt-1"><Skeleton className="h-4 w-12" /><Skeleton className="h-4 w-3/4" /></div></div>
+                <div className="flex items-start space-x-4 justify-end"><div className="space-y-2 flex-1 pt-1 max-w-[80%] items-end flex flex-col"><Skeleton className="h-4 w-12" /><Skeleton className="h-4 w-1/2" /></div><Skeleton className="h-8 w-8 rounded-full" /></div>
+                <div className="flex items-start space-x-4"><Skeleton className="h-8 w-8 rounded-full" /><div className="space-y-2 flex-1 pt-1"><Skeleton className="h-4 w-12" /><Skeleton className="h-4 w-3/4" /><Skeleton className="h-4 w-1/2" /></div></div>
+              </div>
+            ) : user && !activeProject ? (
+                <NoChatsScreen />
+            ) : (
+                <ChatContent />
+            )}
         </div>
         
         <footer className="p-2 md:p-4 bg-background/80 backdrop-blur-sm">
             <div className="mx-auto max-w-4xl">
               <ChatInput 
                 onSend={handleSend} 
-                isLoading={isLoading || !activeProject || !!regeneratingMessageId || !!editingMessageId}
+                isLoading={isLoading || (user && !activeProject) || !!regeneratingMessageId || !!editingMessageId}
                 value={inputText} 
                 onChange={setInputText}
                 onBrowsePrompts={() => setTemplateDialogOpen(true)}

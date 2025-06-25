@@ -214,6 +214,8 @@ export const ja = {
   copyCode: 'コードをコピー',
   messageUpdatedSuccessTitle: 'メッセージが更新されました',
   messageUpdatedSuccessDesc: 'メッセージが正常に保存されました。',
+  loginRequired: 'ログインが必要です',
+  loginToUpload: '画像をアップロードするにはログインまたは登録してください。',
 
   // Feedback Dialog
   feedbackTitle: 'フィードバックを提供する',

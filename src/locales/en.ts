@@ -214,6 +214,8 @@ export const en = {
   copyCode: 'Copy code',
   messageUpdatedSuccessTitle: 'Message Updated',
   messageUpdatedSuccessDesc: 'Your message has been saved successfully.',
+  loginRequired: 'Login Required',
+  loginToUpload: 'Please log in or register to upload images.',
 
   // Feedback Dialog
   feedbackTitle: 'Provide Feedback',

@@ -214,6 +214,8 @@ export const zh = {
   copyCode: '复制代码',
   messageUpdatedSuccessTitle: '消息已更新',
   messageUpdatedSuccessDesc: '您的消息已成功保存。',
+  loginRequired: '需要登录',
+  loginToUpload: '请登录或注册以上传图片。',
 
   // Feedback Dialog
   feedbackTitle: '提供反馈',

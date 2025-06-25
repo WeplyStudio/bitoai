@@ -214,6 +214,8 @@ export const id = {
   copyCode: 'Salin kode',
   messageUpdatedSuccessTitle: 'Pesan Diperbarui',
   messageUpdatedSuccessDesc: 'Pesan Anda telah berhasil disimpan.',
+  loginRequired: 'Diperlukan Login',
+  loginToUpload: 'Silakan login atau daftar untuk mengunggah gambar.',
 
   // Feedback Dialog
   feedbackTitle: 'Berikan Umpan Balik',
