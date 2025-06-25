@@ -82,6 +82,7 @@ const LoginForm = ({ onSwitchToRegister }: { onSwitchToRegister: () => void }) =
 const RegisterForm = ({ onSwitchToLogin }: { onSwitchToLogin: () => void }) => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [username, setUsername] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const { register } = useAuth();
   const { t } = useLanguage();
@@ -89,15 +90,26 @@ const RegisterForm = ({ onSwitchToLogin }: { onSwitchToLogin: () => void }) => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
-    const success = await register(email, password);
-    if (success) {
-        onSwitchToLogin();
-    }
+    await register(email, username, password);
     setIsLoading(false);
   };
   
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
+      <div className="space-y-2">
+        <Label htmlFor="register-username">{t('username')}</Label>
+        <Input
+          id="register-username"
+          type="text"
+          placeholder="YourUniqueName"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+          minLength={3}
+          maxLength={20}
+          required
+        />
+        <p className="text-xs text-muted-foreground">{t('usernamePermanentInfo')}</p>
+      </div>
       <div className="space-y-2">
         <Label htmlFor="register-email">{t('email')}</Label>
         <Input

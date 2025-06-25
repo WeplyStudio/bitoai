@@ -39,12 +39,7 @@ export const id = {
 
   // Settings Page
   settingsTitle: 'Pengaturan & Bantuan',
-  profileSettings: 'Pengaturan Profil',
-  profileSettingsDescription: "Perbarui nama Anda. Nama ini akan digunakan dalam obrolan dan komunitas.",
   username: 'Nama Pengguna',
-  usernameDescription: 'Ini adalah nama tampilan publik Anda.',
-  usernameError: 'Nama pengguna harus antara 3 dan 20 karakter.',
-  usernameUpdatedTitle: 'Nama Pengguna Diperbarui',
   appSettings: 'Pengaturan Aplikasi',
   appSettingsDescription: 'Sesuaikan pengalaman Bito AI Anda.',
   aiMode: 'Mode AI',
@@ -251,6 +246,7 @@ export const id = {
   dontHaveAccount: 'Belum punya akun?',
   alreadyHaveAccount: 'Sudah punya akun?',
   passwordMinLength: 'Kata sandi minimal 6 karakter.',
+  usernamePermanentInfo: 'Ini akan menjadi nama permanen Anda dan tidak dapat diubah nanti.',
   loginSuccessTitle: 'Berhasil Masuk',
   loginSuccessDescription: 'Selamat datang kembali, {{email}}!',
   loginErrorTitle: 'Gagal Masuk',

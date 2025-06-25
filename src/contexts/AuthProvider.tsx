@@ -15,10 +15,9 @@ interface AuthContextType {
   user: User | null;
   isLoading: boolean;
   login: (email: string, pass: string) => Promise<boolean>;
-  register: (email: string, pass: string) => Promise<boolean>;
+  register: (email: string, username: string, pass: string) => Promise<boolean>;
   verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
-  updateUsername: (newUsername: string) => Promise<boolean>;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
 }
@@ -75,12 +74,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const register = async (email: string, password: string): Promise<boolean> => {
+  const register = async (email: string, username: string, password: string): Promise<boolean> => {
     try {
         const response = await fetch('/api/auth/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ email, password }),
+            body: JSON.stringify({ email, username, password }),
         });
         const data = await response.json();
         if (!response.ok) {
@@ -128,27 +127,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  const updateUsername = async (newUsername: string): Promise<boolean> => {
-    try {
-      const response = await fetch('/api/user/update-username', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username: newUsername }),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        throw new Error(data.error || 'Failed to update username.');
-      }
-      setUser(prev => (prev && data.user) ? { ...prev, username: data.user.username } : null);
-      toast({ title: t('usernameUpdatedTitle'), description: data.message });
-      return true;
-    } catch (error: any) {
-      toast({ variant: 'destructive', title: 'Error', description: error.message });
-      return false;
-    }
-  };
-
-  const value = { user, isLoading, login, register, logout, verifyOtp, updateUsername, isAuthDialogOpen, setAuthDialogOpen };
+  const value = { user, isLoading, login, register, logout, verifyOtp, isAuthDialogOpen, setAuthDialogOpen };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

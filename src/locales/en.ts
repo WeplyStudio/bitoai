@@ -39,12 +39,7 @@ export const en = {
 
   // Settings Page
   settingsTitle: 'Settings & Help',
-  profileSettings: 'Profile Settings',
-  profileSettingsDescription: "Update your name. This will be used in chats and the community.",
   username: 'Username',
-  usernameDescription: 'This is your public display name.',
-  usernameError: 'Username must be between 3 and 20 characters.',
-  usernameUpdatedTitle: 'Username Updated',
   appSettings: 'Application Settings',
   appSettingsDescription: 'Customize your Bito AI experience.',
   aiMode: 'AI Mode',
@@ -251,6 +246,7 @@ export const en = {
   dontHaveAccount: "Don't have an account?",
   alreadyHaveAccount: 'Already have an account?',
   passwordMinLength: 'Password must be at least 6 characters.',
+  usernamePermanentInfo: 'This will be your permanent name and cannot be changed later.',
   loginSuccessTitle: 'Login Successful',
   loginSuccessDescription: 'Welcome back, {{email}}!',
   loginErrorTitle: 'Login Failed',

@@ -3,7 +3,6 @@ import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/nodemailer';
-import { generateUsername } from '@/ai/flows/generate-username-flow';
 
 // Function to generate a 6-digit OTP
 const generateOtp = () => {
@@ -13,21 +12,32 @@ const generateOtp = () => {
 export async function POST(request: Request) {
   try {
     await connectDB();
-    const { email, password } = await request.json();
+    const { email, password, username } = await request.json();
 
-    if (!email || !password) {
-      return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
+    if (!email || !password || !username) {
+      return NextResponse.json({ error: 'Email, username, and password are required' }, { status: 400 });
     }
     
     if (password.length < 6) {
       return NextResponse.json({ error: 'Password must be at least 6 characters long' }, { status: 400 });
     }
 
-    const existingUser = await User.findOne({ email });
+    const trimmedUsername = username.trim();
+    if (trimmedUsername.length < 3 || trimmedUsername.length > 20) {
+        return NextResponse.json({ error: 'Username must be between 3 and 20 characters.' }, { status: 400 });
+    }
+    if (/\s/.test(trimmedUsername)) {
+        return NextResponse.json({ error: 'Username cannot contain spaces.' }, { status: 400 });
+    }
 
-    // If user exists and is already verified, block registration
-    if (existingUser && existingUser.isVerified) {
-      return NextResponse.json({ error: 'User with this email already exists' }, { status: 409 });
+    const existingUserByEmail = await User.findOne({ email });
+    if (existingUserByEmail && existingUserByEmail.isVerified) {
+      return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
+    }
+    
+    const existingUserByUsername = await User.findOne({ username: trimmedUsername });
+    if (existingUserByUsername) {
+        return NextResponse.json({ error: 'This username is already taken. Please choose another one.' }, { status: 409 });
     }
     
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -35,41 +45,18 @@ export async function POST(request: Request) {
     const hashedOtp = await bcrypt.hash(otp, 10);
     const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
 
-    if (existingUser) {
-      // Update existing but unverified user
-      existingUser.password = hashedPassword;
-      existingUser.otp = hashedOtp;
-      existingUser.otpExpires = otpExpires;
-      await existingUser.save();
+    if (existingUserByEmail) {
+      // Update existing but unverified user if they try to re-register
+      existingUserByEmail.password = hashedPassword;
+      existingUserByEmail.username = trimmedUsername;
+      existingUserByEmail.otp = hashedOtp;
+      existingUserByEmail.otpExpires = otpExpires;
+      await existingUserByEmail.save();
     } else {
-      // Create new user with a unique AI-generated username
-      let username = '';
-      let isUsernameTaken = true;
-      let retries = 5; // Prevent infinite loop
-      
-      while(isUsernameTaken && retries > 0) {
-        const { username: newUsername } = await generateUsername();
-        const existingUsername = await User.findOne({ username: newUsername });
-        if (!existingUsername) {
-            username = newUsername;
-            isUsernameTaken = false;
-        }
-        retries--;
-      }
-      
-      if (isUsernameTaken) {
-          // Fallback to the old method if AI fails to generate a unique name
-          username = `User${Math.floor(100000 + Math.random() * 900000)}`;
-          let isFallbackUsernameTaken = await User.findOne({ username });
-          while(isFallbackUsernameTaken) {
-            username = `User${Math.floor(100000 + Math.random() * 900000)}`;
-            isFallbackUsernameTaken = await User.findOne({ username });
-          }
-      }
-
+      // Create new user
       await User.create({
         email,
-        username,
+        username: trimmedUsername,
         password: hashedPassword,
         otp: hashedOtp,
         otpExpires,
@@ -81,8 +68,13 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: 'OTP has been sent to your email. Please verify to complete registration.' }, { status: 200 });
 
   } catch (error: any) {
-    if (error.code === 11000 && error.keyPattern?.username) {
-        return NextResponse.json({ error: 'Username is already taken' }, { status: 409 });
+    if (error.code === 11000) {
+        if (error.keyPattern?.email) {
+            return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
+        }
+        if (error.keyPattern?.username) {
+            return NextResponse.json({ error: 'This username is already taken.' }, { status: 409 });
+        }
     }
     if (error.name === 'ValidationError') {
         let errors: { [key: string]: string } = {};

@@ -39,12 +39,7 @@ export const zh = {
 
   // Settings Page
   settingsTitle: '设置与帮助',
-  profileSettings: '个人资料设置',
-  profileSettingsDescription: '更新您的姓名。这将用于聊天和社区。',
   username: '用户名',
-  usernameDescription: '这是您的公开显示名称。',
-  usernameError: '用户名必须介于3到20个字符之间。',
-  usernameUpdatedTitle: '用户名已更新',
   appSettings: '应用设置',
   appSettingsDescription: '自定义您的 Bito AI 体验。',
   aiMode: 'AI 模式',
@@ -251,6 +246,7 @@ export const zh = {
   dontHaveAccount: '没有账户？',
   alreadyHaveAccount: '已经有账户了？',
   passwordMinLength: '密码必须至少为6个字符。',
+  usernamePermanentInfo: '这将是您的永久名称，以后无法更改。',
   loginSuccessTitle: '登录成功',
   loginSuccessDescription: '欢迎回来，{{email}}！',
   loginErrorTitle: '登录失败',
