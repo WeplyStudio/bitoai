@@ -54,6 +54,11 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
+        // **SAFETY NET**: If an old user account has no credits field, initialize it to 0.
+        if (typeof user.credits === 'undefined' || user.credits === null) {
+            user.credits = 0;
+        }
+
         // --- Credit Deduction Logic ---
         if (user.credits < 1) {
             return NextResponse.json({ error: 'Insufficient credits to regenerate response. Please contact admin to buy more.' }, { status: 403 });

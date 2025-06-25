@@ -49,6 +49,12 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
         
+        // **SAFETY NET**: If an old user account has no credits field, initialize it to 0.
+        // The main fix is in verify-otp, this is a fallback.
+        if (typeof user.credits === 'undefined' || user.credits === null) {
+            user.credits = 0;
+        }
+
         // --- Credit Deduction Logic ---
         const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
         if (mode && proModes.includes(mode)) {

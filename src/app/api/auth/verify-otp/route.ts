@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
@@ -39,6 +40,13 @@ export async function POST(request: Request) {
     user.otp = undefined;
     user.otpExpires = undefined;
     user.isVerified = true;
+
+    // **DEFINITIVE FIX**: If an older account doesn't have the credits field,
+    // this patch initializes it upon successful login.
+    if (typeof user.credits === 'undefined' || user.credits === null) {
+      user.credits = 5;
+    }
+    
     await user.save();
     
     // Generate JWT and log the user in
@@ -61,7 +69,7 @@ export async function POST(request: Request) {
       id: user._id,
       email: user.email,
       username: user.username,
-      credits: user.credits ?? 0,
+      credits: user.credits,
       role: user.role,
     });
   } catch (error) {
