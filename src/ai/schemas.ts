@@ -64,3 +64,9 @@ export const InitialPromptOutputSchema = z.object({
   prompts: z.array(z.string()).describe('An array of 4 initial prompt suggestions.'),
 });
 export type InitialPromptOutput = z.infer<typeof InitialPromptOutputSchema>;
+
+// From generate-username-flow.ts
+export const GenerateUsernameOutputSchema = z.object({
+  username: z.string().describe('A single, unique, creative username in PascalCase.'),
+});
+export type GenerateUsernameOutput = z.infer<typeof GenerateUsernameOutputSchema>;

@@ -3,6 +3,7 @@ import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { sendOtpEmail } from '@/lib/nodemailer';
+import { generateUsername } from '@/ai/flows/generate-username-flow';
 
 // Function to generate a 6-digit OTP
 const generateOtp = () => {
@@ -41,12 +42,29 @@ export async function POST(request: Request) {
       existingUser.otpExpires = otpExpires;
       await existingUser.save();
     } else {
-      // Create new user with a unique default username
-      let username = `User${Math.floor(100000 + Math.random() * 900000)}`;
-      let isUsernameTaken = await User.findOne({ username });
-      while(isUsernameTaken) {
-        username = `User${Math.floor(100000 + Math.random() * 900000)}`;
-        isUsernameTaken = await User.findOne({ username });
+      // Create new user with a unique AI-generated username
+      let username = '';
+      let isUsernameTaken = true;
+      let retries = 5; // Prevent infinite loop
+      
+      while(isUsernameTaken && retries > 0) {
+        const { username: newUsername } = await generateUsername();
+        const existingUsername = await User.findOne({ username: newUsername });
+        if (!existingUsername) {
+            username = newUsername;
+            isUsernameTaken = false;
+        }
+        retries--;
+      }
+      
+      if (isUsernameTaken) {
+          // Fallback to the old method if AI fails to generate a unique name
+          username = `User${Math.floor(100000 + Math.random() * 900000)}`;
+          let isFallbackUsernameTaken = await User.findOne({ username });
+          while(isFallbackUsernameTaken) {
+            username = `User${Math.floor(100000 + Math.random() * 900000)}`;
+            isFallbackUsernameTaken = await User.findOne({ username });
+          }
       }
 
       await User.create({
