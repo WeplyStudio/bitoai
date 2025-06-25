@@ -167,7 +167,7 @@ export function ChatPanel() {
       const response = await fetch('/api/chat/regenerate', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ projectId: activeProject.id, messageId: messageId }),
+        body: JSON.stringify({ projectId: activeProject.id, messageId, mode: aiMode }),
       });
 
       if (!response.ok) {
@@ -193,7 +193,7 @@ export function ChatPanel() {
     } finally {
       setRegeneratingMessageId(null);
     }
-  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t]);
+  }, [activeProject, regeneratingMessageId, isLoading, toast, updateUserInContext, t, aiMode]);
 
 
   const handleStartEdit = (messageId: string) => {
@@ -208,6 +208,8 @@ export function ChatPanel() {
     if (!newContent.trim() || editingMessageId !== messageId) return;
 
     const originalMessages = [...messages];
+    const messageIndex = originalMessages.findIndex(m => m.id === messageId);
+    
     const optimisticUpdate = messages.map(m =>
       m.id === messageId ? { ...m, content: newContent } : m
     );
@@ -225,7 +227,19 @@ export function ChatPanel() {
         const errorData = await response.json();
         throw new Error(errorData.error || 'Failed to save message.');
       }
-      toast({ title: t('messageUpdatedSuccessTitle'), description: t('messageUpdatedSuccessDesc') });
+      
+      const data = await response.json();
+      // Update the user message in state with the definitive version from server
+      setMessages(prev => prev.map(m => m.id === messageId ? { ...data.message, id: data.message._id.toString() } : m));
+      
+      // Check if the next message should be regenerated
+      if (messageIndex !== -1 && messageIndex + 1 < originalMessages.length) {
+          const nextMessage = originalMessages[messageIndex + 1];
+          if (nextMessage && nextMessage.role === 'model') {
+              await handleRegenerate(nextMessage.id);
+          }
+      }
+
     } catch (error: any) {
       setMessages(originalMessages); // Revert on failure
       toast({ variant: 'destructive', title: t('error'), description: error.message });

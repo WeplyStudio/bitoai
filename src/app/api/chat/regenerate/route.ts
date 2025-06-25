@@ -32,7 +32,7 @@ export async function POST(request: Request) {
     }
 
     try {
-        const { projectId, messageId } = await request.json();
+        const { projectId, messageId, mode } = await request.json();
         if (!projectId || !messageId) {
             return NextResponse.json({ error: 'Project ID and Message ID are required' }, { status: 400 });
         }
@@ -54,30 +54,26 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
 
-        // **SAFETY NET**: If an old user account has no credits field, initialize it to 0.
-        if (typeof user.credits === 'undefined' || user.credits === null) {
+        if (typeof user.credits !== 'number') {
             user.credits = 0;
         }
 
         // --- Credit Deduction Logic ---
-        if (user.credits < 1) {
-            return NextResponse.json({ error: 'Insufficient credits to regenerate response. Please contact admin to buy more.' }, { status: 403 });
+        const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
+        if (mode && proModes.includes(mode)) {
+            if (user.credits < 1) {
+                return NextResponse.json({ error: 'Insufficient credits to use this feature. Please contact admin to buy more.' }, { status: 403 });
+            }
+            user.credits -= 1;
         }
-        user.credits -= 1;
         // --- End Credit Deduction Logic ---
 
         // Fetch chat history UP TO the message being regenerated
         const historyUpToMessage = await ChatMessage.find({ 
             projectId,
             createdAt: { $lt: messageToRegenerate.createdAt }
-        }).sort({ createdAt: -1 }).limit(10); // get recent messages for context
+        }).sort({ createdAt: -1 }).limit(10); 
 
-        if (historyUpToMessage.length === 0) {
-            // This can happen if it's the very first AI message.
-            // We'll allow regenerating with an empty history.
-            console.log("Regenerating the first message in the chat.")
-        }
-        
         const historyForApi: ApiChatMessage[] = historyUpToMessage.reverse().map(m => ({
             role: m.role as 'user' | 'model',
             content: m.content,
@@ -86,7 +82,7 @@ export async function POST(request: Request) {
         
         const aiResponse = await chat({
             messages: historyForApi,
-            mode: 'default',
+            mode: mode || 'default',
             language: 'id', 
             username: user.username,
         });
