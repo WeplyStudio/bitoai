@@ -240,6 +240,18 @@ export default function SettingsPage() {
                     {t('faqBitoContent')}
                     </AccordionContent>
                 </AccordionItem>
+                <AccordionItem value="item-8">
+                    <AccordionTrigger>{t('faqAchievementsTitle')}</AccordionTrigger>
+                    <AccordionContent>
+                    {t('faqAchievementsContent')}
+                    </AccordionContent>
+                </AccordionItem>
+                <AccordionItem value="item-9">
+                    <AccordionTrigger>{t('faqCreditsTitle')}</AccordionTrigger>
+                    <AccordionContent>
+                    {t('faqCreditsContent')}
+                    </AccordionContent>
+                </AccordionItem>
                  <AccordionItem value="item-2">
                     <AccordionTrigger>{t('faqVoiceTitle')}</AccordionTrigger>
                     <AccordionContent>

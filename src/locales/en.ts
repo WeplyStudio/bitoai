@@ -126,6 +126,10 @@ export const en = {
   // FAQ Section
   faqBitoTitle: 'What is Bito AI?',
   faqBitoContent: 'Bito AI is a helpful and friendly AI assistant developed by JDev, designed to help with creative and business tasks. You can ask it questions, get help with writing, brainstorm ideas, and much more.',
+  faqAchievementsTitle: 'What are Achievements?',
+  faqAchievementsContent: 'Achievements are fun badges you can unlock by using different features of the app. You can view all your unlocked and locked achievements on the Settings page. They are a way to celebrate your journey with Bito AI!',
+  faqCreditsTitle: 'What are Credits and Pro Modes?',
+  faqCreditsContent: 'Credits are used to access "Pro" AI modes like Storyteller, Sarcastic, Technical, and Philosopher. These modes offer more specialized and higher-quality responses. Each message sent in a Pro mode costs 1 credit. You receive some free credits upon registration, and you can contact the admin to purchase more.',
   faqVoiceTitle: 'How does voice input work?',
   faqVoiceContent: "The voice input feature uses your browser's built-in Web Speech API. When you click the microphone icon, your browser will ask for permission to access your microphone. Once granted, whatever you say will be transcribed into text in the language you've selected in the settings.",
   faqLanguageTitle: 'Can I change the response language?',

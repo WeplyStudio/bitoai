@@ -126,6 +126,10 @@ export const id = {
   // FAQ Section
   faqBitoTitle: 'Apa itu Bito AI?',
   faqBitoContent: 'Bito AI adalah asisten AI yang membantu dan ramah yang dikembangkan oleh JDev, dirancang untuk membantu tugas-tugas kreatif dan bisnis. Anda dapat mengajukan pertanyaan, mendapatkan bantuan menulis, melakukan brainstorming ide, dan banyak lagi.',
+  faqAchievementsTitle: 'Apa itu Pencapaian?',
+  faqAchievementsContent: 'Pencapaian adalah lencana seru yang bisa Anda buka dengan menggunakan berbagai fitur aplikasi. Anda dapat melihat semua pencapaian yang sudah terbuka dan terkunci di halaman Pengaturan. Ini adalah cara untuk merayakan perjalanan Anda bersama Bito AI!',
+  faqCreditsTitle: 'Apa itu Kredit dan Mode Pro?',
+  faqCreditsContent: 'Kredit digunakan untuk mengakses mode AI "Pro" seperti Pendongeng, Sarkastis, Teknis, dan Filsuf. Mode-mode ini menawarkan respons yang lebih terspesialisasi dan berkualitas lebih tinggi. Setiap pesan yang dikirim dalam mode Pro akan dikenakan biaya 1 kredit. Anda akan menerima beberapa kredit gratis saat mendaftar, dan Anda dapat menghubungi admin untuk membeli lebih banyak.',
   faqVoiceTitle: 'Bagaimana cara kerja masukan suara?',
   faqVoiceContent: "Fitur masukan suara menggunakan Web Speech API bawaan peramban Anda. Saat Anda mengklik ikon mikrofon, peramban Anda akan meminta izin untuk mengakses mikrofon Anda. Setelah diizinkan, apa pun yang Anda katakan akan ditranskripsikan menjadi teks dalam bahasa yang telah Anda pilih di pengaturan.",
   faqLanguageTitle: 'Dapatkah saya mengubah bahasa respons?',

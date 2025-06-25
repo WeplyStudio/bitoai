@@ -126,6 +126,10 @@ export const zh = {
   // FAQ Section
   faqBitoTitle: '什么是 Bito AI？',
   faqBitoContent: 'Bito AI 是由 JDev 开发的一款乐于助人且友好的 AI 助手，旨在帮助完成创意和业务任务。您可以向它提问、获取写作帮助、进行头脑风暴等。',
+  faqAchievementsTitle: '什么是成就？',
+  faqAchievementsContent: '成就是您可以通过使用应用程序的不同功能来解锁的有趣徽章。您可以在“设置”页面上查看所有已解锁和锁定的成就。这是庆祝您与Bito AI共同旅程的一种方式！',
+  faqCreditsTitle: '什么是积分和专业模式？',
+  faqCreditsContent: '积分用于访问“专业”AI模式，如“讲故事者”、“讽刺”、“技术”和“哲学家”。这些模式提供更专业、更高质量的响应。在专业模式下发送的每条消息将花费1个积分。您在注册时会获得一些免费积分，并且可以联系管理员购买更多积分。',
   faqVoiceTitle: '语音输入如何工作？',
   faqVoiceContent: '语音输入功能使用您浏览器内置的 Web Speech API。当您单击麦克风图标时，您的浏览器会请求访问麦克风的权限。一旦授予，您所说的任何内容都将被转录为您在设置中选择的语言的文本。',
   faqLanguageTitle: '我可以更改响应语言吗？',
