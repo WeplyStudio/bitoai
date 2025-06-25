@@ -196,6 +196,7 @@ export const id = {
   communityTypeMessage: 'Ketik pesan Anda...',
   errorLoadCommunityMessages: 'Tidak dapat memuat pesan komunitas.',
   errorSendCommunityMessage: 'Tidak dapat mengirim pesan Anda. Silakan coba lagi.',
+  communityLoginPrompt: 'Silakan masuk atau daftar untuk bergabung dalam obrolan.',
   
   // Chat Panel & Toasts
   chatRenamed: 'Obrolan Dinamai Ulang',

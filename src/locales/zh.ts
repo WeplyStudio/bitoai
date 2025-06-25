@@ -196,7 +196,8 @@ export const zh = {
   communityTypeMessage: '输入您的消息...',
   errorLoadCommunityMessages: '无法加载社区消息。',
   errorSendCommunityMessage: '无法发送您的消息。请重试。',
-  
+  communityLoginPrompt: '请登录或注册以加入聊天。',
+
   // Chat Panel & Toasts
   chatRenamed: '聊天已重命名',
   chatRenamedDescription: '此聊天已自动命名为“{{projectName}}”。',

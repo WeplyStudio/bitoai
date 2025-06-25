@@ -6,7 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { ScrollArea } from '@/components/ui/scroll-area';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
-import { SendHorizonal } from 'lucide-react';
+import { SendHorizonal, LogIn } from 'lucide-react';
 import { UserIcon } from '@/components/icons';
 import { formatDistanceToNow } from 'date-fns';
 import { useLanguage } from '@/contexts/LanguageProvider';
@@ -27,7 +27,7 @@ export default function CommunityPage() {
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
-  const { user } = useAuth();
+  const { user, setAuthDialogOpen } = useAuth();
 
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -133,32 +133,42 @@ export default function CommunityPage() {
 
       <footer className="p-2 md:p-4 bg-card border-t">
         <div className="mx-auto max-w-4xl">
-          <form onSubmit={handleSendMessage} className="space-y-2">
-            <div className="relative">
-              <Textarea
-                value={newMessage}
-                onChange={(e) => setNewMessage(e.target.value)}
-                placeholder={t('communityTypeMessage')}
-                rows={2}
-                maxLength={1000}
-                className="pr-20 resize-none"
-                disabled={isSending}
-                required
-              />
-              <div className="absolute top-3 right-3 flex items-center gap-2">
-                <span className="text-xs text-muted-foreground">{newMessage.length} / 1000</span>
-                <Button
-                  type="submit"
-                  size="icon"
-                  className="h-8 w-8 bg-accent hover:bg-accent/90"
-                  disabled={isSending || !newMessage.trim()}
-                >
-                  <SendHorizonal className="h-4 w-4" />
-                  <span className="sr-only">{t('send')}</span>
-                </Button>
+          {user ? (
+            <form onSubmit={handleSendMessage} className="space-y-2">
+              <div className="relative">
+                <Textarea
+                  value={newMessage}
+                  onChange={(e) => setNewMessage(e.target.value)}
+                  placeholder={t('communityTypeMessage')}
+                  rows={2}
+                  maxLength={1000}
+                  className="pr-20 resize-none"
+                  disabled={isSending}
+                  required
+                />
+                <div className="absolute top-3 right-3 flex items-center gap-2">
+                  <span className="text-xs text-muted-foreground">{newMessage.length} / 1000</span>
+                  <Button
+                    type="submit"
+                    size="icon"
+                    className="h-8 w-8 bg-accent hover:bg-accent/90"
+                    disabled={isSending || !newMessage.trim()}
+                  >
+                    <SendHorizonal className="h-4 w-4" />
+                    <span className="sr-only">{t('send')}</span>
+                  </Button>
+                </div>
               </div>
+            </form>
+          ) : (
+            <div className="flex flex-col items-center justify-center gap-2 p-4 border-2 border-dashed rounded-lg">
+                <p className="text-center text-muted-foreground">{t('communityLoginPrompt')}</p>
+                <Button onClick={() => setAuthDialogOpen(true)}>
+                    <LogIn className="mr-2 h-4 w-4" />
+                    {t('loginRegister')}
+                </Button>
             </div>
-          </form>
+          )}
         </div>
       </footer>
     </div>

@@ -196,6 +196,7 @@ export const en = {
   communityTypeMessage: 'Type your message...',
   errorLoadCommunityMessages: 'Could not load community messages.',
   errorSendCommunityMessage: 'Could not send your message. Please try again.',
+  communityLoginPrompt: 'Log in or register to join the chat.',
   
   // Chat Panel & Toasts
   chatRenamed: 'Chat Renamed',

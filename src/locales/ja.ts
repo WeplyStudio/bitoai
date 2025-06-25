@@ -196,6 +196,7 @@ export const ja = {
   communityTypeMessage: 'メッセージを入力してください...',
   errorLoadCommunityMessages: 'コミュニティメッセージを読み込めませんでした。',
   errorSendCommunityMessage: 'メッセージを送信できませんでした。もう一度お試しください。',
+  communityLoginPrompt: 'チャットに参加するにはログインまたは登録してください。',
 
   // Chat Panel & Toasts
   chatRenamed: 'チャット名が変更されました',

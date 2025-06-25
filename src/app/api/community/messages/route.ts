@@ -38,44 +38,48 @@ export async function GET() {
 }
 
 export async function POST(request: Request) {
-  await connectDB();
-  try {
-    const { content } = await request.json();
+  if (!JWT_SECRET) {
+    console.error('JWT_SECRET is not defined');
+    return NextResponse.json({ error: 'Server configuration error' }, { status: 500 });
+  }
 
-    if (!content) {
+  await connectDB();
+  
+  try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('token')?.value;
+
+    if (!token) {
+      return NextResponse.json({ error: 'You must be logged in to post messages.' }, { status: 401 });
+    }
+
+    let decoded;
+    try {
+      decoded = jwt.verify(token, JWT_SECRET) as { id: string };
+    } catch (e) {
+      return NextResponse.json({ error: 'Unauthorized: Invalid token.' }, { status: 401 });
+    }
+    
+    if (!decoded || !decoded.id) {
+        return NextResponse.json({ error: 'Unauthorized: Invalid token payload.' }, { status: 401 });
+    }
+
+    const user = await User.findById(decoded.id).select('username');
+    if (!user) {
+      return NextResponse.json({ error: 'Unauthorized: User not found.' }, { status: 401 });
+    }
+
+    const { content } = await request.json();
+    if (!content || typeof content !== 'string' || content.trim() === '') {
       return NextResponse.json({ error: 'Content is required' }, { status: 400 });
     }
-
-    let authorName = 'Anonymous';
-
-    // Check for user token to get their username
-    if (JWT_SECRET) {
-        const cookieStore = cookies();
-        const token = cookieStore.get('token')?.value;
-
-        if (token) {
-            try {
-                const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-                if (decoded) {
-                    const user = await User.findById(decoded.id).select('username');
-                    if (user) {
-                        authorName = user.username;
-                    }
-                }
-            } catch (e) {
-                // Token is invalid or expired, user remains anonymous
-                console.log("Community post with invalid token, user is Anonymous.");
-            }
-        }
-    }
-
 
     // Sanitize user input before saving to the database to prevent XSS
     const sanitizedContent = sanitize(content);
 
     const newMessage = new CommunityMessage({
       content: sanitizedContent,
-      author: authorName,
+      author: user.username,
     });
 
     await newMessage.save();
