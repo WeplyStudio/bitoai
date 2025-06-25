@@ -51,6 +51,7 @@ export async function POST(request: Request) {
       password: hashedPassword,
       otp: hashedOtp,
       otpExpires,
+      credits: 5,
     });
 
     await sendOtpEmail(email, otp);
