@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -27,7 +28,7 @@ export default function SettingsPage() {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
     if (user) {
-      setNewUsername(user.username);
+      setNewUsername(user.username || '');
     }
   }, [user]);
 
