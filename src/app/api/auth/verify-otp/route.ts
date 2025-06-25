@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Explicitly select all fields needed for patching and the response.
-    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role');
+    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role achievements');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -43,9 +43,11 @@ export async function POST(request: Request) {
     user.isVerified = true;
 
     // *** GUARANTEED PATCH FOR EXISTING ACCOUNTS ***
-    // If an older account is missing the credits field, this initializes it.
     if (typeof user.credits !== 'number') {
       user.credits = 5;
+    }
+    if (!Array.isArray(user.achievements)) {
+      user.achievements = [];
     }
     
     await user.save();
@@ -73,6 +75,7 @@ export async function POST(request: Request) {
       username: user.username,
       credits: user.credits,
       role: user.role,
+      achievements: user.achievements,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);
