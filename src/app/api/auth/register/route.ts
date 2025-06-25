@@ -30,38 +30,28 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Username cannot contain spaces.' }, { status: 400 });
     }
 
-    const existingUserByEmail = await User.findOne({ email });
-    if (existingUserByEmail && existingUserByEmail.isVerified) {
-      return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
-    }
-    
-    const existingUserByUsername = await User.findOne({ username: trimmedUsername });
-    if (existingUserByUsername) {
-        return NextResponse.json({ error: 'This username is already taken. Please choose another one.' }, { status: 409 });
-    }
-    
+    // This is the new, more robust logic.
+    // If an unverified user with this email exists, delete them to ensure we start fresh.
+    // This prevents issues with malformed documents from previous failed registration attempts.
+    await User.deleteOne({ email: email, isVerified: false });
+
+    // Now, attempt to create a new user.
+    // This will naturally fail if a VERIFIED user with the same email exists,
+    // or if ANY user has the same username, due to unique indexes in the schema.
+    // The catch block below will handle these specific duplicate errors.
+
     const hashedPassword = await bcrypt.hash(password, 10);
     const otp = generateOtp();
     const hashedOtp = await bcrypt.hash(otp, 10);
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // 10 minutes expiry
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000);
 
-    if (existingUserByEmail) {
-      // Update existing but unverified user if they try to re-register
-      existingUserByEmail.password = hashedPassword;
-      existingUserByEmail.username = trimmedUsername;
-      existingUserByEmail.otp = hashedOtp;
-      existingUserByEmail.otpExpires = otpExpires;
-      await existingUserByEmail.save();
-    } else {
-      // Create new user
-      await User.create({
-        email,
-        username: trimmedUsername,
-        password: hashedPassword,
-        otp: hashedOtp,
-        otpExpires,
-      });
-    }
+    await User.create({
+      email,
+      username: trimmedUsername,
+      password: hashedPassword,
+      otp: hashedOtp,
+      otpExpires,
+    });
 
     await sendOtpEmail(email, otp);
 
@@ -69,12 +59,15 @@ export async function POST(request: Request) {
 
   } catch (error: any) {
     if (error.code === 11000) {
+        // Handle duplicate key errors from MongoDB's unique indexes
         if (error.keyPattern?.email) {
-            return NextResponse.json({ error: 'An account with this email already exists' }, { status: 409 });
+            return NextResponse.json({ error: 'An account with this email already exists and is verified.' }, { status: 409 });
         }
         if (error.keyPattern?.username) {
-            return NextResponse.json({ error: 'This username is already taken.' }, { status: 409 });
+            return NextResponse.json({ error: 'This username is already taken. Please choose another one.' }, { status: 409 });
         }
+        // Fallback for other potential unique index violations
+        return NextResponse.json({ error: 'A user with these details already exists.' }, { status: 409 });
     }
     if (error.name === 'ValidationError') {
         let errors: { [key: string]: string } = {};
