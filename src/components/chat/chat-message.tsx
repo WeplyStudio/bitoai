@@ -15,7 +15,16 @@ import { useLanguage } from '@/contexts/LanguageProvider';
 import { Skeleton } from '../ui/skeleton';
 import { Textarea } from '../ui/textarea';
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  credits: number;
+  role: 'user' | 'admin';
+}
+
 interface ChatMessageProps {
+  user: User | null;
   message: Message;
   onFeedback: (messageId: string) => void;
   onRegenerate: (messageId: string) => void;
@@ -26,7 +35,7 @@ interface ChatMessageProps {
   onSaveEdit: (messageId: string, newContent: string) => void;
 }
 
-const ChatMessageModel = ({ message, onFeedback, onRegenerate, isRegenerating }: Pick<ChatMessageProps, 'message' | 'onFeedback' | 'onRegenerate' | 'isRegenerating'>) => {
+const ChatMessageModel = ({ user, message, onFeedback, onRegenerate, isRegenerating }: ChatMessageProps) => {
   const { t } = useLanguage();
   
   const CodeBlock = ({ node, ...props }: any) => {
@@ -97,9 +106,11 @@ const ChatMessageModel = ({ message, onFeedback, onRegenerate, isRegenerating }:
           <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onFeedback(message.id)}>
             <ThumbsDown className="h-4 w-4" />
           </Button>
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onRegenerate(message.id)}>
-            <RefreshCw className="h-4 w-4" />
-          </Button>
+          {user && (
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onRegenerate(message.id)}>
+              <RefreshCw className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
@@ -138,13 +149,7 @@ const ChatMessageUserEditor = ({ message, onSave, onCancel }: { message: Message
 };
 
 
-const ChatMessageUser = ({ 
-  message, 
-  onStartEdit,
-  editingMessageId,
-  onCancelEdit,
-  onSaveEdit
-}: Omit<ChatMessageProps, 'onFeedback' | 'onRegenerate' | 'isRegenerating'>) => {
+const ChatMessageUser = ({ user, message, onStartEdit, editingMessageId, onCancelEdit, onSaveEdit }: ChatMessageProps) => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   
   if (editingMessageId === message.id) {
@@ -194,9 +199,11 @@ const ChatMessageUser = ({
             )}
           </div>
         <div className="flex items-center self-end opacity-0 group-hover:opacity-100 transition-opacity">
-          <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
-            <Pencil className="h-4 w-4" />
-          </Button>
+          {user && (
+            <Button variant="ghost" size="icon" className="h-7 w-7 text-muted-foreground hover:text-foreground" onClick={() => onStartEdit(message.id, message.content)}>
+              <Pencil className="h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
       <Avatar className="h-8 w-8 border flex-shrink-0 order-2">
@@ -210,7 +217,7 @@ const ChatMessageUser = ({
 
 
 export function ChatMessage(props: ChatMessageProps) {
-  const { message, editingMessageId } = props;
+  const { message } = props;
 
   if (message.role === 'model') {
     return <ChatMessageModel {...props} />;

@@ -416,6 +416,7 @@ export function ChatPanel() {
               <WelcomeScreen />
             ) : (
               <ChatMessages
+                user={user}
                 messages={messages}
                 isLoading={isLoading}
                 onFeedback={handleActionTemporarilyDisabled}

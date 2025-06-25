@@ -8,7 +8,16 @@ import { BitoIcon } from '@/components/icons';
 import type { Message } from './chat-panel';
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 
+interface User {
+  id: string;
+  email: string;
+  username: string;
+  credits: number;
+  role: 'user' | 'admin';
+}
+
 interface ChatMessagesProps {
+  user: User | null;
   messages: Message[];
   isLoading: boolean;
   onFeedback: (messageId: string) => void;
@@ -21,6 +30,7 @@ interface ChatMessagesProps {
 }
 
 export function ChatMessages({ 
+    user,
     messages, 
     isLoading, 
     onFeedback,
@@ -45,6 +55,7 @@ export function ChatMessages({
         {messages.map((message) => (
           <ChatMessage 
             key={message.id} 
+            user={user}
             message={message} 
             onFeedback={onFeedback}
             onRegenerate={onRegenerate}
