@@ -27,9 +27,10 @@ export default function SettingsPage() {
   useEffect(() => {
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
-    if (user) {
-      setNewUsername(user.username || '');
-    }
+    // This ensures the username state is always a valid string,
+    // reflecting the logged-in user or an empty string if logged out.
+    // This fixes the controlled vs. uncontrolled input error.
+    setNewUsername(user?.username || '');
   }, [user]);
 
   useEffect(() => {
