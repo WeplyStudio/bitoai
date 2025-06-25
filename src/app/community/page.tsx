@@ -27,7 +27,7 @@ export default function CommunityPage() {
   const { toast } = useToast();
   const scrollViewportRef = useRef<HTMLDivElement>(null);
   const { t } = useLanguage();
-  const { user, setAuthDialogOpen } = useAuth();
+  const { user, setAuthDialogOpen, updateUserInContext } = useAuth();
 
   const fetchMessages = async () => {
     setIsLoading(true);
@@ -76,9 +76,21 @@ export default function CommunityPage() {
         throw new Error(errorData.error || 'Failed to send message');
       }
       
-      const savedMessage = await response.json();
+      const data = await response.json();
+      const savedMessage = data.message;
+      const newAchievements = data.newAchievements;
+
       setMessages(prev => [...prev, savedMessage]);
       setNewMessage('');
+
+      if (newAchievements && user) {
+        const hasNewAchievement = newAchievements.length > user.achievements.length;
+        updateUserInContext({ achievements: newAchievements });
+        if(hasNewAchievement) {
+            toast({ title: t('achievementsTitle'), description: "You've earned the Community Member badge!" });
+        }
+      }
+
     } catch (error: any) {
       toast({
         variant: 'destructive',

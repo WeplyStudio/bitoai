@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import connectDB from '@/lib/mongodb';
 import CommunityMessage from '@/models/CommunityMessage';
@@ -64,9 +65,14 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'Unauthorized: Invalid token payload.' }, { status: 401 });
     }
 
-    const user = await User.findById(decoded.id).select('username');
+    const user = await User.findById(decoded.id).select('username achievements');
     if (!user) {
       return NextResponse.json({ error: 'Unauthorized: User not found.' }, { status: 401 });
+    }
+
+    // **SAFETY NET**: If an old user account has no achievements field, initialize it.
+    if (!Array.isArray(user.achievements)) {
+        user.achievements = [];
     }
 
     const { content } = await request.json();
@@ -83,7 +89,21 @@ export async function POST(request: Request) {
     });
 
     await newMessage.save();
-    return NextResponse.json(newMessage, { status: 201 });
+    
+    let finalAchievements = user.achievements;
+    // --- Achievement Logic ---
+    if (!user.achievements.includes('first_community_post')) {
+      const updatedUser = await User.findByIdAndUpdate(user._id, 
+        { $addToSet: { achievements: 'first_community_post' } },
+        { new: true }
+      );
+      if (updatedUser) {
+        finalAchievements = updatedUser.achievements;
+      }
+    }
+    // --- End Achievement Logic ---
+
+    return NextResponse.json({ message: newMessage, newAchievements: finalAchievements }, { status: 201 });
   } catch (error) {
     console.error('Failed to post message:', error);
     return NextResponse.json({ error: 'Failed to post message' }, { status: 500 });

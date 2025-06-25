@@ -32,7 +32,7 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
   const [activeProjectId, setActiveProjectId] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, updateUserInContext } = useAuth();
 
   const fetchProjects = useCallback(async () => {
     if (!user) {
@@ -55,7 +55,9 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
       if (savedActiveId && clientProjects.some((p: Project) => p.id === savedActiveId)) {
           setActiveProjectId(savedActiveId);
       } else if (clientProjects.length > 0) {
-          setActiveProjectId(clientProjects[0].id);
+          // Sort by creation date and set the most recent one as active
+          const sortedProjects = [...clientProjects].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+          setActiveProjectId(sortedProjects[0].id);
       } else {
           setActiveProjectId(null);
       }
@@ -83,17 +85,29 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
 
 
   const createProject = useCallback(async () => {
+    if (!user) return;
     try {
       const response = await fetch('/api/projects', { method: 'POST' });
       if (!response.ok) throw new Error('Failed to create project');
-      const newProjectData = await response.json();
-      const newProject = { ...newProjectData, id: newProjectData._id };
-      setProjects(prev => [newProject, ...prev]);
+      
+      const data = await response.json();
+      const newProject = { ...data.project, id: data.project._id };
+      
+      setProjects(prev => [newProject, ...prev].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime()));
       setActiveProjectId(newProject.id);
+
+      if (data.newAchievements) {
+        const hasNewAchievement = data.newAchievements.length > user.achievements.length;
+        updateUserInContext({ achievements: data.newAchievements });
+        if(hasNewAchievement) {
+            toast({ title: "Achievement Unlocked!", description: "Check your new badge in the Settings page." });
+        }
+      }
+
     } catch (error) {
       toast({ variant: 'destructive', title: 'Error', description: 'Could not create a new chat.' });
     }
-  }, [toast]);
+  }, [toast, user, updateUserInContext]);
 
   const switchProject = useCallback((id: string) => {
     if (projects.some(p => p.id === id)) {
@@ -127,7 +141,12 @@ export const ProjectProvider = ({ children }: { children: ReactNode }) => {
     setProjects(remainingProjects);
     
     if (activeProjectId === idToDelete) {
-        setActiveProjectId(remainingProjects.length > 0 ? remainingProjects[0].id : null);
+        if (remainingProjects.length > 0) {
+            const sorted = [...remainingProjects].sort((a,b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
+            setActiveProjectId(sorted[0].id);
+        } else {
+            setActiveProjectId(null);
+        }
     }
 
     try {

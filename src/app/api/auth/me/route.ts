@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
@@ -26,13 +27,13 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id username credits role');
+    const user = await User.findById(decoded.id).select('email _id username credits role achievements');
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role } });
+    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role, achievements: user.achievements || [] } });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });
