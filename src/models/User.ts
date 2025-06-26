@@ -78,7 +78,7 @@ const UserSchema: Schema = new Schema({
   apiKeyHash: {
     type: String,
     unique: true,
-    sparse: true,
+    sparse: true, // Allows multiple documents to have a null value for this field
     select: false,
   },
   createdAt: { 

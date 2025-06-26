@@ -20,7 +20,7 @@ import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/comp
 
 const NavItem = ({ icon: Icon, text, badge, href }: { icon: React.ElementType, text: string, badge?: string, href: string }) => {
   const pathname = usePathname();
-  const active = pathname.startsWith(href) && href !== "/" || pathname === href;
+  const active = (pathname.startsWith(href) && href !== "/") || pathname === href;
 
   return (
     <Link href={href} passHref>
