@@ -1,9 +1,11 @@
+
 'use client';
 
 import { BitoIcon } from '@/components/icons';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetTrigger, SheetTitle, SheetDescription } from '@/components/ui/sheet';
 import { PanelLeft, PanelRight } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface MobileHeaderProps {
   leftSidebar: React.ReactNode;
@@ -29,9 +31,10 @@ export function MobileHeader({ leftSidebar, rightSidebar }: MobileHeaderProps) {
         </SheetContent>
       </Sheet>
 
-      <div className="flex items-center gap-1.5">
+      <div className="flex items-center gap-2">
         <BitoIcon className="w-7 h-7" />
         <h1 className="text-lg font-bold">Bito</h1>
+        <Badge variant="outline" className="border-primary/50 text-primary text-xs">BETA</Badge>
       </div>
 
       <Sheet>

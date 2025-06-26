@@ -83,9 +83,10 @@ export const LeftSidebarContent = () => {
 
     return (
         <div className="flex flex-col h-full">
-            <div className="flex items-center gap-1.5 px-4 pt-4 pb-2">
+            <div className="flex items-center gap-2 px-4 pt-4 pb-2">
                 <BitoIcon className="w-8 h-8" />
                 <h1 className="text-xl font-bold">Bito</h1>
+                <Badge variant="outline" className="border-primary/50 text-primary">BETA</Badge>
             </div>
             
             <div className="p-2 space-y-2">
