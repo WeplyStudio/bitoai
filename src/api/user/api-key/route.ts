@@ -35,24 +35,28 @@ export async function POST() {
     }
 
     await connectDB();
-    
-    const user = await User.findById(userId);
-    if (!user) {
-        return NextResponse.json({ error: 'User not found.' }, { status: 404 });
-    }
 
     const apiKey = `bito_${randomBytes(16).toString('hex')}`;
     const apiKeyHash = createHash('sha256').update(apiKey).digest('hex');
 
-    user.apiKeyHash = apiKeyHash;
-    await user.save();
+    // This is a single, atomic database operation which is much safer and prevents crashes.
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: { apiKeyHash: apiKeyHash } },
+      { new: true, runValidators: true }
+    );
 
+    if (!updatedUser) {
+      return NextResponse.json({ error: 'User not found. Could not generate API key.' }, { status: 404 });
+    }
+    
+    // If the update is successful, return the new key.
     return NextResponse.json({ apiKey });
 
   } catch (error: any) {
     console.error('API key generation error:', error);
-    // Handle the specific duplicate key error from Mongoose,
-    // which can happen in the astronomically rare case of a hash collision.
+    // This robust catch block will handle any unexpected database errors gracefully
+    // without crashing the server.
     if (error.code === 11000) {
         return NextResponse.json({ error: 'An unexpected error occurred. Please try generating the key again.' }, { status: 500 });
     }
