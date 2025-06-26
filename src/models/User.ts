@@ -2,7 +2,7 @@
 import mongoose, { Schema, Document } from 'mongoose';
 
 const CustomAIModeSchema = new Schema({
-  id: { type: String, required: true, unique: true },
+  id: { type: String, required: true },
   name: { type: String, required: true },
   prompt: { type: String, required: true },
 }, { _id: false });
