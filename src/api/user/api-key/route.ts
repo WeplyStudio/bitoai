@@ -10,42 +10,52 @@ import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
-async function getAuthenticatedUser() {
-  if (!JWT_SECRET) throw new Error('JWT_SECRET is not defined');
+async function getUserIdFromToken(): Promise<string | null> {
+  if (!JWT_SECRET) {
+    console.error('JWT_SECRET is not defined');
+    return null;
+  }
   const token = cookies().get('token')?.value;
   if (!token) return null;
   
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { id: string };
-    await connectDB();
-    const user = await User.findById(decoded.id);
-    return user;
+    return decoded.id;
   } catch (error) {
+    console.error('Token verification failed:', error);
     return null;
   }
 }
 
 export async function POST() {
-  const user = await getAuthenticatedUser();
-  if (!user) {
-    return NextResponse.json({ error: 'Unauthorized: User not found or invalid token.' }, { status: 401 });
+  const userId = await getUserIdFromToken();
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    // Generate a new API key
-    const apiKey = `bito_${randomBytes(16).toString('hex')}`;
+    await connectDB();
     
-    // Hash the API key for storage
+    const apiKey = `bito_${randomBytes(16).toString('hex')}`;
     const apiKeyHash = createHash('sha256').update(apiKey).digest('hex');
 
-    // Update the user's document with the new hashed API key
-    user.apiKeyHash = apiKeyHash;
-    await user.save();
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      { $set: { apiKeyHash: apiKeyHash } },
+      { new: true }
+    );
 
-    // Return the plain API key to the user (this is the only time it will be shown)
+    if (!updatedUser) {
+        return NextResponse.json({ error: 'User not found during update.' }, { status: 404 });
+    }
+
     return NextResponse.json({ apiKey });
-  } catch (error) {
+
+  } catch (error: any) {
     console.error('API key generation error:', error);
+    if (error.code === 11000) {
+        return NextResponse.json({ error: 'An unexpected error occurred. Please try again.' }, { status: 500 });
+    }
     return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
   }
 }
