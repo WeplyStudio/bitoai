@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     }
 
     // Explicitly select all fields needed for patching and the response.
-    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role achievements customAiModes');
+    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role achievements');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -48,9 +48,6 @@ export async function POST(request: Request) {
     }
     if (!Array.isArray(user.achievements)) {
       user.achievements = [];
-    }
-    if (!Array.isArray(user.customAiModes)) {
-        user.customAiModes = [];
     }
     
     await user.save();
@@ -79,7 +76,6 @@ export async function POST(request: Request) {
       credits: user.credits,
       role: user.role,
       achievements: user.achievements,
-      customAiModes: user.customAiModes,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);

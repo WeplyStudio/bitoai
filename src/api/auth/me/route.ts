@@ -27,7 +27,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id username credits role achievements customAiModes');
+    const user = await User.findById(decoded.id).select('email _id username credits role achievements');
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
@@ -35,7 +35,6 @@ export async function GET() {
 
     // Ensure achievements is an array
     const achievements = Array.isArray(user.achievements) ? user.achievements : [];
-    const customAiModes = Array.isArray(user.customAiModes) ? user.customAiModes : [];
 
     return NextResponse.json({ 
         user: { 
@@ -45,7 +44,6 @@ export async function GET() {
             credits: user.credits ?? 0, 
             role: user.role, 
             achievements,
-            customAiModes
         } 
     });
   } catch (error) {

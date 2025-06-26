@@ -14,7 +14,6 @@ export const ChatRequestSchema = z.object({
   mode: z.string().optional().describe('The personality mode for the AI response. Can be a preset or a custom mode ID.'),
   language: z.enum(['id', 'en', 'zh', 'ja']).optional().describe('The language for the AI response.'),
   username: z.string().optional().describe("The user's name or nickname."),
-  customPrompt: z.string().optional().describe("The system prompt for a custom AI mode."),
 });
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 

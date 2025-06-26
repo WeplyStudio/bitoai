@@ -13,7 +13,6 @@ interface User {
   credits: number;
   role: 'user' | 'admin';
   achievements: string[];
-  customAiModes: { id: string; name: string; prompt: string; }[];
 }
 
 interface AuthContextType {

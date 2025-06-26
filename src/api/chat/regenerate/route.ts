@@ -60,21 +60,11 @@ export async function POST(request: Request) {
         if (typeof user.creditsSpent !== 'number') user.creditsSpent = 0;
 
         const achievementsToGrant: string[] = [];
-        let customPrompt: string | undefined = undefined;
 
         // --- Credit & Pro Mode Logic ---
         const proModes = ['storyteller', 'sarcastic', 'technical', 'philosopher'];
-        const presetModes = ['default', 'creative', 'professional', ...proModes];
         
-        if (mode && !presetModes.includes(mode)) {
-            // This is a custom mode
-            const customMode = user.customAiModes?.find(m => m.id === mode);
-            if (customMode) {
-                customPrompt = customMode.prompt;
-            } else {
-                mode = 'default'; // Fallback if custom mode ID is invalid
-            }
-        } else if (mode && proModes.includes(mode)) {
+        if (mode && proModes.includes(mode)) {
             // This is a preset Pro mode
             if (user.credits < 1) {
                 return NextResponse.json({ error: 'Insufficient credits to use this feature. Please contact admin to buy more.' }, { status: 403 });
@@ -109,7 +99,6 @@ export async function POST(request: Request) {
             mode: mode || 'default',
             language: 'id', 
             username: user.username,
-            customPrompt: customPrompt,
         });
         const duration = performance.now() - startTime;
 
