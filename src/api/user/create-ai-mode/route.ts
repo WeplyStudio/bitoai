@@ -37,36 +37,37 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Name and prompt are required.' }, { status: 400 });
         }
 
-        const user = await User.findById(userId);
-        if (!user) {
-            return NextResponse.json({ error: 'User not found.' }, { status: 404 });
-        }
-
-        if (user.credits < MODE_CREATION_COST) {
-            return NextResponse.json({ error: `Insufficient credits. You need ${MODE_CREATION_COST} credits to create a mode.` }, { status: 403 });
-        }
-        
-        // Defensive check: Initialize the array if it doesn't exist on older documents.
-        if (!Array.isArray(user.customAiModes)) {
-            user.customAiModes = [];
-        }
-
         const newMode = {
             id: `custom-${new mongoose.Types.ObjectId().toString()}`,
             name: name.trim(),
             prompt: prompt.trim(),
         };
+
+        // Use a single, atomic findOneAndUpdate operation.
+        // This is safer than find-then-save, as it prevents race conditions.
+        const updatedUser = await User.findOneAndUpdate(
+            { _id: userId, credits: { $gte: MODE_CREATION_COST } }, // Condition: Find user with enough credits
+            {
+                $push: { customAiModes: newMode },
+                $inc: { credits: -MODE_CREATION_COST }
+            },
+            { new: true } // Option to return the document after the update
+        );
         
-        user.customAiModes.push(newMode);
-        user.credits -= MODE_CREATION_COST;
-
-        const updatedUser = await user.save();
-
+        // If updatedUser is null, it means the condition was not met (user not found or insufficient credits).
         if (!updatedUser) {
-            throw new Error("Failed to save user updates.");
+            // To provide a specific error message, we check why it failed.
+            const user = await User.findById(userId).select('credits');
+            if (!user) {
+                return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+            }
+            if (user.credits < MODE_CREATION_COST) {
+                 return NextResponse.json({ error: `Insufficient credits. You need ${MODE_CREATION_COST} credits to create a mode.` }, { status: 403 });
+            }
+            // Fallback for other potential issues
+            throw new Error("Failed to create custom mode for an unknown reason.");
         }
-        
-        // Construct a plain JS object for the response to ensure no Mongoose-specific properties are sent.
+
         const responseUser = {
             username: updatedUser.username,
             email: updatedUser.email,
