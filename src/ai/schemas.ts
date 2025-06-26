@@ -1,3 +1,4 @@
+
 import { z } from 'genkit';
 
 // From chat.ts
@@ -10,9 +11,10 @@ export type ChatMessage = z.infer<typeof ChatMessageSchema>;
 
 export const ChatRequestSchema = z.object({
   messages: z.array(ChatMessageSchema),
-  mode: z.enum(['default', 'creative', 'professional', 'storyteller', 'sarcastic', 'technical', 'philosopher']).optional().describe('The personality mode for the AI response.'),
+  mode: z.string().optional().describe('The personality mode for the AI response. Can be a preset or a custom mode ID.'),
   language: z.enum(['id', 'en', 'zh', 'ja']).optional().describe('The language for the AI response.'),
   username: z.string().optional().describe("The user's name or nickname."),
+  customPrompt: z.string().optional().describe("The system prompt for a custom AI mode."),
 });
 export type ChatRequest = z.infer<typeof ChatRequestSchema>;
 

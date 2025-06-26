@@ -15,6 +15,8 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
 import { AchievementsDisplay } from '@/components/settings/achievements-display';
+import { CreateAIModeDialog } from '@/components/settings/create-ai-mode-dialog';
+import { CustomAIModeList } from '@/components/settings/custom-ai-mode-list';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -24,6 +26,7 @@ export default function SettingsPage() {
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
   const { user, deleteAccount } = useAuth();
+  const [isCreateModeDialogOpen, setCreateModeDialogOpen] = useState(false);
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -94,6 +97,7 @@ export default function SettingsPage() {
 
 
   return (
+    <>
     <div className="flex-1 space-y-4 p-4 md:p-8 pt-6">
       <div className="flex items-center justify-between space-y-2 mb-4">
         <h2 className="text-3xl font-bold tracking-tight">{t('settingsTitle')}</h2>
@@ -125,6 +129,9 @@ export default function SettingsPage() {
                       <SelectItem value="sarcastic">{t('faqAiModeSarcasticProTitle')}</SelectItem>
                       <SelectItem value="technical">{t('faqAiModeTechnicalProTitle')}</SelectItem>
                       <SelectItem value="philosopher">{t('faqAiModePhilosopherProTitle')}</SelectItem>
+                      {user?.customAiModes?.map(mode => (
+                        <SelectItem key={mode.id} value={mode.id}>{mode.name}</SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
               </div>
@@ -206,6 +213,8 @@ export default function SettingsPage() {
               </Card>
 
               <AchievementsDisplay />
+              
+              <CustomAIModeList onOpenCreateDialog={() => setCreateModeDialogOpen(true)} />
 
               <Card>
                 <CardHeader>
@@ -214,8 +223,8 @@ export default function SettingsPage() {
                 </CardHeader>
                 <CardContent>
                     <Button asChild>
-                        <a href="mailto:admin@weplystudio.my.id">
-                            <Mail className="mr-2 h-4 w-4" /> {t('contactAdmin')}
+                        <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
+                            <MessageCircle className="mr-2 h-4 w-4" /> {t('whatsapp')}
                         </a>
                     </Button>
                 </CardContent>
@@ -270,6 +279,12 @@ export default function SettingsPage() {
                     {t('faqTemplatesContent')}
                     </AccordionContent>
                 </AccordionItem>
+                <AccordionItem value="item-10">
+                    <AccordionTrigger>{t('faqCustomModeTitle')}</AccordionTrigger>
+                    <AccordionContent>
+                    {t('faqCustomModeContent')}
+                    </AccordionContent>
+                </AccordionItem>
                 <AccordionItem value="item-4">
                     <AccordionTrigger>{t('faqPrivacyTitle')}</AccordionTrigger>
                     <AccordionContent>
@@ -294,6 +309,9 @@ export default function SettingsPage() {
                         <li><b>{t('faqAiModeSarcasticProTitle')}:</b> {t('faqAiModeSarcasticContent')}</li>
                         <li><b>{t('faqAiModeTechnicalProTitle')}:</b> {t('faqAiModeTechnicalContent')}</li>
                         <li><b>{t('faqAiModePhilosopherProTitle')}:</b> {t('faqAiModePhilosopherContent')}</li>
+                        {user?.customAiModes?.map(mode => (
+                            <li key={mode.id}><b>{mode.name} (Custom):</b> {mode.prompt}</li>
+                        ))}
                     </ul>
                     </AccordionContent>
                 </AccordionItem>
@@ -318,5 +336,7 @@ export default function SettingsPage() {
         </Card>
       </div>
     </div>
+    { user && <CreateAIModeDialog isOpen={isCreateModeDialogOpen} onOpenChange={setCreateModeDialogOpen} /> }
+    </>
   );
 }

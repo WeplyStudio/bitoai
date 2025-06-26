@@ -27,7 +27,7 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id username credits role achievements');
+    const user = await User.findById(decoded.id).select('email _id username credits role achievements customAiModes');
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
@@ -35,8 +35,19 @@ export async function GET() {
 
     // Ensure achievements is an array
     const achievements = Array.isArray(user.achievements) ? user.achievements : [];
+    const customAiModes = Array.isArray(user.customAiModes) ? user.customAiModes : [];
 
-    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role, achievements } });
+    return NextResponse.json({ 
+        user: { 
+            id: user._id, 
+            email: user.email, 
+            username: user.username, 
+            credits: user.credits ?? 0, 
+            role: user.role, 
+            achievements,
+            customAiModes
+        } 
+    });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });

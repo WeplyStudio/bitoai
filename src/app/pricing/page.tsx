@@ -62,15 +62,10 @@ export default function PricingPage() {
                 </CardDescription>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-col space-y-2 sm:flex-row sm:space-y-0 sm:space-x-2">
+                <div className="flex">
                     <Button asChild className="justify-center w-full">
                         <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
                              <MessageCircle className="mr-2 h-4 w-4" /> {t('whatsapp')}
-                        </a>
-                    </Button>
-                    <Button asChild variant="outline" className="justify-center w-full">
-                        <a href="mailto:admin@weplystudio.my.id">
-                            <Mail className="mr-2 h-4 w-4" /> {t('email')}
                         </a>
                     </Button>
                 </div>

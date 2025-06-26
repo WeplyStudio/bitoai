@@ -1,6 +1,13 @@
 
 import mongoose, { Schema, Document } from 'mongoose';
 
+const CustomAIModeSchema = new Schema({
+  id: { type: String, required: true, unique: true },
+  name: { type: String, required: true },
+  prompt: { type: String, required: true },
+}, { _id: false });
+
+
 export interface IUser extends Document {
   email: string;
   username: string;
@@ -14,6 +21,7 @@ export interface IUser extends Document {
   lastMessageDate?: Date;
   role: 'user' | 'admin';
   achievements: string[];
+  customAiModes: { id: string; name: string; prompt: string; }[];
   createdAt: Date;
 }
 
@@ -72,6 +80,10 @@ const UserSchema: Schema = new Schema({
   },
   achievements: {
     type: [String],
+    default: [],
+  },
+  customAiModes: {
+    type: [CustomAIModeSchema],
     default: [],
   },
   createdAt: { 
