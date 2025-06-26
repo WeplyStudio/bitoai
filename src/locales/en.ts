@@ -11,9 +11,10 @@ export const en = {
   dark: 'Dark',
   loginRegister: 'Login / Register',
   logout: 'Logout',
-  creditsRemaining: 'Credits Remaining',
+  creditsRemaining: 'Credits',
   adminDashboard: 'Admin Dashboard',
   topUp: 'Top Up',
+  apiKey: 'API Key',
 
   // Right Sidebar
   chatsCount: 'Chats ({{count}})',
@@ -87,6 +88,24 @@ export const en = {
   getMoreCreditsDescription: "Run out of credits? Contact our admin to purchase more and unlock premium features.",
   contactAdmin: 'Contact Admin',
   
+  // API Key Settings
+  apiKeyDescription: "Manage your API key for integrating Bito AI into your own applications.",
+  yourApiKey: "Your API Key",
+  yourApiKeyDescription: "Use this key in your applications to authenticate API requests. Each API call costs 1 credit.",
+  generateKeyPrompt: "You don't have an API key yet. Generate one to get started.",
+  apiKeyWarningTitle: "Treat your API key like a password!",
+  apiKeyWarningDesc: "Do not share this key or expose it in any client-side code. We only show it to you once.",
+  regenerate: "Regenerate",
+  apiKeyRegenerateConfirm: "Are you sure you want to regenerate your API key? Your old key will stop working immediately.",
+  generateApiKey: "Generate API Key",
+  apiKeyGeneratedSuccessTitle: "API Key Generated!",
+  apiKeyGeneratedSuccessDesc: "Your new key is ready. Copy it now as it won't be shown again.",
+  apiLoginRequiredDesc: "You must be logged in to manage your API key.",
+  apiUsageTitle: "API Usage Example",
+  apiUsageDesc1: "Here's how to make a request to the chat endpoint:",
+  apiUsageDesc2: "Set the following headers in your request:",
+  apiUsageDesc3: "The request body should be a JSON object like this:",
+
   // Achievements
   achievementsTitle: 'Achievements',
   achievementsDescription: 'You have unlocked {{count}} of {{total}} achievements.',

@@ -14,6 +14,7 @@ export interface IUser extends Document {
   lastMessageDate?: Date;
   role: 'user' | 'admin';
   achievements: string[];
+  apiKeyHash?: string;
   createdAt: Date;
 }
 
@@ -73,6 +74,12 @@ const UserSchema: Schema = new Schema({
   achievements: {
     type: [String],
     default: [],
+  },
+  apiKeyHash: {
+    type: String,
+    unique: true,
+    sparse: true,
+    select: false,
   },
   createdAt: { 
     type: Date, 

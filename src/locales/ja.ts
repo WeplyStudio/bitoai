@@ -14,6 +14,7 @@ export const ja = {
   creditsRemaining: '残りのクレジット',
   adminDashboard: '管理者ダッシュボード',
   topUp: 'チャージ',
+  apiKey: 'APIキー',
 
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',
@@ -86,6 +87,24 @@ export const ja = {
   getMoreCredits: 'クレジットを追加取得',
   getMoreCreditsDescription: "クレジットがなくなりましたか？管理者にご連絡の上、クレジットを追加購入し、プレミアム機能をご利用ください。",
   contactAdmin: '管理者に連絡',
+
+  // API Key Settings
+  apiKeyDescription: "独自のアプリケーションにBito AIを統合するためのAPIキーを管理します。",
+  yourApiKey: "あなたのAPIキー",
+  yourApiKeyDescription: "アプリケーションでこのキーを使用してAPIリクエストを認証します。各API呼び出しには1クレジットがかかります。",
+  generateKeyPrompt: "まだAPIキーがありません。開始するにはキーを生成してください。",
+  apiKeyWarningTitle: "APIキーはパスワードのように扱ってください！",
+  apiKeyWarningDesc: "このキーを共有したり、クライアント側のコードで公開したりしないでください。一度しか表示されません。",
+  regenerate: "再生成",
+  apiKeyRegenerateConfirm: "APIキーを再生成してもよろしいですか？古いキーはすぐに無効になります。",
+  generateApiKey: "APIキーを生成",
+  apiKeyGeneratedSuccessTitle: "APIキーが生成されました！",
+  apiKeyGeneratedSuccessDesc: "新しいキーの準備ができました。二度と表示されないので、今すぐコピーしてください。",
+  apiLoginRequiredDesc: "APIキーを管理するにはログインする必要があります。",
+  apiUsageTitle: "API使用例",
+  apiUsageDesc1: "チャットエンドポイントへのリクエストの作成方法は次のとおりです：",
+  apiUsageDesc2: "リクエストに次のヘッダーを設定してください：",
+  apiUsageDesc3: "リクエストボディは次のようなJSONオブジェクトである必要があります：",
   
   // Achievements
   achievementsTitle: '実績',
