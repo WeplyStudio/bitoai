@@ -45,30 +45,40 @@ export async function POST(request: Request) {
         if (user.credits < MODE_CREATION_COST) {
             return NextResponse.json({ error: `Insufficient credits. You need ${MODE_CREATION_COST} credits to create a mode.` }, { status: 403 });
         }
+        
+        // Defensive check: Initialize the array if it doesn't exist on older documents.
+        if (!Array.isArray(user.customAiModes)) {
+            user.customAiModes = [];
+        }
 
         const newMode = {
             id: `custom-${new mongoose.Types.ObjectId().toString()}`,
             name: name.trim(),
             prompt: prompt.trim(),
         };
+        
+        user.customAiModes.push(newMode);
+        user.credits -= MODE_CREATION_COST;
 
-        const updatedUser = await User.findByIdAndUpdate(
-            userId,
-            { 
-                $inc: { credits: -MODE_CREATION_COST },
-                $push: { customAiModes: newMode }
-            },
-            { new: true }
-        ).select('username email credits role achievements customAiModes');
-
+        const updatedUser = await user.save();
 
         if (!updatedUser) {
-            throw new Error("Failed to update user.");
+            throw new Error("Failed to save user updates.");
         }
+        
+        // Construct a plain JS object for the response to ensure no Mongoose-specific properties are sent.
+        const responseUser = {
+            username: updatedUser.username,
+            email: updatedUser.email,
+            credits: updatedUser.credits,
+            role: updatedUser.role,
+            achievements: updatedUser.achievements,
+            customAiModes: updatedUser.customAiModes,
+        };
 
         return NextResponse.json({ 
             message: 'Custom AI mode created successfully!', 
-            user: updatedUser
+            user: responseUser
         }, { status: 201 });
 
     } catch (error) {
