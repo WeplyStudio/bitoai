@@ -47,7 +47,7 @@ export async function POST() {
     const apiKeyHash = createHash('sha256').update(apiKey).digest('hex');
 
     // Step 3: Assign the new hash and save the document.
-    // The .save() method provides more reliable error handling than findByIdAndUpdate in this context.
+    // The .save() method provides more reliable error handling and triggers Mongoose middleware.
     user.apiKeyHash = apiKeyHash;
     await user.save();
 
