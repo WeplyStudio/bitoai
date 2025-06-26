@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield, KeyRound } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
@@ -146,7 +146,6 @@ export const LeftSidebarContent = () => {
                         </div>
                     )}
                     
-                    {user && <NavItem icon={KeyRound} text={t('apiKey')} href="/settings/api" />}
                     <NavItem icon={Settings} text={t('settingsAndHelp')} href="/settings" />
 
                     <div className="p-2 bg-muted rounded-lg flex items-center h-[56px]">

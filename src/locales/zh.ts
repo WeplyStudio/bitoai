@@ -87,24 +87,6 @@ export const zh = {
   getMoreCredits: '获取更多积分',
   getMoreCreditsDescription: "积分用完了？联系我们的管理员购买更多积分并解锁高级功能。",
   contactAdmin: '联系管理员',
-
-  // API Key Settings
-  apiKeyDescription: "管理您的 API 密钥，以便将 Bito AI 集成到您自己的应用程序中。",
-  yourApiKey: "您的 API 密钥",
-  yourApiKeyDescription: "在您的应用程序中使用此密钥来验证 API 请求。每次 API 调用花费 1 积分。",
-  generateKeyPrompt: "您还没有 API 密钥。生成一个以开始使用。",
-  apiKeyWarningTitle: "像对待密码一样对待您的 API 密钥！",
-  apiKeyWarningDesc: "请勿分享此密钥或在任何客户端代码中暴露它。我们只向您显示一次。",
-  regenerate: "重新生成",
-  apiKeyRegenerateConfirm: "您确定要重新生成您的 API 密钥吗？您的旧密钥将立即失效。",
-  generateApiKey: "生成 API 密钥",
-  apiKeyGeneratedSuccessTitle: "API 密钥已生成！",
-  apiKeyGeneratedSuccessDesc: "您的新密钥已准备就绪。请立即复制，因为它不会再次显示。",
-  apiLoginRequiredDesc: "您必须登录才能管理您的 API 密钥。",
-  apiUsageTitle: "API 使用示例",
-  apiUsageDesc1: "以下是如何向聊天端点发出请求：",
-  apiUsageDesc2: "在您的请求中设置以下标头：",
-  apiUsageDesc3: "请求正文应为如下所示的 JSON 对象：",
   
   // Achievements
   achievementsTitle: '成就',
@@ -159,6 +141,8 @@ export const zh = {
   faqPrivacyContent: '是的。您的聊天记录、自定义提示模板和设置都存储在您浏览器的本地存储中。用户账户信息安全地存储在我们的数据库中。对话会被发送到AI模型进行处理，不会被长期存储。',
   faqImageTitle: '为什么 AI 无法生成图像？',
   faqImageContent: '图像生成功能当前已禁用。这使我们能够专注于提供最佳的基于文本的对话和任务辅助体验。但是，Bito AI 可以分析您上传的图像。',
+  faqApiUsageTitle: '如何使用API？',
+  faqApiUsageContent: '您可以通过向 `/api/v1/chat` 发送POST请求，将Bito AI集成到您自己的应用程序中。认证通过基本认证（Basic Auth）完成。请使用您的Bito AI用户名作为用户名，密码作为密码。每成功100次请求将消耗1个积分。请确保您的账户有足够的积分。',
   faqAiModesTitle: '不同的 AI 模式是什么？',
   faqAiModesContent: 'AI 模式会改变 AI 响应的个性和语气。每种模式都通过特定的系统提示和温度设置进行了微调，以实现不同的风格。',
   faqAiModeDefaultTitle: '默认',

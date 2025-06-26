@@ -87,24 +87,6 @@ export const ja = {
   getMoreCredits: 'クレジットを追加取得',
   getMoreCreditsDescription: "クレジットがなくなりましたか？管理者にご連絡の上、クレジットを追加購入し、プレミアム機能をご利用ください。",
   contactAdmin: '管理者に連絡',
-
-  // API Key Settings
-  apiKeyDescription: "独自のアプリケーションにBito AIを統合するためのAPIキーを管理します。",
-  yourApiKey: "あなたのAPIキー",
-  yourApiKeyDescription: "アプリケーションでこのキーを使用してAPIリクエストを認証します。各API呼び出しには1クレジットがかかります。",
-  generateKeyPrompt: "まだAPIキーがありません。開始するにはキーを生成してください。",
-  apiKeyWarningTitle: "APIキーはパスワードのように扱ってください！",
-  apiKeyWarningDesc: "このキーを共有したり、クライアント側のコードで公開したりしないでください。一度しか表示されません。",
-  regenerate: "再生成",
-  apiKeyRegenerateConfirm: "APIキーを再生成してもよろしいですか？古いキーはすぐに無効になります。",
-  generateApiKey: "APIキーを生成",
-  apiKeyGeneratedSuccessTitle: "APIキーが生成されました！",
-  apiKeyGeneratedSuccessDesc: "新しいキーの準備ができました。二度と表示されないので、今すぐコピーしてください。",
-  apiLoginRequiredDesc: "APIキーを管理するにはログインする必要があります。",
-  apiUsageTitle: "API使用例",
-  apiUsageDesc1: "チャットエンドポイントへのリクエストの作成方法は次のとおりです：",
-  apiUsageDesc2: "リクエストに次のヘッダーを設定してください：",
-  apiUsageDesc3: "リクエストボディは次のようなJSONオブジェクトである必要があります：",
   
   // Achievements
   achievementsTitle: '実績',
@@ -159,6 +141,8 @@ export const ja = {
   faqPrivacyContent: 'はい。チャット履歴、カスタムプロンプトテンプレート、設定は、ブラウザのストレージにローカルに保存されます。ユーザーアカウント情報はデータベースに安全に保存されます。会話は処理のためにAIモデルに送信され、長期保存されることはありません。',
   faqImageTitle: 'なぜAIは画像を生成できないのですか？',
   faqImageContent: '画像生成は現在無効になっています。これにより、最高のテキストベースの会話とタスク支援体験を提供することに集中できます。ただし、Bito AIはアップロードした画像を分析できます。',
+  faqApiUsageTitle: 'APIの使い方は？',
+  faqApiUsageContent: 'POSTリクエストを`/api/v1/chat`に送信することで、Bito AIを独自のアプリケーションに統合できます。認証はBasic認証で行われます。Bito AIのユーザー名をユーザー名として、パスワードをパスワードとして使用してください。100回のリクエスト成功ごとに1クレジットが消費されます。アカウントに十分なクレジットがあることを確認してください。',
   faqAiModesTitle: '異なるAIモードとは何ですか？',
   faqAiModesContent: 'AIモードは、AIの応答の個性とトーンを変更します。各モードは、異なるスタイルを実現するために、特定のシステムプロンプトと温度設定で微調整されています。',
   faqAiModeDefaultTitle: 'デフォルト',

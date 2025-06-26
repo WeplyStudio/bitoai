@@ -88,24 +88,6 @@ export const en = {
   getMoreCreditsDescription: "Run out of credits? Contact our admin to purchase more and unlock premium features.",
   contactAdmin: 'Contact Admin',
   
-  // API Key Settings
-  apiKeyDescription: "Manage your API key for integrating Bito AI into your own applications.",
-  yourApiKey: "Your API Key",
-  yourApiKeyDescription: "Use this key in your applications to authenticate API requests. Each API call costs 1 credit.",
-  generateKeyPrompt: "You don't have an API key yet. Generate one to get started.",
-  apiKeyWarningTitle: "Treat your API key like a password!",
-  apiKeyWarningDesc: "Do not share this key or expose it in any client-side code. We only show it to you once.",
-  regenerate: "Regenerate",
-  apiKeyRegenerateConfirm: "Are you sure you want to regenerate your API key? Your old key will stop working immediately.",
-  generateApiKey: "Generate API Key",
-  apiKeyGeneratedSuccessTitle: "API Key Generated!",
-  apiKeyGeneratedSuccessDesc: "Your new key is ready. Copy it now as it won't be shown again.",
-  apiLoginRequiredDesc: "You must be logged in to manage your API key.",
-  apiUsageTitle: "API Usage Example",
-  apiUsageDesc1: "Here's how to make a request to the chat endpoint:",
-  apiUsageDesc2: "Set the following headers in your request:",
-  apiUsageDesc3: "The request body should be a JSON object like this:",
-
   // Achievements
   achievementsTitle: 'Achievements',
   achievementsDescription: 'You have unlocked {{count}} of {{total}} achievements.',
@@ -159,6 +141,8 @@ export const en = {
   faqPrivacyContent: "Yes. Your chat histories, custom prompt templates, and settings are stored locally in your browser's storage. User account information is stored securely in our database. Conversations are sent to the AI model for processing and are not stored long-term.",
   faqImageTitle: "Why can't the AI generate images?",
   faqImageContent: "Image generation is currently disabled. This allows us to focus on providing the best possible text-based conversation and task assistance experience. Bito AI can, however, analyze images that you upload.",
+  faqApiUsageTitle: 'How do I use the API?',
+  faqApiUsageContent: "You can integrate Bito AI into your own applications by sending a POST request to `/api/v1/chat`. Authentication is done via Basic Auth. Use your Bito AI username as the username and your password as the password. Every 100 successful requests will consume 1 credit. Make sure your account has enough credits.",
   faqAiModesTitle: 'What are the different AI Modes?',
   faqAiModesContent: "The AI modes change the personality and tone of the AI's responses. Each mode is fine-tuned with a specific system prompt and temperature setting to achieve a different style.",
   faqAiModeDefaultTitle: 'Default',

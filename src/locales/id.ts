@@ -87,24 +87,6 @@ export const id = {
   getMoreCredits: 'Dapatkan Kredit Lebih',
   getMoreCreditsDescription: "Kredit habis? Hubungi admin kami untuk membeli lebih banyak dan membuka fitur premium.",
   contactAdmin: 'Hubungi Admin',
-
-  // API Key Settings
-  apiKeyDescription: "Kelola kunci API Anda untuk mengintegrasikan Bito AI ke dalam aplikasi Anda sendiri.",
-  yourApiKey: "Kunci API Anda",
-  yourApiKeyDescription: "Gunakan kunci ini di aplikasi Anda untuk mengotentikasi permintaan API. Setiap panggilan API dikenakan biaya 1 kredit.",
-  generateKeyPrompt: "Anda belum memiliki kunci API. Buat satu untuk memulai.",
-  apiKeyWarningTitle: "Perlakukan kunci API Anda seperti kata sandi!",
-  apiKeyWarningDesc: "Jangan bagikan kunci ini atau mengeksposnya di kode sisi klien mana pun. Kami hanya menunjukkannya sekali.",
-  regenerate: "Buat Ulang",
-  apiKeyRegenerateConfirm: "Apakah Anda yakin ingin membuat ulang kunci API Anda? Kunci lama Anda akan segera berhenti berfungsi.",
-  generateApiKey: "Buat Kunci API",
-  apiKeyGeneratedSuccessTitle: "Kunci API Dibuat!",
-  apiKeyGeneratedSuccessDesc: "Kunci baru Anda sudah siap. Salin sekarang karena tidak akan ditampilkan lagi.",
-  apiLoginRequiredDesc: "Anda harus masuk untuk mengelola kunci API Anda.",
-  apiUsageTitle: "Contoh Penggunaan API",
-  apiUsageDesc1: "Berikut cara membuat permintaan ke endpoint obrolan:",
-  apiUsageDesc2: "Atur header berikut dalam permintaan Anda:",
-  apiUsageDesc3: "Isi permintaan harus berupa objek JSON seperti ini:",
   
   // Achievements
   achievementsTitle: 'Pencapaian',
@@ -159,6 +141,8 @@ export const id = {
   faqPrivacyContent: "Ya. Riwayat obrolan, templat prompt kustom, dan pengaturan Anda disimpan secara lokal di penyimpanan peramban Anda. Informasi akun pengguna disimpan dengan aman di basis data kami. Percakapan dikirim ke model AI untuk diproses dan tidak disimpan dalam jangka panjang.",
   faqImageTitle: "Mengapa AI tidak dapat menghasilkan gambar?",
   faqImageContent: "Pembuatan gambar saat ini dinonaktifkan. Ini memungkinkan kami untuk fokus memberikan pengalaman percakapan dan bantuan tugas berbasis teks terbaik. Namun, Bito AI dapat menganalisis gambar yang Anda unggah.",
+  faqApiUsageTitle: 'Bagaimana cara menggunakan API?',
+  faqApiUsageContent: 'Anda dapat mengintegrasikan Bito AI ke aplikasi Anda dengan mengirimkan permintaan POST ke `/api/v1/chat`. Otentikasi dilakukan melalui Basic Auth. Gunakan nama pengguna Bito AI Anda sebagai nama pengguna dan kata sandi Anda sebagai kata sandi. Setiap 100 permintaan yang berhasil akan menggunakan 1 kredit. Pastikan akun Anda memiliki kredit yang cukup.',
   faqAiModesTitle: 'Apa saja Mode AI yang berbeda?',
   faqAiModesContent: "Mode AI mengubah kepribadian dan nada respons AI. Setiap mode disesuaikan dengan prompt sistem dan pengaturan suhu tertentu untuk mencapai gaya yang berbeda.",
   faqAiModeDefaultTitle: 'Default',

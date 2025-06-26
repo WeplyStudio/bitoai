@@ -2,37 +2,54 @@
 'use server';
 
 import { NextResponse } from 'next/server';
-import { createHash } from 'crypto';
+import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 import { chat } from '@/ai/flows/chat';
 import type { ChatMessage as ApiChatMessage } from '@/ai/schemas';
 
-async function authenticateAndDeductCredit(apiKey: string): Promise<{ error?: string, status?: number, user?: any }> {
-    if (!apiKey) return { error: 'API Key is required.', status: 401 };
+async function authenticateAndManageCredits(authHeader: string | null): Promise<{ error?: string, status?: number, user?: any }> {
+    if (!authHeader || !authHeader.startsWith('Basic ')) {
+        return { error: 'Authorization header with Basic scheme is required.', status: 401 };
+    }
 
-    const apiKeyHash = createHash('sha256').update(apiKey).digest('hex');
+    const base64Credentials = authHeader.substring(6);
+    const credentials = Buffer.from(base64Credentials, 'base64').toString('ascii');
+    const [username, password] = credentials.split(':');
+
+    if (!username || !password) {
+        return { error: 'Invalid authentication credentials.', status: 401 };
+    }
 
     await connectDB();
-    // Use select('+credits') to explicitly include the credits field
-    const user = await User.findOne({ apiKeyHash }).select('+credits');
+    const user = await User.findOne({ username }).select('+password +credits +apiRequestCount');
 
     if (!user) {
-        return { error: 'Invalid API Key.', status: 401 };
-    }
-
-    // Since we explicitly selected it, credits should be available.
-    // Add a safety check just in case.
-    if (typeof user.credits !== 'number') {
-        user.credits = 0; // Initialize if somehow missing
+        return { error: 'Invalid username or password.', status: 401 };
     }
     
-    if (user.credits < 1) {
-        return { error: 'Insufficient credits.', status: 402 };
+    if (!user.password) {
+        return { error: 'Invalid account configuration.', status: 500 };
     }
 
-    // Deduct one credit for the API call
-    user.credits -= 1;
+    const isMatch = await bcrypt.compare(password, user.password);
+    if (!isMatch) {
+        return { error: 'Invalid username or password.', status: 401 };
+    }
+
+    if (typeof user.apiRequestCount !== 'number') user.apiRequestCount = 0;
+    if (typeof user.credits !== 'number') user.credits = 0;
+
+    user.apiRequestCount += 1;
+
+    if (user.apiRequestCount >= 100) {
+        if (user.credits < 1) {
+            return { error: 'Insufficient credits. 100 requests have been made.', status: 402 };
+        }
+        user.credits -= 1;
+        user.apiRequestCount = 0;
+    }
+
     await user.save();
 
     return { user };
@@ -40,10 +57,9 @@ async function authenticateAndDeductCredit(apiKey: string): Promise<{ error?: st
 
 export async function POST(request: Request) {
     const authHeader = request.headers.get('Authorization');
-    const apiKey = authHeader?.startsWith('Bearer ') ? authHeader.substring(7) : null;
 
     try {
-        const { error, status, user } = await authenticateAndDeductCredit(apiKey || '');
+        const { error, status, user } = await authenticateAndManageCredits(authHeader);
         if (error) {
             return NextResponse.json({ error }, { status });
         }
@@ -61,15 +77,21 @@ export async function POST(request: Request) {
         const aiResponse = await chat({
             messages: historyForApi,
             mode: mode || 'default',
-            language: 'en', // API defaults to English
+            language: 'en',
             username: user.username,
         });
         
         if (!aiResponse || !aiResponse.content) {
             throw new Error('AI did not return a response.');
         }
+        
+        const requestsLeft = 100 - user.apiRequestCount;
 
-        return NextResponse.json({ response: aiResponse.content, credits_remaining: user.credits });
+        return NextResponse.json({ 
+            response: aiResponse.content, 
+            credits_remaining: user.credits,
+            requests_until_next_deduction: requestsLeft
+        });
 
     } catch (err: any) {
         console.error('[API V1 CHAT ERROR]', err);
