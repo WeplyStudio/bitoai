@@ -5,6 +5,7 @@ import jwt from 'jsonwebtoken';
 import { cookies } from 'next/headers';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import { sendWelcomeEmail } from '@/lib/nodemailer';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -22,7 +23,7 @@ export async function POST(request: Request) {
     }
 
     // Explicitly select all fields needed for patching and the response.
-    const user = await User.findOne({ email }).select('+otp +otpExpires username credits role achievements');
+    const user = await User.findOne({ email }).select('+otp +otpExpires +isVerified username credits role achievements');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -36,6 +37,9 @@ export async function POST(request: Request) {
     if (!isOtpMatch) {
       return NextResponse.json({ error: 'Invalid OTP.' }, { status: 400 });
     }
+
+    // Check if user was already verified before this action.
+    const wasAlreadyVerified = user.isVerified;
 
     // OTP is correct, clear it and mark user as verified
     user.otp = undefined;
@@ -51,6 +55,11 @@ export async function POST(request: Request) {
     }
     
     await user.save();
+    
+    // Only send welcome email on the very first verification
+    if (!wasAlreadyVerified) {
+      await sendWelcomeEmail(user.email, user.username);
+    }
     
     // Generate JWT and log the user in
     const tokenPayload = {
