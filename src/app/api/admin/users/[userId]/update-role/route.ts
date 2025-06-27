@@ -50,18 +50,21 @@ export async function POST(request: Request, { params }: { params: { userId: str
       return NextResponse.json({ error: 'Invalid role provided.' }, { status: 400 });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: { role: role } },
-      { new: true }
-    ).select('username email credits _id role blocked createdAt');
-
-    if (!updatedUser) {
-      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+    const userToUpdate = await User.findById(userId);
+    if (!userToUpdate) {
+        return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
-    
-    const projectCount = await mongoose.model('Project').countDocuments({ userId: updatedUser._id });
-    const { blocked, ...userObj } = updatedUser.toObject();
+
+    userToUpdate.role = role;
+    await userToUpdate.save();
+
+    const finalUser = await User.findById(userId).select('username email credits _id role blocked createdAt').lean();
+    if (!finalUser) {
+        return NextResponse.json({ error: 'Failed to retrieve user after update.' }, { status: 500 });
+    }
+
+    const projectCount = await mongoose.model('Project').countDocuments({ userId: finalUser._id });
+    const { blocked, ...userObj } = finalUser;
     const userWithDetails = { 
       ...userObj, 
       projectCount,

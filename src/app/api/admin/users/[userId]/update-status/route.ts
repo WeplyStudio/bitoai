@@ -52,18 +52,22 @@ export async function POST(request: Request, { params }: { params: { userId: str
     
     const isBlocked = status === 'banned';
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $set: { blocked: isBlocked } },
-      { new: true }
-    ).select('username email credits _id role blocked createdAt');
+    const userToUpdate = await User.findById(userId);
+    if (!userToUpdate) {
+        return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+    }
 
-    if (!updatedUser) {
-      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+    userToUpdate.blocked = isBlocked;
+    await userToUpdate.save();
+
+    const finalUser = await User.findById(userId).select('username email credits _id role blocked createdAt').lean();
+
+    if (!finalUser) {
+        return NextResponse.json({ error: 'Failed to retrieve user after update.' }, { status: 500 });
     }
     
-    const projectCount = await mongoose.model('Project').countDocuments({ userId: updatedUser._id });
-    const { blocked, ...userObj } = updatedUser.toObject();
+    const projectCount = await mongoose.model('Project').countDocuments({ userId: finalUser._id });
+    const { blocked, ...userObj } = finalUser;
     const userWithDetails = { 
         ...userObj, 
         projectCount,

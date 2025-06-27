@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import mongoose from 'mongoose';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -46,17 +47,30 @@ export async function POST(request: Request, { params }: { params: { userId: str
       return NextResponse.json({ error: 'Invalid credit amount. Must be a positive number.' }, { status: 400 });
     }
 
-    const updatedUser = await User.findByIdAndUpdate(
-      userId,
-      { $inc: { credits: creditsToAdd } },
-      { new: true }
-    ).select('username email credits _id');
-
-    if (!updatedUser) {
-      return NextResponse.json({ error: 'User not found.' }, { status: 404 });
+    const userToUpdate = await User.findById(userId);
+    if (!userToUpdate) {
+        return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
 
-    return NextResponse.json({ message: 'Credits added successfully', user: updatedUser });
+    userToUpdate.credits += creditsToAdd;
+    await userToUpdate.save();
+
+    const finalUser = await User.findById(userId).select('username email credits _id role blocked createdAt').lean();
+
+    if (!finalUser) {
+        return NextResponse.json({ error: 'Failed to retrieve user after update.' }, { status: 500 });
+    }
+
+    const projectCount = await mongoose.model('Project').countDocuments({ userId: finalUser._id });
+    
+    const { blocked, ...userObj } = finalUser;
+    const userWithDetails = { 
+        ...userObj, 
+        projectCount,
+        status: blocked ? 'banned' : 'active'
+    };
+
+    return NextResponse.json({ message: 'Credits added successfully', user: userWithDetails });
   } catch (error) {
     console.error('Add credits error:', error);
     return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
