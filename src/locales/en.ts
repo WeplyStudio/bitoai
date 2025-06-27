@@ -233,7 +233,7 @@ export const en = {
   templateCodeTitle2: 'Write a function',
   templateCodeDescription2: 'Generate a function in any programming language.',
   templateCodePrompt2: "Write a function in [programming language] that takes [input] and returns [output].",
-
+  
   // Chat Panel & Toasts
   chatRenamed: 'Chat Renamed',
   chatRenamedDescription: 'This chat was automatically named "{{projectName}}".',
@@ -351,15 +351,15 @@ export const en = {
   accessDeniedDescription: 'You do not have permission to view this page.',
   creditsAddedSuccess: 'Credits added successfully!',
   creditsAddedSuccessDesc: '{{amount}} credits have been added to {{username}}.',
-  
-  // Pricing Page
-  pricingTitle: 'Credit Pricing',
-  pricingDescription: 'Choose a package that suits your needs and unlock premium features.',
-  oneThousandCredits: '1,000 Credits',
-  howToTopUp: 'How to Top Up',
-  howToTopUpDescription: 'To top up your credits, please contact our admin via WhatsApp. Mention your username and the desired package. We will process your request shortly.',
-  proAccess: 'Access to all Pro features',
-  lifetimeValidity: 'Lifetime validity',
-  prioritySupport: 'Priority support',
-  comingSoon: 'Coming Soon',
+  role: 'Role',
+  status: 'Status',
+  user: 'User',
+  admin: 'Admin',
+  active: 'Active',
+  banned: 'Banned',
+  banUser: 'Ban User',
+  unbanUser: 'Unban User',
+  confirmAction: 'Confirm Action',
+  actionSuccess: 'Action Successful',
+  cannotModifySelf: 'You cannot modify your own account.',
 };

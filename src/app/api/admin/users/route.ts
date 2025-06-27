@@ -6,6 +6,7 @@ import { cookies } from 'next/headers';
 import jwt from 'jsonwebtoken';
 import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
+import Project from '@/models/Project';
 
 const JWT_SECRET = process.env.JWT_SECRET;
 
@@ -34,8 +35,23 @@ export async function GET(request: Request) {
   }
 
   try {
-    const users = await User.find({}).select('username email credits _id').sort({ createdAt: -1 });
-    return NextResponse.json(users);
+    const users = await User.find({}).select('username email credits _id role status createdAt').sort({ createdAt: -1 });
+
+    const projectsCount = await Project.aggregate([
+        { $group: { _id: "$userId", count: { $sum: 1 } } }
+    ]);
+
+    const projectsCountMap = new Map(projectsCount.map(item => [item._id.toString(), item.count]));
+
+    const usersWithDetails = users.map(user => {
+        const userObj = user.toObject();
+        return {
+            ...userObj,
+            projectCount: projectsCountMap.get(user._id.toString()) || 0
+        };
+    });
+
+    return NextResponse.json(usersWithDetails);
   } catch (error) {
     console.error('Error fetching users for admin:', error);
     return NextResponse.json({ error: 'An internal server error occurred.' }, { status: 500 });
