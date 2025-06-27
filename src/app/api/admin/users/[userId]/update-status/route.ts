@@ -49,19 +49,26 @@ export async function POST(request: Request, { params }: { params: { userId: str
     if (!status || !['active', 'banned'].includes(status)) {
       return NextResponse.json({ error: 'Invalid status provided.' }, { status: 400 });
     }
+    
+    const isBlocked = status === 'banned';
 
     const updatedUser = await User.findByIdAndUpdate(
       userId,
-      { $set: { status: status } },
+      { $set: { blocked: isBlocked } },
       { new: true }
-    ).select('username email credits _id role status createdAt');
+    ).select('username email credits _id role blocked createdAt');
 
     if (!updatedUser) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
     
     const projectCount = await mongoose.model('Project').countDocuments({ userId: updatedUser._id });
-    const userWithDetails = { ...updatedUser.toObject(), projectCount };
+    const { blocked, ...userObj } = updatedUser.toObject();
+    const userWithDetails = { 
+        ...userObj, 
+        projectCount,
+        status: blocked ? 'banned' : 'active'
+    };
 
     return NextResponse.json({ message: 'Status updated successfully', user: userWithDetails });
   } catch (error) {

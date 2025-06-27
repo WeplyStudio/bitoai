@@ -17,10 +17,14 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const user = await User.findOne({ email }).select('+password');
+    const user = await User.findOne({ email }).select('+password blocked');
 
     if (!user) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
+    }
+    
+    if (user.blocked) {
+      return NextResponse.json({ error: 'This account has been suspended.' }, { status: 403 });
     }
 
     const isPasswordMatch = await bcrypt.compare(password, user.password!);

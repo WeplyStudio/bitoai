@@ -35,7 +35,7 @@ export async function GET(request: Request) {
   }
 
   try {
-    const users = await User.find({}).select('username email credits _id role status createdAt').sort({ createdAt: -1 });
+    const users = await User.find({}).select('username email credits _id role blocked createdAt').sort({ createdAt: -1 });
 
     const projectsCount = await Project.aggregate([
         { $group: { _id: "$userId", count: { $sum: 1 } } }
@@ -44,10 +44,11 @@ export async function GET(request: Request) {
     const projectsCountMap = new Map(projectsCount.map(item => [item._id.toString(), item.count]));
 
     const usersWithDetails = users.map(user => {
-        const userObj = user.toObject();
+        const { blocked, ...userObj } = user.toObject();
         return {
             ...userObj,
-            projectCount: projectsCountMap.get(user._id.toString()) || 0
+            projectCount: projectsCountMap.get(user._id.toString()) || 0,
+            status: blocked ? 'banned' : 'active'
         };
     });
 

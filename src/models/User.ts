@@ -13,7 +13,7 @@ export interface IUser extends Document {
   messagesToday: number;
   lastMessageDate?: Date;
   role: 'user' | 'admin';
-  status: 'active' | 'banned';
+  blocked: boolean;
   achievements: string[];
   apiRequestCount: number;
   createdAt: Date;
@@ -72,10 +72,9 @@ const UserSchema: Schema = new Schema({
     enum: ['user', 'admin'],
     default: 'user',
   },
-  status: {
-    type: String,
-    enum: ['active', 'banned'],
-    default: 'active',
+  blocked: {
+    type: Boolean,
+    default: false,
   },
   achievements: {
     type: [String],

@@ -54,14 +54,19 @@ export async function POST(request: Request, { params }: { params: { userId: str
       userId,
       { $set: { role: role } },
       { new: true }
-    ).select('username email credits _id role status createdAt');
+    ).select('username email credits _id role blocked createdAt');
 
     if (!updatedUser) {
       return NextResponse.json({ error: 'User not found.' }, { status: 404 });
     }
     
     const projectCount = await mongoose.model('Project').countDocuments({ userId: updatedUser._id });
-    const userWithDetails = { ...updatedUser.toObject(), projectCount };
+    const { blocked, ...userObj } = updatedUser.toObject();
+    const userWithDetails = { 
+      ...userObj, 
+      projectCount,
+      status: blocked ? 'banned' : 'active',
+    };
 
     return NextResponse.json({ message: 'Role updated successfully', user: userWithDetails });
   } catch (error) {
