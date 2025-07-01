@@ -1,3 +1,4 @@
+
 'use client';
 
 import { useLanguage } from '@/contexts/LanguageProvider';
@@ -12,6 +13,7 @@ export default function PricingPage() {
 
   const tiers = [
     {
+      id: 'starter',
       name: t('pricingTierStarterTitle'),
       price: t('pricingTierFree'),
       description: t('pricingTierStarterDescription'),
@@ -25,6 +27,7 @@ export default function PricingPage() {
       isHighlighted: false,
     },
     {
+      id: 'pro',
       name: t('pricingTierProTitle'),
       price: t('pricingTierProPrice'),
       description: t('pricingTierProDescription'),
@@ -38,6 +41,7 @@ export default function PricingPage() {
       isHighlighted: true,
     },
     {
+      id: 'enterprise',
       name: t('pricingTierEnterpriseTitle'),
       price: t('pricingTierEnterprisePrice'),
       description: t('pricingTierEnterpriseDescription'),
@@ -65,7 +69,7 @@ export default function PricingPage() {
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
           {tiers.map((tier) => (
             <Card
-              key={tier.name}
+              key={tier.id}
               className={cn(
                 'flex flex-col h-full shadow-lg transition-transform duration-300 hover:scale-105',
                 tier.isHighlighted && 'border-2 border-primary relative'
