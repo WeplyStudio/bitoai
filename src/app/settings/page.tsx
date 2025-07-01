@@ -15,6 +15,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
 import { AchievementsDisplay } from '@/components/settings/achievements-display';
+import { Footer } from '@/components/layout/footer';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -325,6 +326,7 @@ export default function SettingsPage() {
         </Card>
       </div>
     </div>
+    <Footer />
     </>
   );
 }
