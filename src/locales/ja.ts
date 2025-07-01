@@ -16,6 +16,50 @@ export const ja = {
   topUp: 'チャージ',
   apiKey: 'APIキー',
 
+  // Pricing Page
+  pricingTitle: 'あなたの規模に合わせたプラン',
+  pricingDescription: 'シンプルで透明性のある価格設定。あなたにぴったりのプランをお選びください。隠れた料金はありません。',
+  pricingMostPopular: '一番人気',
+  
+  pricingTierStarterTitle: 'スターター',
+  pricingTierFree: '無料',
+  pricingTierStarterDescription: 'Bito AIを始めたばかりの個人や趣味の方に。',
+  pricingTierStarterFeature1: '初期5クレジット',
+  pricingTierStarterFeature2: '標準AIモードへのアクセス',
+  pricingTierStarterFeature3: '無制限の標準チャット',
+  pricingTierStarterFeature4: 'コミュニティサポート',
+  pricingTierStarterCTA: '始める',
+
+  pricingTierProTitle: 'プロ',
+  pricingTierProPrice: 'Rp9.900',
+  pricingTierProDescription: 'より多くを必要とするパワーユーザー、フリーランサー、プロフェッショナル向け。',
+  pricingTierProFeature1: 'スターターのすべて、さらに：',
+  pricingTierProFeature2: '最初に1,000クレジット',
+  pricingTierProFeature3: 'すべてのプロAIモードへのアクセス',
+  pricingTierProFeature4: '優先メール＆チャットサポート',
+  pricingTierProCTA: 'プロを選択',
+
+  pricingTierEnterpriseTitle: 'エンタープライズ',
+  pricingTierEnterprisePrice: 'カスタム',
+  pricingTierEnterpriseDescription: '高度な機能とサポートを必要とする大規模なチームやビジネス向け。',
+  pricingTierEnterpriseFeature1: 'ボリュームクレジットパッケージ',
+  pricingTierEnterpriseFeature2: 'カスタムAIモデルのファインチューニング',
+  pricingTierEnterpriseFeature3: '専用サポートとSLA',
+  pricingTierEnterpriseFeature4: '高度なセキュリティとコンプライアンス',
+  pricingTierEnterpriseCTA: '営業に連絡',
+
+  howToTopUp: 'クレジットを購入しますか？',
+  howToTopUpDescription: '現在、すべての購入とチャージはWhatsApp経由で処理され、安全で個人的なサービスを確保しています。',
+
+  pricingFaq1Title: 'クレジットは何に使われますか？',
+  pricingFaq1Content: 'クレジットは、当社の高度な「プロ」AIモード（ストーリーテラー、テクニカル、皮肉など）にアクセスするために使用されます。プロモードを使用して送信された各メッセージは1クレジットを消費します。標準モードは常に無料で、クレジットを消費しません。',
+  pricingFaq2Title: 'クレジットに有効期限はありますか？',
+  pricingFaq2Content: 'いいえ、ありません。購入したすべてのクレジットは生涯有効で、有効期限はありません。必要なときにいつでも使用できます。',
+  pricingFaq3Title: 'どのような支払い方法を受け付けていますか？',
+  pricingFaq3Content: '現在、インドネシアの銀行振込または一般的な電子ウォレット（GoPay、OVO、DANAなど）を介して手動で支払いを処理しています。購入を完了するには、WhatsAppでお問い合わせください。',
+  pricingFaq4Title: '返金は可能ですか？',
+  pricingFaq4Content: 'デジタルクレジットの性質上、すべての購入は最終的なものであり、返金はできません。不確かな場合は、より小さなパッケージから始めることをお勧めします。',
+
   // Right Sidebar
   chatsCount: 'チャット ({{count}})',
 

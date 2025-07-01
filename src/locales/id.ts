@@ -16,6 +16,50 @@ export const id = {
   topUp: 'Isi Ulang',
   apiKey: 'Kunci API',
 
+  // Pricing Page
+  pricingTitle: 'Paket yang Sesuai dengan Skala Anda',
+  pricingDescription: 'Harga yang sederhana dan transparan. Pilih paket yang tepat untuk Anda. Tanpa biaya tersembunyi.',
+  pricingMostPopular: 'Paling Populer',
+  
+  pricingTierStarterTitle: 'Starter',
+  pricingTierFree: 'Gratis',
+  pricingTierStarterDescription: 'Untuk individu dan penghobi yang baru memulai dengan Bito AI.',
+  pricingTierStarterFeature1: '5 kredit awal',
+  pricingTierStarterFeature2: 'Akses ke mode AI standar',
+  pricingTierStarterFeature3: 'Obrolan standar tanpa batas',
+  pricingTierStarterFeature4: 'Dukungan komunitas',
+  pricingTierStarterCTA: 'Mulai',
+
+  pricingTierProTitle: 'Pro',
+  pricingTierProPrice: 'Rp9.900',
+  pricingTierProDescription: 'Untuk pengguna mahir, freelancer, dan profesional yang butuh lebih.',
+  pricingTierProFeature1: 'Semua yang ada di Starter, ditambah:',
+  pricingTierProFeature2: '1.000 kredit untuk memulai',
+  pricingTierProFeature3: 'Akses ke semua Mode AI Pro',
+  pricingTierProFeature4: 'Dukungan prioritas email & obrolan',
+  pricingTierProCTA: 'Pilih Pro',
+
+  pricingTierEnterpriseTitle: 'Enterprise',
+  pricingTierEnterprisePrice: 'Kustom',
+  pricingTierEnterpriseDescription: 'Untuk tim besar dan bisnis yang memerlukan fitur dan dukungan tingkat lanjut.',
+  pricingTierEnterpriseFeature1: 'Paket kredit volume',
+  pricingTierEnterpriseFeature2: 'Fine-tuning model AI kustom',
+  pricingTierEnterpriseFeature3: 'Dukungan khusus & SLA',
+  pricingTierEnterpriseFeature4: 'Keamanan & kepatuhan tingkat lanjut',
+  pricingTierEnterpriseCTA: 'Hubungi Penjualan',
+
+  howToTopUp: 'Siap Membeli Kredit?',
+  howToTopUpDescription: 'Semua pembelian dan isi ulang saat ini ditangani melalui WhatsApp untuk memastikan layanan yang aman dan personal.',
+
+  pricingFaq1Title: 'Untuk apa kredit digunakan?',
+  pricingFaq1Content: 'Kredit digunakan untuk mengakses mode AI "Pro" kami yang canggih (seperti Pendongeng, Teknis, Sarkastis). Setiap pesan yang dikirim menggunakan mode Pro akan menggunakan satu kredit. Mode standar selalu gratis dan tidak menggunakan kredit.',
+  pricingFaq2Title: 'Apakah kredit saya bisa hangus?',
+  pricingFaq2Content: 'Tidak, tidak akan pernah. Semua kredit yang dibeli berlaku seumur hidup dan tidak memiliki tanggal kedaluwarsa. Gunakan kapan pun Anda membutuhkannya.',
+  pricingFaq3Title: 'Metode pembayaran apa yang Anda terima?',
+  pricingFaq3Content: 'Saat ini kami memproses pembayaran secara manual melalui transfer bank atau e-wallet populer di Indonesia (seperti GoPay, OVO, DANA). Silakan hubungi kami melalui WhatsApp untuk menyelesaikan pembelian Anda.',
+  pricingFaq4Title: 'Bisakah saya mendapatkan pengembalian dana?',
+  pricingFaq4Content: 'Karena sifat kredit digital, semua pembelian bersifat final dan tidak dapat dikembalikan. Kami merekomendasikan untuk memulai dengan paket yang lebih kecil jika Anda tidak yakin.',
+
   // Right Sidebar
   chatsCount: 'Obrolan ({{count}})',
 

@@ -16,6 +16,50 @@ export const zh = {
   topUp: '充值',
   apiKey: 'API 密钥',
 
+  // Pricing Page
+  pricingTitle: '适合您规模的计划',
+  pricingDescription: '简单、透明的定价。选择适合您的计划。无隐藏费用。',
+  pricingMostPopular: '最受欢迎',
+  
+  pricingTierStarterTitle: '入门版',
+  pricingTierFree: '免费',
+  pricingTierStarterDescription: '适用于刚开始使用 Bito AI 的个人和业余爱好者。',
+  pricingTierStarterFeature1: '5个初始积分',
+  pricingTierStarterFeature2: '访问标准AI模式',
+  pricingTierStarterFeature3: '无限标准聊天',
+  pricingTierStarterFeature4: '社区支持',
+  pricingTierStarterCTA: '开始使用',
+
+  pricingTierProTitle: '专业版',
+  pricingTierProPrice: 'Rp9.900',
+  pricingTierProDescription: '适用于需要更多功能的高级用户、自由职业者和专业人士。',
+  pricingTierProFeature1: '入门版所有功能，外加：',
+  pricingTierProFeature2: '起始1,000积分',
+  pricingTierProFeature3: '访问所有专业AI模式',
+  pricingTierProFeature4: '优先邮件和聊天支持',
+  pricingTierProCTA: '选择专业版',
+
+  pricingTierEnterpriseTitle: '企业版',
+  pricingTierEnterprisePrice: '定制',
+  pricingTierEnterpriseDescription: '适用于需要高级功能和支持的大型团队和企业。',
+  pricingTierEnterpriseFeature1: '批量积分套餐',
+  pricingTierEnterpriseFeature2: '自定义AI模型微调',
+  pricingTierEnterpriseFeature3: '专属支持与服务等级协议',
+  pricingTierEnterpriseFeature4: '高级安全与合规性',
+  pricingTierEnterpriseCTA: '联系销售',
+
+  howToTopUp: '准备购买积分吗？',
+  howToTopUpDescription: '目前所有购买和充值均通过WhatsApp处理，以确保安全和个性化的服务。',
+
+  pricingFaq1Title: '积分有什么用？',
+  pricingFaq1Content: '积分用于访问我们高级的“专业”AI模式（如讲故事者、技术、讽刺）。使用专业模式发送的每条消息都会消耗一个积分。标准模式始终免费，不消耗积分。',
+  pricingFaq2Title: '我的积分会过期吗？',
+  pricingFaq2Content: '不，永远不会。所有购买的积分终身有效，没有有效期。您可以在需要时随时使用。',
+  pricingFaq3Title: '你们接受哪些付款方式？',
+  pricingFaq3Content: '我们目前通过银行转账或印度尼西亚流行的电子钱包（如GoPay、OVO、DANA）手动处理付款。请通过WhatsApp联系我们完成您的购买。',
+  pricingFaq4Title: '我可以退款吗？',
+  pricingFaq4Content: '由于数字积分的性质，所有购买均为最终决定，不可退款。如果您不确定，我们建议您从较小的套餐开始。',
+
   // Right Sidebar
   chatsCount: '聊天 ({{count}})',
 

@@ -16,6 +16,50 @@ export const en = {
   topUp: 'Top Up',
   apiKey: 'API Key',
 
+  // Pricing Page
+  pricingTitle: 'Plans that fit your scale',
+  pricingDescription: 'Simple, transparent pricing. Choose the plan that\'s right for you. No hidden fees.',
+  pricingMostPopular: 'Most Popular',
+  
+  pricingTierStarterTitle: 'Starter',
+  pricingTierFree: 'Free',
+  pricingTierStarterDescription: 'For individuals and hobbyists getting started with Bito AI.',
+  pricingTierStarterFeature1: '5 initial credits',
+  pricingTierStarterFeature2: 'Access to standard AI modes',
+  pricingTierStarterFeature3: 'Unlimited standard chats',
+  pricingTierStarterFeature4: 'Community support',
+  pricingTierStarterCTA: 'Get Started',
+
+  pricingTierProTitle: 'Pro',
+  pricingTierProPrice: 'Rp9.900',
+  pricingTierProDescription: 'For power users, freelancers, and professionals who need more.',
+  pricingTierProFeature1: 'Everything in Starter, plus:',
+  pricingTierProFeature2: '1,000 credits to start',
+  pricingTierProFeature3: 'Access to all Pro AI Modes',
+  pricingTierProFeature4: 'Priority email & chat support',
+  pricingTierProCTA: 'Choose Pro',
+
+  pricingTierEnterpriseTitle: 'Enterprise',
+  pricingTierEnterprisePrice: 'Custom',
+  pricingTierEnterpriseDescription: 'For large teams and businesses requiring advanced features and support.',
+  pricingTierEnterpriseFeature1: 'Volume credit packages',
+  pricingTierEnterpriseFeature2: 'Custom AI model fine-tuning',
+  pricingTierEnterpriseFeature3: 'Dedicated support & SLA',
+  pricingTierEnterpriseFeature4: 'Advanced security & compliance',
+  pricingTierEnterpriseCTA: 'Contact Sales',
+
+  howToTopUp: 'Ready to Purchase Credits?',
+  howToTopUpDescription: 'All purchases and top-ups are currently handled via WhatsApp to ensure secure and personal service.',
+
+  pricingFaq1Title: 'What are credits used for?',
+  pricingFaq1Content: 'Credits are used to access our advanced "Pro" AI modes (like Storyteller, Technical, Sarcastic). Each message sent using a Pro mode consumes one credit. Standard modes are always free and do not consume credits.',
+  pricingFaq2Title: 'Do my credits expire?',
+  pricingFaq2Content: 'No, never. All purchased credits are valid for a lifetime and do not have an expiration date. Use them whenever you need them.',
+  pricingFaq3Title: 'What payment methods do you accept?',
+  pricingFaq3Content: 'We currently process payments manually via bank transfer or popular e-wallets in Indonesia (like GoPay, OVO, DANA). Please contact us via WhatsApp to complete your purchase.',
+  pricingFaq4Title: 'Can I get a refund?',
+  pricingFaq4Content: 'Due to the nature of digital credits, all purchases are final and non-refundable. We recommend starting with a smaller package if you are unsure.',
+
   // Right Sidebar
   chatsCount: 'Chats ({{count}})',
 
