@@ -29,6 +29,7 @@ export const zh = {
   pricingTierStarterFeature3: '无限标准聊天',
   pricingTierStarterFeature4: '社区支持',
   pricingTierStarterCTA: '开始使用',
+  pricingTierStarterCurrentPlan: '您当前的计划',
 
   pricingTierProTitle: '专业版',
   pricingTierProPrice: 'Rp9.900',

@@ -29,6 +29,7 @@ export const id = {
   pricingTierStarterFeature3: 'Obrolan standar tanpa batas',
   pricingTierStarterFeature4: 'Dukungan komunitas',
   pricingTierStarterCTA: 'Mulai',
+  pricingTierStarterCurrentPlan: 'Paket Anda Saat Ini',
 
   pricingTierProTitle: 'Pro',
   pricingTierProPrice: 'Rp9.900',
@@ -174,7 +175,7 @@ export const id = {
   faqAchievementsTitle: 'Apa itu Pencapaian?',
   faqAchievementsContent: 'Pencapaian adalah lencana seru yang bisa Anda buka dengan menggunakan berbagai fitur aplikasi. Anda dapat melihat semua pencapaian yang sudah terbuka dan terkunci di halaman Pengaturan. Ini adalah cara untuk merayakan perjalanan Anda bersama Bito AI!',
   faqCreditsTitle: 'Apa itu Kredit dan Mode Pro?',
-  faqCreditsContent: 'Kredit digunakan untuk mengakses mode AI "Pro" seperti Pendongeng, Sarkastis, Teknis, dan Filsuf. Setiap pesan yang dikirim dalam mode Pro akan dikenakan biaya 1 kredit. Anda akan menerima beberapa kredit gratis saat mendaftar, dan Anda dapat menghubungi admin untuk membeli lebih banyak.',
+  faqCreditsContent: 'Kredit digunakan untuk mengakses mode AI "Pro" kami yang canggih (seperti Pendongeng, Teknis, Sarkastis). Setiap pesan yang dikirim menggunakan mode Pro akan menggunakan satu kredit. Mode standar selalu gratis dan tidak menggunakan kredit.',
   faqVoiceTitle: 'Bagaimana cara kerja masukan suara?',
   faqVoiceContent: "Fitur masukan suara menggunakan Web Speech API bawaan peramban Anda. Saat Anda mengklik ikon mikrofon, peramban Anda akan meminta izin untuk mengakses mikrofon Anda. Setelah diizinkan, apa pun yang Anda katakan akan ditranskripsikan menjadi teks dalam bahasa yang telah Anda pilih di pengaturan.",
   faqLanguageTitle: 'Dapatkah saya mengubah bahasa respons?',

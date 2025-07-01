@@ -29,6 +29,7 @@ export const en = {
   pricingTierStarterFeature3: 'Unlimited standard chats',
   pricingTierStarterFeature4: 'Community support',
   pricingTierStarterCTA: 'Get Started',
+  pricingTierStarterCurrentPlan: 'Your Current Plan',
 
   pricingTierProTitle: 'Pro',
   pricingTierProPrice: 'Rp9.900',

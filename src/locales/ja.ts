@@ -29,6 +29,7 @@ export const ja = {
   pricingTierStarterFeature3: '無制限の標準チャット',
   pricingTierStarterFeature4: 'コミュニティサポート',
   pricingTierStarterCTA: '始める',
+  pricingTierStarterCurrentPlan: '現在のプラン',
 
   pricingTierProTitle: 'プロ',
   pricingTierProPrice: 'Rp9.900',

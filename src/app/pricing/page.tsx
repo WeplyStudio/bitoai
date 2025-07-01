@@ -1,6 +1,7 @@
 
 'use client';
 
+import { useAuth } from '@/contexts/AuthProvider';
 import { useLanguage } from '@/contexts/LanguageProvider';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
@@ -10,6 +11,7 @@ import { cn } from '@/lib/utils';
 
 export default function PricingPage() {
   const { t } = useLanguage();
+  const { user, setAuthDialogOpen } = useAuth();
 
   const tiers = [
     {
@@ -101,11 +103,30 @@ export default function PricingPage() {
                 </ul>
               </CardContent>
               <CardFooter>
-                 <Button asChild className="w-full" size="lg" variant={tier.isHighlighted ? 'default' : 'outline'}>
-                    <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
+                 {user ? (
+                    // Logic for LOGGED IN users
+                    tier.id === 'starter' ? (
+                      <Button className="w-full" size="lg" variant="outline" disabled>
+                        {t('pricingTierStarterCurrentPlan')}
+                      </Button>
+                    ) : (
+                      <Button asChild className="w-full" size="lg" variant={tier.isHighlighted ? 'default' : 'outline'}>
+                        <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
+                          {tier.cta}
+                        </a>
+                      </Button>
+                    )
+                  ) : (
+                    // Logic for LOGGED OUT users
+                    <Button
+                      className="w-full"
+                      size="lg"
+                      variant={tier.isHighlighted ? 'default' : 'outline'}
+                      onClick={() => setAuthDialogOpen(true)}
+                    >
                       {tier.cta}
-                    </a>
-                  </Button>
+                    </Button>
+                  )}
               </CardFooter>
             </Card>
           ))}
