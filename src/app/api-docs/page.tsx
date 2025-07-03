@@ -47,7 +47,7 @@ This is the primary endpoint for interacting with the AI.
 
 ##### Example Request (\`curl\`)
 \`\`\`bash
-curl -X POST https://weplystudio.my.id/api/v1/chat \\
+curl -X POST https://bitoai.my.id/api/v1/chat \\
 -H "Content-Type: application/json" \\
 -H "Authorization: Basic YOUR_BASE64_AUTH_STRING" \\
 -d '{
