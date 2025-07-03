@@ -1,3 +1,4 @@
+
 import { NextResponse } from 'next/server';
 import bcrypt from 'bcryptjs';
 import connectDB from '@/lib/mongodb';
@@ -17,7 +18,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and password are required' }, { status: 400 });
     }
 
-    const user = await User.findOne({ email }).select('+password blocked');
+    const user = await User.findOne({ email }).select('+password blocked isVerified');
 
     if (!user) {
       return NextResponse.json({ error: 'Invalid email or password' }, { status: 401 });
