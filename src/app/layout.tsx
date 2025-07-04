@@ -6,6 +6,7 @@ import { ProjectProvider } from '@/contexts/ProjectProvider';
 import { LanguageProvider } from '@/contexts/LanguageProvider';
 import { AuthProvider } from '@/contexts/AuthProvider';
 import { AuthDialog } from '@/components/auth-dialog';
+import { UiThemeProvider } from '@/contexts/UiThemeProvider';
 
 export const metadata: Metadata = {
   title: 'Bito AI',
@@ -22,24 +23,26 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Nunito:wght@400;600;700&family=VT323&family=Press+Start+2P&family=Orbitron:wght@400;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased bg-muted/30">
+      <body className="antialiased">
         <ThemeProvider
           attribute="class"
           defaultTheme="system"
           enableSystem
           disableTransitionOnChange
         >
-          <LanguageProvider>
-            <AuthProvider>
-              <ProjectProvider>
-                {children}
-                <AuthDialog />
-              </ProjectProvider>
-            </AuthProvider>
-          </LanguageProvider>
-          <Toaster />
+          <UiThemeProvider>
+            <LanguageProvider>
+              <AuthProvider>
+                <ProjectProvider>
+                  {children}
+                  <AuthDialog />
+                </ProjectProvider>
+              </AuthProvider>
+            </LanguageProvider>
+            <Toaster />
+          </UiThemeProvider>
         </ThemeProvider>
       </body>
     </html>

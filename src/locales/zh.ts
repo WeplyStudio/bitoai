@@ -94,6 +94,8 @@ export const zh = {
   aiModeDescription: '为 Bito AI 响应选择个性。',
   language: '语言',
   languageDescription: '为 AI 响应和语音输入选择语言。',
+  theme: '主题',
+  themeDescription: '更改应用程序的外观和感觉。',
   exportData: '导出数据',
   exportDataDescription: '将所有聊天的完整历史记录下载为 JSON 文件。',
   exportAllChats: '导出所有聊天',
@@ -107,6 +109,8 @@ export const zh = {
   aiModeUpdatedTo: 'Bito AI 现在将以{{mode}}模式响应。',
   languageUpdated: '语言已更新',
   languageUpdatedMessage: 'Bito AI 现在将以所选语言响应。',
+  themeUpdated: '主题已更新',
+  themeUpdatedMessage: '应用程序主题已更改为{{theme}}。',
   exportSuccessful: '导出成功',
   exportSuccessfulMessage: '您的所有聊天记录都已下载。',
   error: '错误',
@@ -333,6 +337,12 @@ export const zh = {
   // Settings Page Dropdowns
   selectAiModePlaceholder: '选择模式',
   selectLanguagePlaceholder: '选择语言',
+  selectThemePlaceholder: '选择主题',
+  themeMinimalist: '极简',
+  themeKawaii: '可爱',
+  themeHacker: '黑客',
+  themeRetro: '复古',
+  themeCyberpunk: '赛博朋克',
   lang_id: '印度尼西亚语',
   lang_en: '英语',
   lang_zh: '普通话',
@@ -386,7 +396,7 @@ export const zh = {
   otpVerifiedTitle: '代码已验证',
   enterNewPasswordPrompt: '您的代码正确。请输入您的新密码。',
   verifyOtp: '验证代码',
-
+  
   // Admin
   manageUsersAndCredits: '管理用户及其积分。',
   totalUsers: '总用户数',

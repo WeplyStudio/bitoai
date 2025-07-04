@@ -9,13 +9,14 @@ import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle, Trash2 } from 'lucide-react';
+import { Download, Mail, MessageCircle, Trash2, Palette } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
 import { AchievementsDisplay } from '@/components/settings/achievements-display';
 import { Footer } from '@/components/layout/footer';
+import { useUiTheme } from '@/contexts/UiThemeProvider';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
@@ -25,6 +26,7 @@ export default function SettingsPage() {
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
   const { user, deleteAccount } = useAuth();
+  const { theme: uiTheme, setTheme: setUiTheme } = useUiTheme();
 
   const [isMounted, setIsMounted] = useState(false);
   useEffect(() => {
@@ -53,6 +55,14 @@ export default function SettingsPage() {
     toast({
       title: t('languageUpdated'),
       description: t('languageUpdatedMessage'),
+    });
+  };
+  
+  const handleThemeChange = (value: string) => {
+    setUiTheme(value);
+    toast({
+      title: t('themeUpdated'),
+      description: t('themeUpdatedMessage', { theme: t(`theme${value.charAt(0).toUpperCase() + value.slice(1)}` as any) }),
     });
   };
 
@@ -108,6 +118,26 @@ export default function SettingsPage() {
               <CardDescription>{t('appSettingsDescription')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
+              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+                  <div className="space-y-0.5">
+                    <Label className="flex items-center gap-2"><Palette className="h-4 w-4" />{t('theme')}</Label>
+                    <p className="text-sm text-muted-foreground">
+                      {t('themeDescription')}
+                    </p>
+                  </div>
+                  <Select value={uiTheme} onValueChange={handleThemeChange}>
+                    <SelectTrigger className="w-[180px]">
+                      <SelectValue placeholder={t('selectThemePlaceholder')} />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="minimalist">{t('themeMinimalist')}</SelectItem>
+                      <SelectItem value="kawaii">{t('themeKawaii')}</SelectItem>
+                      <SelectItem value="hacker">{t('themeHacker')}</SelectItem>
+                      <SelectItem value="retro">{t('themeRetro')}</SelectItem>
+                      <SelectItem value="cyberpunk">{t('themeCyberpunk')}</SelectItem>
+                    </SelectContent>
+                  </Select>
+              </div>
               <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <Label htmlFor="ai-mode">{t('aiMode')}</Label>
