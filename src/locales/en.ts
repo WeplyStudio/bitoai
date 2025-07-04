@@ -15,6 +15,7 @@ export const en = {
   adminDashboard: 'Admin Dashboard',
   topUp: 'Top Up',
   apiKey: 'API Key',
+  gacha: 'Gacha',
 
   // Pricing Page
   pricingTitle: 'Plans that fit your scale',
@@ -417,4 +418,26 @@ export const en = {
   confirmAction: 'Confirm Action',
   actionSuccess: 'Action Successful',
   cannotModifySelf: 'You cannot modify your own account.',
+
+  // Gacha Page
+  gachaTitle: 'Gacha Zone',
+  gachaDescription: "Test your luck! Spend credits for a chance to win big.",
+  pullGacha: 'Pull (100 Credits)',
+  pulling: 'Pulling',
+  notEnoughCredits: 'Not enough credits.',
+  gachaError: 'Gacha pull failed. Please try again later.',
+  gachaPrize: 'You won {{amount}} Credits!',
+  congratulations: 'Congratulations',
+  gachaDisclaimer: 'Gacha results are random. Spend wisely.',
+
+  // Theme Unlocking
+  unlockTheme: 'Unlock for {{cost}} Credits',
+  setTheme: 'Set Theme',
+  activeTheme: 'Active',
+  unlock: 'Unlock',
+  unlocked: 'Unlocked',
+  themeUnlocked: 'Theme Unlocked!',
+  themeUnlockedDescription: 'You can now use the {{theme}} theme from the settings.',
+  unlockThemeConfirmationTitle: 'Confirm Unlock',
+  unlockThemeConfirmationDescription: 'Are you sure you want to spend {{cost}} credits to unlock the {{theme}} theme? This action is permanent.',
 };

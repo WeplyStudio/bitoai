@@ -27,13 +27,27 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id username credits role achievements');
+    const user = await User.findById(decoded.id).select('email _id username credits role achievements unlockedThemes');
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    return NextResponse.json({ user: { id: user._id, email: user.email, username: user.username, credits: user.credits ?? 0, role: user.role, achievements: user.achievements || [] } });
+    // Ensure achievements and themes are arrays
+    const achievements = Array.isArray(user.achievements) ? user.achievements : [];
+    const unlockedThemes = Array.isArray(user.unlockedThemes) && user.unlockedThemes.length > 0 ? user.unlockedThemes : ['minimalist'];
+
+    return NextResponse.json({ 
+        user: { 
+            id: user._id, 
+            email: user.email, 
+            username: user.username, 
+            credits: user.credits ?? 0, 
+            role: user.role, 
+            achievements,
+            unlockedThemes,
+        } 
+    });
   } catch (error) {
     // This can happen if the token is invalid or expired
     return NextResponse.json({ user: null }, { status: 200 });

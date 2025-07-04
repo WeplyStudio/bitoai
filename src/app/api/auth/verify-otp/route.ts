@@ -23,7 +23,7 @@ export async function POST(request: Request) {
     }
 
     // Explicitly select all fields needed for patching and the response.
-    const user = await User.findOne({ email }).select('+otp +otpExpires +isVerified username credits role achievements');
+    const user = await User.findOne({ email }).select('+otp +otpExpires +isVerified username credits role achievements unlockedThemes');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -52,6 +52,9 @@ export async function POST(request: Request) {
     }
     if (!Array.isArray(user.achievements)) {
       user.achievements = [];
+    }
+    if (!Array.isArray(user.unlockedThemes) || user.unlockedThemes.length === 0) {
+      user.unlockedThemes = ['minimalist'];
     }
     
     await user.save();
@@ -85,6 +88,7 @@ export async function POST(request: Request) {
       credits: user.credits,
       role: user.role,
       achievements: user.achievements,
+      unlockedThemes: user.unlockedThemes,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);

@@ -13,6 +13,7 @@ interface User {
   credits: number;
   role: 'user' | 'admin';
   achievements: string[];
+  unlockedThemes: string[];
 }
 
 interface AuthContextType {
@@ -158,15 +159,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setUser(prevUser => {
         if (!prevUser) return null;
         
-        // Handle achievement array updates carefully to avoid duplicates
         const newAchievements = updates.achievements 
             ? [...new Set([...(prevUser.achievements || []), ...updates.achievements])]
             : prevUser.achievements;
+        
+        const newUnlockedThemes = updates.unlockedThemes
+            ? [...new Set([...(prevUser.unlockedThemes || []), ...updates.unlockedThemes])]
+            : prevUser.unlockedThemes;
             
         return { 
             ...prevUser, 
             ...updates,
-            achievements: newAchievements
+            achievements: newAchievements,
+            unlockedThemes: newUnlockedThemes,
         };
     });
   }, []);

@@ -6,103 +6,81 @@ import { useLanguage } from '@/contexts/LanguageProvider';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle, Trash2, Palette } from 'lucide-react';
+import { Download, Mail, MessageCircle, Trash2, Palette, Lock, CheckCircle2 } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
 import { AchievementsDisplay } from '@/components/settings/achievements-display';
 import { Footer } from '@/components/layout/footer';
 import { useUiTheme } from '@/contexts/UiThemeProvider';
+import { cn } from '@/lib/utils';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const AI_MODE_KEY = 'bito-ai-mode';
-const CHAT_HISTORIES_KEY = 'bito-ai-chat-histories';
+const THEME_UNLOCK_COST = 150;
+
+const availableThemes = [
+  { id: 'minimalist', nameKey: 'themeMinimalist', isFree: true },
+  { id: 'kawaii', nameKey: 'themeKawaii', isFree: false },
+  { id: 'hacker', nameKey: 'themeHacker', isFree: false },
+  { id: 'retro', nameKey: 'themeRetro', isFree: false },
+  { id: 'cyberpunk', nameKey: 'themeCyberpunk', isFree: false },
+];
 
 export default function SettingsPage() {
-  const [aiMode, setAiMode] = useState('default');
   const { toast } = useToast();
   const { language, setLanguage, t } = useLanguage();
-  const { user, deleteAccount } = useAuth();
-  const { theme: uiTheme, setTheme: setUiTheme } = useUiTheme();
+  const { user, deleteAccount, updateUserInContext } = useAuth();
+  const { theme: activeTheme, setTheme: setActiveTheme } = useUiTheme();
 
+  const [aiMode, setAiMode] = useState('default');
   const [isMounted, setIsMounted] = useState(false);
+  const [themeToUnlock, setThemeToUnlock] = useState<string | null>(null);
+
   useEffect(() => {
     setIsMounted(true);
     const savedMode = localStorage.getItem(AI_MODE_KEY) || 'default';
     setAiMode(savedMode);
   }, []);
 
-
   useEffect(() => {
     if (isMounted) {
       localStorage.setItem(AI_MODE_KEY, aiMode);
     }
   }, [aiMode, isMounted]);
-
-  const handleModeChange = (value: string) => {
-    setAiMode(value);
-    toast({
-      title: t('aiModeUpdated'),
-      description: t('aiModeUpdatedTo', { mode: value }),
-    });
-  };
-
-  const handleLanguageChange = (value: string) => {
-    setLanguage(value as any);
-    toast({
-      title: t('languageUpdated'),
-      description: t('languageUpdatedMessage'),
-    });
-  };
   
-  const handleThemeChange = (value: string) => {
-    setUiTheme(value);
-    toast({
-      title: t('themeUpdated'),
-      description: t('themeUpdatedMessage', { theme: t(`theme${value.charAt(0).toUpperCase() + value.slice(1)}` as any) }),
-    });
-  };
+  const handleUnlockTheme = async () => {
+    if (!themeToUnlock || !user) return;
 
-  const handleExportChat = () => {
     try {
-      const allChatHistories = localStorage.getItem(CHAT_HISTORIES_KEY);
-      if (!allChatHistories || allChatHistories === '{}') {
-        toast({
-          variant: 'destructive',
-          title: t('error'),
-          description: t('errorNoChatHistoryToExport'),
+        const response = await fetch('/api/user/unlock-theme', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ themeName: themeToUnlock })
         });
-        return;
-      }
-
-      const blob = new Blob([allChatHistories], { type: 'application/json' });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = 'bito-ai-all-chats.json';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url);
-      
-      toast({
-        title: t('exportSuccessful'),
-        description: t('exportSuccessfulMessage'),
-      });
-
-    } catch (error) {
-      console.error('Failed to export chat history:', error);
-      toast({
-        variant: 'destructive',
-        title: 'Error',
-        description: 'Could not export your chat history.',
-      });
+        const data = await response.json();
+        if (!response.ok) {
+            throw new Error(data.error || 'Failed to unlock theme.');
+        }
+        updateUserInContext({ 
+            unlockedThemes: data.unlockedThemes, 
+            credits: data.newBalance 
+        });
+        toast({
+            title: t('themeUnlocked'),
+            description: t('themeUnlockedDescription', { theme: t(availableThemes.find(th => th.id === themeToUnlock)?.nameKey as any) })
+        });
+    } catch(error: any) {
+        toast({ variant: 'destructive', title: t('error'), description: error.message });
+    } finally {
+        setThemeToUnlock(null);
     }
   };
 
+  if (!isMounted) return null;
 
   return (
     <>
@@ -118,48 +96,39 @@ export default function SettingsPage() {
               <CardDescription>{t('appSettingsDescription')}</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
+              <div className="space-y-2 rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <Label className="flex items-center gap-2"><Palette className="h-4 w-4" />{t('theme')}</Label>
                     <p className="text-sm text-muted-foreground">
                       {t('themeDescription')}
                     </p>
                   </div>
-                  <Select value={uiTheme} onValueChange={handleThemeChange}>
-                    <SelectTrigger className="w-[180px]">
-                      <SelectValue placeholder={t('selectThemePlaceholder')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="minimalist">{t('themeMinimalist')}</SelectItem>
-                      <SelectItem value="kawaii">{t('themeKawaii')}</SelectItem>
-                      <SelectItem value="hacker">{t('themeHacker')}</SelectItem>
-                      <SelectItem value="retro">{t('themeRetro')}</SelectItem>
-                      <SelectItem value="cyberpunk">{t('themeCyberpunk')}</SelectItem>
-                    </SelectContent>
-                  </Select>
-              </div>
-              <div className="flex flex-row items-center justify-between rounded-lg border p-4">
-                  <div className="space-y-0.5">
-                    <Label htmlFor="ai-mode">{t('aiMode')}</Label>
-                    <p className="text-sm text-muted-foreground">
-                      {t('aiModeDescription')}
-                    </p>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                    {availableThemes.map(theme => {
+                        const isUnlocked = user?.unlockedThemes.includes(theme.id);
+                        const isActive = activeTheme === theme.id;
+                        return (
+                            <Card key={theme.id} className={cn("flex flex-col justify-between", isActive && "border-2 border-primary")}>
+                                <CardHeader className="p-4">
+                                    <CardTitle className="text-base">{t(theme.nameKey as any)}</CardTitle>
+                                </CardHeader>
+                                <CardFooter className="p-4">
+                                    {isUnlocked ? (
+                                        <Button className="w-full" variant={isActive ? "default" : "secondary"} onClick={() => setActiveTheme(theme.id as any)} disabled={isActive}>
+                                            {isActive ? <><CheckCircle2 className="mr-2 h-4 w-4" />{t('activeTheme')}</> : t('setTheme')}
+                                        </Button>
+                                    ) : (
+                                        <Button className="w-full" variant="outline" onClick={() => setThemeToUnlock(theme.id)} disabled={(user?.credits ?? 0) < THEME_UNLOCK_COST}>
+                                            <Lock className="mr-2 h-4 w-4" /> {t('unlockTheme', { cost: THEME_UNLOCK_COST })}
+                                        </Button>
+                                    )}
+                                </CardFooter>
+                            </Card>
+                        )
+                    })}
                   </div>
-                  <Select value={aiMode} onValueChange={handleModeChange}>
-                    <SelectTrigger id="ai-mode" className="w-[180px]">
-                      <SelectValue placeholder={t('selectAiModePlaceholder')} />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="default">{t('faqAiModeDefaultTitle')}</SelectItem>
-                      <SelectItem value="creative">{t('faqAiModeCreativeTitle')}</SelectItem>
-                      <SelectItem value="professional">{t('faqAiModeProfessionalTitle')}</SelectItem>
-                      <SelectItem value="storyteller">{t('faqAiModeStorytellerProTitle')}</SelectItem>
-                      <SelectItem value="sarcastic">{t('faqAiModeSarcasticProTitle')}</SelectItem>
-                      <SelectItem value="technical">{t('faqAiModeTechnicalProTitle')}</SelectItem>
-                      <SelectItem value="philosopher">{t('faqAiModePhilosopherProTitle')}</SelectItem>
-                    </SelectContent>
-                  </Select>
               </div>
+
               <div className="flex flex-row items-center justify-between rounded-lg border p-4">
                   <div className="space-y-0.5">
                     <Label htmlFor="language">{t('language')}</Label>
@@ -167,7 +136,7 @@ export default function SettingsPage() {
                       {t('languageDescription')}
                     </p>
                   </div>
-                  <Select value={language} onValueChange={handleLanguageChange}>
+                  <Select value={language} onValueChange={(value) => setLanguage(value as any)}>
                     <SelectTrigger id="language" className="w-[180px]">
                       <SelectValue placeholder={t('selectLanguagePlaceholder')} />
                     </SelectTrigger>
@@ -178,18 +147,6 @@ export default function SettingsPage() {
                       <SelectItem value="ja">{t('lang_ja')}</SelectItem>
                     </SelectContent>
                   </Select>
-              </div>
-              <div className="flex flex-col items-start gap-3 rounded-lg border p-4">
-                <div className="space-y-0.5">
-                  <Label>{t('exportData')}</Label>
-                  <p className="text-sm text-muted-foreground">
-                    {t('exportDataDescription')}
-                  </p>
-                </div>
-                <Button variant="outline" onClick={handleExportChat}>
-                  <Download className="mr-2 h-4 w-4" />
-                  {t('exportAllChats')}
-                </Button>
               </div>
             </CardContent>
           </Card>
@@ -204,54 +161,10 @@ export default function SettingsPage() {
                   <CardContent className="space-y-4">
                       <UsernameForm />
                       <ChangePasswordForm />
-                      <div className="flex flex-col items-start gap-3 rounded-lg border border-destructive/50 bg-destructive/5 p-4">
-                          <div className="space-y-0.5">
-                              <Label className="text-destructive">{t('deleteAccount')}</Label>
-                              <p className="text-sm text-destructive/80">
-                                  {t('deleteAccountDescription')}
-                              </p>
-                          </div>
-                          <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                  <Button variant="destructive">
-                                      <Trash2 className="mr-2 h-4 w-4" />
-                                      {t('deleteAccount')}
-                                  </Button>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                      <AlertDialogTitle>{t('deleteAccountConfirmationTitle')}</AlertDialogTitle>
-                                      <AlertDialogDescription>
-                                          {t('deleteAccountConfirmationMessage')}
-                                      </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                      <AlertDialogCancel>{t('cancel')}</AlertDialogCancel>
-                                      <AlertDialogAction className="bg-destructive hover:bg-destructive/90" onClick={() => deleteAccount()}>
-                                          {t('delete')}
-                                      </AlertDialogAction>
-                                  </AlertDialogFooter>
-                              </AlertDialogContent>
-                          </AlertDialog>
-                      </div>
                   </CardContent>
               </Card>
 
               <AchievementsDisplay />
-              
-              <Card>
-                <CardHeader>
-                    <CardTitle>{t('getMoreCredits')}</CardTitle>
-                    <CardDescription>{t('getMoreCreditsDescription')}</CardDescription>
-                </CardHeader>
-                <CardContent>
-                    <Button asChild>
-                        <a href="https://wa.me/6285868055463" target="_blank" rel="noopener noreferrer">
-                            <MessageCircle className="mr-2 h-4 w-4" /> {t('whatsapp')}
-                        </a>
-                    </Button>
-                </CardContent>
-              </Card>
             </div>
           )}
 
@@ -268,71 +181,44 @@ export default function SettingsPage() {
                 <Accordion type="single" collapsible className="w-full">
                 <AccordionItem value="item-1">
                     <AccordionTrigger>{t('faqBitoTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqBitoContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqBitoContent')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-api">
                     <AccordionTrigger>{t('faqApiUsageTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqApiUsageContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqApiUsageContent')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-8">
                     <AccordionTrigger>{t('faqAchievementsTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqAchievementsContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqAchievementsContent')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-9">
                     <AccordionTrigger>{t('faqCreditsTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqCreditsContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqCreditsContent')}</AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-2">
                     <AccordionTrigger>{t('faqVoiceTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqVoiceContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqVoiceContent')}</AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-7">
                     <AccordionTrigger>{t('faqLanguageTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqLanguageContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqLanguageContent')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-3">
                     <AccordionTrigger>{t('faqTemplatesTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqTemplatesContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqTemplatesContent')}</AccordionContent>
                 </AccordionItem>
                 <AccordionItem value="item-4">
                     <AccordionTrigger>{t('faqPrivacyTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqPrivacyContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqPrivacyContent')}</AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-5">
                     <AccordionTrigger>{t('faqImageTitle')}</AccordionTrigger>
-                    <AccordionContent>
-                    {t('faqImageContent')}
-                    </AccordionContent>
+                    <AccordionContent>{t('faqImageContent')}</AccordionContent>
                 </AccordionItem>
                  <AccordionItem value="item-6">
                     <AccordionTrigger>{t('faqAiModesTitle')}</AccordionTrigger>
                     <AccordionContent>
-                    <p className="mb-2">{t('faqAiModesContent')}</p>
-                    <ul className="list-disc pl-5 mt-2 space-y-2">
-                        <li><b>{t('faqAiModeDefaultTitle')}:</b> {t('faqAiModeDefaultContent')}</li>
-                        <li><b>{t('faqAiModeCreativeTitle')}:</b> {t('faqAiModeCreativeContent')}</li>
-                        <li><b>{t('faqAiModeProfessionalTitle')}:</b> {t('faqAiModeProfessionalContent')}</li>
-                        <li><b>{t('faqAiModeStorytellerProTitle')}:</b> {t('faqAiModeStorytellerContent')}</li>
-                        <li><b>{t('faqAiModeSarcasticProTitle')}:</b> {t('faqAiModeSarcasticContent')}</li>
-                        <li><b>{t('faqAiModeTechnicalProTitle')}:</b> {t('faqAiModeTechnicalContent')}</li>
-                        <li><b>{t('faqAiModePhilosopherProTitle')}:</b> {t('faqAiModePhilosopherContent')}</li>
-                    </ul>
+                        <p className="mb-2">{t('faqAiModesContent')}</p>
                     </AccordionContent>
                 </AccordionItem>
                 </Accordion>
@@ -357,6 +243,27 @@ export default function SettingsPage() {
       </div>
     </div>
     <Footer />
+    
+    <AlertDialog open={!!themeToUnlock} onOpenChange={(isOpen) => !isOpen && setThemeToUnlock(null)}>
+        <AlertDialogContent>
+            <AlertDialogHeader>
+                <AlertDialogTitle>{t('unlockThemeConfirmationTitle')}</AlertDialogTitle>
+                <AlertDialogDescription>
+                    {t('unlockThemeConfirmationDescription', { 
+                        cost: THEME_UNLOCK_COST, 
+                        theme: t(availableThemes.find(th => th.id === themeToUnlock)?.nameKey as any || '') 
+                    })}
+                </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+                <AlertDialogCancel onClick={() => setThemeToUnlock(null)}>{t('cancel')}</AlertDialogCancel>
+                <AlertDialogAction onClick={handleUnlockTheme}>
+                    {t('unlock')}
+                </AlertDialogAction>
+            </AlertDialogFooter>
+        </AlertDialogContent>
+    </AlertDialog>
+
     </>
   );
 }

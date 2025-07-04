@@ -15,6 +15,7 @@ export interface IUser extends Document {
   role: 'user' | 'admin';
   blocked: boolean;
   achievements: string[];
+  unlockedThemes: string[];
   apiRequestCount: number;
   createdAt: Date;
 }
@@ -79,6 +80,10 @@ const UserSchema: Schema = new Schema({
   achievements: {
     type: [String],
     default: [],
+  },
+  unlockedThemes: {
+    type: [String],
+    default: ['minimalist'],
   },
   apiRequestCount: {
     type: Number,

@@ -15,6 +15,7 @@ export const zh = {
   adminDashboard: '管理员仪表盘',
   topUp: '充值',
   apiKey: 'API 密钥',
+  gacha: '扭蛋',
 
   // Pricing Page
   pricingTitle: '适合您规模的计划',
@@ -417,4 +418,26 @@ export const zh = {
   confirmAction: '确认操作',
   actionSuccess: '操作成功',
   cannotModifySelf: '您不能修改自己的账户。',
+  
+  // Gacha Page
+  gachaTitle: '扭蛋区',
+  gachaDescription: '测试您的运气！花费积分，有机会赢取大奖。',
+  pullGacha: '抽奖（100积分）',
+  pulling: '抽奖中',
+  notEnoughCredits: '积分不足。',
+  gachaError: '抽奖失败。请稍后再试。',
+  gachaPrize: '您赢得了 {{amount}} 积分！',
+  congratulations: '恭喜',
+  gachaDisclaimer: '扭蛋结果是随机的。请明智消费。',
+
+  // Theme Unlocking
+  unlockTheme: '解锁（{{cost}}积分）',
+  setTheme: '设置主题',
+  activeTheme: '当前主题',
+  unlock: '解锁',
+  unlocked: '已解锁',
+  themeUnlocked: '主题已解锁！',
+  themeUnlockedDescription: '您现在可以从设置中使用{{theme}}主题。',
+  unlockThemeConfirmationTitle: '确认解锁',
+  unlockThemeConfirmationDescription: '您确定要花费{{cost}}积分来解锁{{theme}}主题吗？此操作是永久性的。',
 };

@@ -15,6 +15,7 @@ export const ja = {
   adminDashboard: '管理者ダッシュボード',
   topUp: 'チャージ',
   apiKey: 'APIキー',
+  gacha: 'ガチャ',
 
   // Pricing Page
   pricingTitle: 'あなたの規模に合わせたプラン',
@@ -417,4 +418,26 @@ export const ja = {
   confirmAction: 'アクションを確認',
   actionSuccess: 'アクション成功',
   cannotModifySelf: '自分のアカウントは変更できません。',
+
+  // Gacha Page
+  gachaTitle: 'ガチャゾーン',
+  gachaDescription: '運試し！クレジットを使って大当たりを狙おう。',
+  pullGacha: '引く（100クレジット）',
+  pulling: '抽選中',
+  notEnoughCredits: 'クレジットが不足しています。',
+  gachaError: 'ガチャに失敗しました。後でもう一度お試しください。',
+  gachaPrize: '{{amount}}クレジットを獲得しました！',
+  congratulations: 'おめでとうございます',
+  gachaDisclaimer: 'ガチャの結果はランダムです。賢く使いましょう。',
+
+  // Theme Unlocking
+  unlockTheme: '解除（{{cost}}クレジット）',
+  setTheme: 'テーマを設定',
+  activeTheme: '有効',
+  unlock: '解除',
+  unlocked: '解除済み',
+  themeUnlocked: 'テーマが解除されました！',
+  themeUnlockedDescription: '設定から{{theme}}テーマを使用できるようになりました。',
+  unlockThemeConfirmationTitle: '解除の確認',
+  unlockThemeConfirmationDescription: '{{cost}}クレジットを使用して{{theme}}テーマを解除しますか？この操作は永続的です。',
 };

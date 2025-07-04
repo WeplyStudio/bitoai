@@ -15,6 +15,7 @@ export const id = {
   adminDashboard: 'Dasbor Admin',
   topUp: 'Isi Ulang',
   apiKey: 'Kunci API',
+  gacha: 'Gacha',
 
   // Pricing Page
   pricingTitle: 'Paket yang Sesuai dengan Skala Anda',
@@ -417,4 +418,26 @@ export const id = {
   confirmAction: 'Konfirmasi Tindakan',
   actionSuccess: 'Tindakan Berhasil',
   cannotModifySelf: 'Anda tidak dapat mengubah akun Anda sendiri.',
+
+  // Gacha Page
+  gachaTitle: 'Zona Gacha',
+  gachaDescription: "Uji keberuntunganmu! Habiskan kredit untuk kesempatan memenangkan hadiah besar.",
+  pullGacha: 'Tarik (100 Kredit)',
+  pulling: 'Menarik',
+  notEnoughCredits: 'Kredit tidak cukup.',
+  gachaError: 'Gagal menarik gacha. Silakan coba lagi nanti.',
+  gachaPrize: 'Anda memenangkan {{amount}} Kredit!',
+  congratulations: 'Selamat',
+  gachaDisclaimer: 'Hasil gacha acak. Gunakan dengan bijak.',
+
+  // Theme Unlocking
+  unlockTheme: 'Buka ({{cost}} Kredit)',
+  setTheme: 'Atur Tema',
+  activeTheme: 'Aktif',
+  unlock: 'Buka',
+  unlocked: 'Terbuka',
+  themeUnlocked: 'Tema Terbuka!',
+  themeUnlockedDescription: 'Anda sekarang dapat menggunakan tema {{theme}} dari pengaturan.',
+  unlockThemeConfirmationTitle: 'Konfirmasi Pembukaan Tema',
+  unlockThemeConfirmationDescription: 'Apakah Anda yakin ingin menghabiskan {{cost}} kredit untuk membuka tema {{theme}}? Tindakan ini permanen.',
 };
