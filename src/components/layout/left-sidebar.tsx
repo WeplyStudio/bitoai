@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, Coins, Shield } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, CreditCard, Shield } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
@@ -114,7 +114,7 @@ export const LeftSidebarContent = () => {
                     )}
                     <NavItem icon={Folder} text={t('chats')} href="/projects" />
                     <NavItem icon={FileText} text={t('templates')} href="/templates" />
-                    <NavItem icon={Coins} text={t('topUp')} href="/pricing" />
+                    <NavItem icon={CreditCard} text={t('topUp')} href="/pricing" />
                 </div>
                 
                 <div className="space-y-2 p-2 border-t">
@@ -128,7 +128,7 @@ export const LeftSidebarContent = () => {
                             <span className="font-medium text-foreground truncate" title={user.username}>{user.username}</span>
                             <div className="flex items-center gap-2">
                                 <div className="flex items-center gap-1 font-semibold text-amber-500" title={`${user.credits} ${t('creditsRemaining')}`}>
-                                    <Coins className="h-4 w-4" />
+                                    <CreditCard className="h-4 w-4" />
                                     {user.credits}
                                 </div>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
