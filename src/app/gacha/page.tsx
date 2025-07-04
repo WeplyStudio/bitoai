@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Gift, CreditCard, Loader2 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from '@/components/ui/alert-dialog';
+import { cn } from '@/lib/utils';
 
 const GACHA_COST = 100;
 
@@ -18,16 +19,19 @@ export default function GachaPage() {
     const { toast } = useToast();
 
     const [isGachaing, setIsGachaing] = useState(false);
+    const [isSpinning, setIsSpinning] = useState(false);
     const [lastPrize, setLastPrize] = useState<number | null>(null);
     const [isResultOpen, setIsResultOpen] = useState(false);
 
     const handleGachaPull = async () => {
-        if (!user || user.credits < GACHA_COST) {
-            toast({
-                variant: 'destructive',
-                title: t('error'),
-                description: t('notEnoughCredits')
-            });
+        if (!user || user.credits < GACHA_COST || isGachaing) {
+            if (!isGachaing) {
+                toast({
+                    variant: 'destructive',
+                    title: t('error'),
+                    description: t('notEnoughCredits')
+                });
+            }
             return;
         }
 
@@ -43,17 +47,22 @@ export default function GachaPage() {
                 throw new Error(data.error || t('gachaError'));
             }
 
-            updateUserInContext({ credits: data.newBalance });
+            setIsSpinning(true);
             setLastPrize(data.prize);
-            setIsResultOpen(true);
             
+            setTimeout(() => {
+                updateUserInContext({ credits: data.newBalance });
+                setIsSpinning(false);
+                setIsResultOpen(true);
+                setIsGachaing(false);
+            }, 2500); // 2.5 seconds spin animation
+
         } catch (error: any) {
             toast({
                 variant: 'destructive',
                 title: t('error'),
                 description: error.message
             });
-        } finally {
             setIsGachaing(false);
         }
     };
@@ -67,10 +76,10 @@ export default function GachaPage() {
                         <p className="mt-4 text-lg text-muted-foreground">{t('gachaDescription')}</p>
                     </div>
 
-                    <Card className="shadow-lg">
+                    <Card className={cn("shadow-lg transition-all", isSpinning && 'animate-gacha-flash ring-4 ring-primary/50')}>
                         <CardHeader>
                             <div className="mx-auto bg-primary/10 p-4 rounded-full">
-                                <Gift className="h-12 w-12 text-primary" />
+                                <Gift className={cn("h-12 w-12 text-primary transition-transform", isSpinning && 'animate-gacha-spin')} />
                             </div>
                         </CardHeader>
                         <CardContent className="space-y-4">
@@ -82,12 +91,12 @@ export default function GachaPage() {
                                 size="lg"
                                 className="w-full text-lg py-6"
                                 onClick={handleGachaPull}
-                                disabled={isAuthLoading || isGachaing || (user?.credits ?? 0) < GACHA_COST}
+                                disabled={isAuthLoading || isGachaing}
                             >
                                 {isGachaing ? (
                                     <>
                                         <Loader2 className="mr-2 h-5 w-5 animate-spin" />
-                                        {t('pulling')}...
+                                        {isSpinning ? t('spinning') : t('pulling')}
                                     </>
                                 ) : (
                                     t('pullGacha')

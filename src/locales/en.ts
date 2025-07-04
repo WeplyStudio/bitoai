@@ -424,6 +424,7 @@ export const en = {
   gachaDescription: "Test your luck! Spend credits for a chance to win big.",
   pullGacha: 'Pull (100 Credits)',
   pulling: 'Pulling',
+  spinning: 'Spinning...',
   notEnoughCredits: 'Not enough credits.',
   gachaError: 'Gacha pull failed. Please try again later.',
   gachaPrize: 'You won {{amount}} Credits!',

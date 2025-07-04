@@ -424,6 +424,7 @@ export const zh = {
   gachaDescription: '测试您的运气！花费积分，有机会赢取大奖。',
   pullGacha: '抽奖（100积分）',
   pulling: '抽奖中',
+  spinning: '旋转中...',
   notEnoughCredits: '积分不足。',
   gachaError: '抽奖失败。请稍后再试。',
   gachaPrize: '您赢得了 {{amount}} 积分！',

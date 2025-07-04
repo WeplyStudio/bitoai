@@ -424,6 +424,7 @@ export const id = {
   gachaDescription: "Uji keberuntunganmu! Habiskan kredit untuk kesempatan memenangkan hadiah besar.",
   pullGacha: 'Tarik (100 Kredit)',
   pulling: 'Menarik',
+  spinning: 'Memutar...',
   notEnoughCredits: 'Kredit tidak cukup.',
   gachaError: 'Gagal menarik gacha. Silakan coba lagi nanti.',
   gachaPrize: 'Anda memenangkan {{amount}} Kredit!',

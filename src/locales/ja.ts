@@ -424,6 +424,7 @@ export const ja = {
   gachaDescription: '運試し！クレジットを使って大当たりを狙おう。',
   pullGacha: '引く（100クレジット）',
   pulling: '抽選中',
+  spinning: '回転中...',
   notEnoughCredits: 'クレジットが不足しています。',
   gachaError: 'ガチャに失敗しました。後でもう一度お試しください。',
   gachaPrize: '{{amount}}クレジットを獲得しました！',

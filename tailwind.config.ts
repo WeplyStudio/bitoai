@@ -105,11 +105,19 @@ export default {
           '0%, 100%': { transform: 'scaleY(0.2)' },
           '50%': { transform: 'scaleY(1)' },
         },
+        'gacha-spin': {
+          '100%': { transform: 'rotate(360deg)' },
+        },
+        'gacha-flash': {
+            '50%': { 'box-shadow': '0 0 20px 10px hsl(var(--primary) / 0.5)' },
+        },
       },
       animation: {
         'accordion-down': 'accordion-down 0.2s ease-out',
         'accordion-up': 'accordion-up 0.2s ease-out',
         'wave': 'wave 1.2s linear infinite',
+        'gacha-spin': 'gacha-spin 0.4s linear infinite',
+        'gacha-flash': 'gacha-flash 0.8s ease-in-out infinite',
       },
     },
   },
