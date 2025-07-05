@@ -1,3 +1,4 @@
+
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -161,33 +162,32 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   const updateUserInContext = useCallback((updates: Partial<User>) => {
     setUser(prevUser => {
-        // If there is no previous user, we cannot perform an update.
-        if (!prevUser) {
-            return null;
-        }
+      // THE ABSOLUTE MOST IMPORTANT GUARD: If no user is logged in, do nothing.
+      if (!prevUser) {
+        return null;
+      }
 
-        // Create a new state object from the previous state and apply updates.
-        const newUserState = { ...prevUser, ...updates };
+      // Create a new user object by merging the old state and the new updates.
+      // This is safe because we've already confirmed prevUser is not null.
+      const newUser = { ...prevUser, ...updates };
 
-        // Safely merge achievements array.
-        if (updates.achievements) {
-            // Ensure both old and new achievements are arrays before spreading.
-            const oldAchievements = Array.isArray(prevUser.achievements) ? prevUser.achievements : [];
-            const newAchievements = Array.isArray(updates.achievements) ? updates.achievements : [];
-            const combinedAchievements = new Set([...oldAchievements, ...newAchievements]);
-            newUserState.achievements = Array.from(combinedAchievements);
-        }
+      // The spread operator above overwrites arrays. We need to merge them manually.
+      // We check if the 'achievements' key exists in the updates object.
+      if (updates.achievements) {
+        // We use Set to automatically handle duplicates.
+        newUser.achievements = Array.from(
+          new Set([...(prevUser.achievements || []), ...updates.achievements])
+        );
+      }
 
-        // Safely merge unlockedThemes array.
-        if (updates.unlockedThemes) {
-            // Ensure both old and new themes are arrays before spreading.
-            const oldThemes = Array.isArray(prevUser.unlockedThemes) ? prevUser.unlockedThemes : [];
-            const newThemes = Array.isArray(updates.unlockedThemes) ? updates.unlockedThemes : [];
-            const combinedThemes = new Set([...oldThemes, ...newThemes]);
-            newUserState.unlockedThemes = Array.from(combinedThemes);
-        }
+      // We do the same for unlocked themes.
+      if (updates.unlockedThemes) {
+        newUser.unlockedThemes = Array.from(
+          new Set([...(prevUser.unlockedThemes || []), ...updates.unlockedThemes])
+        );
+      }
 
-        return newUserState;
+      return newUser;
     });
   }, []);
 
