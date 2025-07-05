@@ -27,13 +27,15 @@ export async function GET() {
     }
 
     await connectDB();
-    const user = await User.findById(decoded.id).select('email _id username credits role achievements unlockedThemes');
+    const user = await User.findById(decoded.id).select(
+        'email _id username credits role achievements unlockedThemes level exp nextLevelExp coins'
+    );
 
     if (!user) {
         return NextResponse.json({ user: null }, { status: 200 });
     }
 
-    // Ensure achievements and themes are arrays
+    // Ensure arrays are always arrays
     const achievements = Array.isArray(user.achievements) ? user.achievements : [];
     const unlockedThemes = Array.isArray(user.unlockedThemes) && user.unlockedThemes.length > 0 ? user.unlockedThemes : ['minimalist'];
 
@@ -46,6 +48,10 @@ export async function GET() {
             role: user.role, 
             achievements,
             unlockedThemes,
+            level: user.level ?? 1,
+            exp: user.exp ?? 0,
+            nextLevelExp: user.nextLevelExp ?? 50,
+            coins: user.coins ?? 0,
         } 
     });
   } catch (error) {

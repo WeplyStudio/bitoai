@@ -16,6 +16,20 @@ export const en = {
   topUp: 'Top Up',
   apiKey: 'API Key',
   gacha: 'Gacha',
+  exp: 'EXP & Coins',
+
+  // EXP Page
+  expTitle: 'EXP & Coins Center',
+  expDescription: 'Level up and collect coins by interacting with Bito AI.',
+  gachaTitle: 'Gacha Zone',
+  gachaExpDescription: 'Exchange your coins for a chance to win extra EXP or coin prizes!',
+  pullGacha: 'Pull ({{cost}} Coins)',
+  gachaDisclaimer: 'Gacha results are random. Spend wisely.',
+  spinning: 'Spinning...',
+  pulling: 'Pulling',
+  notEnoughCredits: 'Not enough coins.',
+  gachaError: 'Gacha pull failed. Please try again later.',
+  congratulations: 'Congratulations!',
 
   // Pricing Page
   pricingTitle: 'Plans that fit your scale',
@@ -420,19 +434,10 @@ export const en = {
   cannotModifySelf: 'You cannot modify your own account.',
 
   // Gacha Page
-  gachaTitle: 'Gacha Zone',
-  gachaDescription: "Test your luck! Spend credits for a chance to win big.",
-  pullGacha: 'Pull ({{cost}} Credits)',
-  pulling: 'Pulling',
-  spinning: 'Spinning...',
-  notEnoughCredits: 'Not enough credits.',
-  gachaError: 'Gacha pull failed. Please try again later.',
   gachaPrize: 'You won {{amount}} Credits!',
-  congratulations: 'Congratulations',
-  gachaDisclaimer: 'Gacha results are random. Spend wisely.',
 
   // Theme Unlocking
-  unlockTheme: 'Unlock for {{cost}} Credits',
+  unlockTheme: 'Unlock for {{cost}} Coins',
   setTheme: 'Set Theme',
   activeTheme: 'Active',
   unlock: 'Unlock',
@@ -440,5 +445,5 @@ export const en = {
   themeUnlocked: 'Theme Unlocked!',
   themeUnlockedDescription: 'You can now use the {{theme}} theme from the settings.',
   unlockThemeConfirmationTitle: 'Confirm Unlock',
-  unlockThemeConfirmationDescription: 'Are you sure you want to spend {{cost}} credits to unlock the {{theme}} theme? This action is permanent.',
+  unlockThemeConfirmationDescription: 'Are you sure you want to spend {{cost}} coins to unlock the {{theme}} theme? This action is permanent.',
 };

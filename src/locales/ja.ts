@@ -16,6 +16,20 @@ export const ja = {
   topUp: 'チャージ',
   apiKey: 'APIキー',
   gacha: 'ガチャ',
+  exp: '経験値とコイン',
+
+  // EXP Page
+  expTitle: '経験値＆コインセンター',
+  expDescription: 'Bito AIと対話してレベルアップし、コインを集めましょう。',
+  gachaTitle: 'ガチャゾーン',
+  gachaExpDescription: 'コインを交換して、追加の経験値やコインの賞品を獲得するチャンス！',
+  pullGacha: '引く ({{cost}} コイン)',
+  gachaDisclaimer: 'ガチャの結果はランダムです。賢く使いましょう。',
+  spinning: '回転中...',
+  pulling: '抽選中',
+  notEnoughCredits: 'コインが不足しています。',
+  gachaError: 'ガチャに失敗しました。後でもう一度お試しください。',
+  congratulations: 'おめでとうございます！',
 
   // Pricing Page
   pricingTitle: 'あなたの規模に合わせたプラン',
@@ -420,19 +434,10 @@ export const ja = {
   cannotModifySelf: '自分のアカウントは変更できません。',
 
   // Gacha Page
-  gachaTitle: 'ガチャゾーン',
-  gachaDescription: '運試し！クレジットを使って大当たりを狙おう。',
-  pullGacha: '引く（{{cost}}クレジット）',
-  pulling: '抽選中',
-  spinning: '回転中...',
-  notEnoughCredits: 'クレジットが不足しています。',
-  gachaError: 'ガチャに失敗しました。後でもう一度お試しください。',
   gachaPrize: '{{amount}}クレジットを獲得しました！',
-  congratulations: 'おめでとうございます',
-  gachaDisclaimer: 'ガチャの結果はランダムです。賢く使いましょう。',
 
   // Theme Unlocking
-  unlockTheme: '解除（{{cost}}クレジット）',
+  unlockTheme: '解除（{{cost}} コイン）',
   setTheme: 'テーマを設定',
   activeTheme: '有効',
   unlock: '解除',
@@ -440,5 +445,5 @@ export const ja = {
   themeUnlocked: 'テーマが解除されました！',
   themeUnlockedDescription: '設定から{{theme}}テーマを使用できるようになりました。',
   unlockThemeConfirmationTitle: '解除の確認',
-  unlockThemeConfirmationDescription: '{{cost}}クレジットを使用して{{theme}}テーマを解除しますか？この操作は永続的です。',
+  unlockThemeConfirmationDescription: '{{cost}}コインを使用して{{theme}}テーマを解除しますか？この操作は永続的です。',
 };

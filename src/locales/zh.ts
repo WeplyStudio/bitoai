@@ -16,6 +16,20 @@ export const zh = {
   topUp: '充值',
   apiKey: 'API 密钥',
   gacha: '扭蛋',
+  exp: '经验与金币',
+
+  // EXP Page
+  expTitle: '经验与金币中心',
+  expDescription: '通过与 Bito AI 互动来升级并收集金币。',
+  gachaTitle: '扭蛋区',
+  gachaExpDescription: '用您的金币换取赢得额外经验或金币奖励的机会！',
+  pullGacha: '抽奖（{{cost}} 金币）',
+  gachaDisclaimer: '扭蛋结果是随机的。请明智消费。',
+  spinning: '旋转中...',
+  pulling: '抽奖中',
+  notEnoughCredits: '金币不足。',
+  gachaError: '抽奖失败。请稍后再试。',
+  congratulations: '恭喜！',
 
   // Pricing Page
   pricingTitle: '适合您规模的计划',
@@ -420,19 +434,10 @@ export const zh = {
   cannotModifySelf: '您不能修改自己的账户。',
   
   // Gacha Page
-  gachaTitle: '扭蛋区',
-  gachaDescription: '测试您的运气！花费积分，有机会赢取大奖。',
-  pullGacha: '抽奖（{{cost}}积分）',
-  pulling: '抽奖中',
-  spinning: '旋转中...',
-  notEnoughCredits: '积分不足。',
-  gachaError: '抽奖失败。请稍后再试。',
   gachaPrize: '您赢得了 {{amount}} 积分！',
-  congratulations: '恭喜',
-  gachaDisclaimer: '扭蛋结果是随机的。请明智消费。',
 
   // Theme Unlocking
-  unlockTheme: '解锁（{{cost}}积分）',
+  unlockTheme: '解锁（{{cost}} 金币）',
   setTheme: '设置主题',
   activeTheme: '当前主题',
   unlock: '解锁',
@@ -440,5 +445,5 @@ export const zh = {
   themeUnlocked: '主题已解锁！',
   themeUnlockedDescription: '您现在可以从设置中使用{{theme}}主题。',
   unlockThemeConfirmationTitle: '确认解锁',
-  unlockThemeConfirmationDescription: '您确定要花费{{cost}}积分来解锁{{theme}}主题吗？此操作是永久性的。',
+  unlockThemeConfirmationDescription: '您确定要花费{{cost}}金币来解锁{{theme}}主题吗？此操作是永久性的。',
 };

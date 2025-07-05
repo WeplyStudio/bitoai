@@ -16,6 +16,20 @@ export const id = {
   topUp: 'Isi Ulang',
   apiKey: 'Kunci API',
   gacha: 'Gacha',
+  exp: 'EXP & Koin',
+
+  // EXP Page
+  expTitle: 'Pusat EXP & Koin',
+  expDescription: 'Naikkan level dan kumpulkan koin dengan berinteraksi bersama Bito AI.',
+  gachaTitle: 'Zona Gacha',
+  gachaExpDescription: 'Tukarkan koinmu untuk kesempatan memenangkan hadiah EXP atau koin tambahan!',
+  pullGacha: 'Tarik ({{cost}} Koin)',
+  gachaDisclaimer: 'Hasil gacha acak. Gunakan dengan bijak.',
+  spinning: 'Memutar...',
+  pulling: 'Menarik',
+  notEnoughCredits: 'Koin tidak cukup.',
+  gachaError: 'Gagal menarik gacha. Silakan coba lagi nanti.',
+  congratulations: 'Selamat!',
 
   // Pricing Page
   pricingTitle: 'Paket yang Sesuai dengan Skala Anda',
@@ -420,19 +434,10 @@ export const id = {
   cannotModifySelf: 'Anda tidak dapat mengubah akun Anda sendiri.',
 
   // Gacha Page
-  gachaTitle: 'Zona Gacha',
-  gachaDescription: "Uji keberuntunganmu! Habiskan kredit untuk kesempatan memenangkan hadiah besar.",
-  pullGacha: 'Tarik ({{cost}} Kredit)',
-  pulling: 'Menarik',
-  spinning: 'Memutar...',
-  notEnoughCredits: 'Kredit tidak cukup.',
-  gachaError: 'Gagal menarik gacha. Silakan coba lagi nanti.',
   gachaPrize: 'Anda memenangkan {{amount}} Kredit!',
-  congratulations: 'Selamat',
-  gachaDisclaimer: 'Hasil gacha acak. Gunakan dengan bijak.',
 
   // Theme Unlocking
-  unlockTheme: 'Buka ({{cost}} Kredit)',
+  unlockTheme: 'Buka ({{cost}} Koin)',
   setTheme: 'Atur Tema',
   activeTheme: 'Aktif',
   unlock: 'Buka',
@@ -440,5 +445,5 @@ export const id = {
   themeUnlocked: 'Tema Terbuka!',
   themeUnlockedDescription: 'Anda sekarang dapat menggunakan tema {{theme}} dari pengaturan.',
   unlockThemeConfirmationTitle: 'Konfirmasi Pembukaan Tema',
-  unlockThemeConfirmationDescription: 'Apakah Anda yakin ingin menghabiskan {{cost}} kredit untuk membuka tema {{theme}}? Tindakan ini permanen.',
+  unlockThemeConfirmationDescription: 'Apakah Anda yakin ingin menghabiskan {{cost}} koin untuk membuka tema {{theme}}? Tindakan ini permanen.',
 };
