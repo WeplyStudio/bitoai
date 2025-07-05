@@ -388,7 +388,7 @@ export const en = {
   passwordMinLength: 'Password must be at least 6 characters.',
   usernamePermanentInfo: 'This will be your permanent name and cannot be changed later.',
   loginSuccessTitle: 'Login Successful',
-  loginSuccessDescription: 'Welcome back, {{email}}!',
+  loginSuccessDescription: 'Welcome back, {{username}}!',
   loginErrorTitle: 'Login Failed',
   registerSuccessTitle: 'Registration Successful',
   registerSuccessDescription: 'You can now log in with your new account.',
@@ -451,5 +451,3 @@ export const en = {
   unlockThemeConfirmationTitle: 'Confirm Unlock',
   unlockThemeConfirmationDescription: 'Are you sure you want to spend {{cost}} coins to unlock the {{theme}} theme? This action is permanent.',
 };
-
-    

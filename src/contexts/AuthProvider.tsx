@@ -123,7 +123,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
         throw new Error(data.error || 'OTP verification failed.');
       }
       setUser(data);
-      toast({ title: t('loginSuccessTitle'), description: t('loginSuccessDescription', { email: data.email }) });
+      toast({ title: t('loginSuccessTitle'), description: t('loginSuccessDescription', { username: data.username }) });
       router.push('/');
       return true;
     } catch (error: any) {
@@ -161,27 +161,21 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
   
   const updateUserInContext = useCallback((updates?: Partial<User>) => {
-    // Robustness check: if no updates are provided, do nothing.
     if (!updates) {
       return;
     }
-
     setUser(prevUser => {
-      // Robustness check: if no user is logged in, we can't update anything.
       if (!prevUser) {
         return null;
       }
-
-      // Create a new user object by merging the old state and the new updates.
+      
       const newUser = { ...prevUser, ...updates };
 
-      // Safely merge `achievements` array if it exists in the updates.
       if (Array.isArray(updates.achievements)) {
         const previousAchievements = prevUser.achievements || [];
         newUser.achievements = Array.from(new Set([...previousAchievements, ...updates.achievements]));
       }
 
-      // Safely merge `unlockedThemes` array if it exists in the updates.
       if (Array.isArray(updates.unlockedThemes)) {
         const previousThemes = prevUser.unlockedThemes || [];
         newUser.unlockedThemes = Array.from(new Set([...previousThemes, ...updates.unlockedThemes]));

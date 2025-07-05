@@ -388,7 +388,7 @@ export const ja = {
   passwordMinLength: 'パスワードは6文字以上である必要があります。',
   usernamePermanentInfo: 'この名前は永続的なものであり、後で変更することはできません。',
   loginSuccessTitle: 'ログインに成功しました',
-  loginSuccessDescription: 'おかえりなさい、{{email}}さん！',
+  loginSuccessDescription: 'おかえりなさい、{{username}}さん！',
   loginErrorTitle: 'ログインに失敗しました',
   registerSuccessTitle: '登録に成功しました',
   registerSuccessDescription: '新しいアカウントでログインできます。',
@@ -451,5 +451,3 @@ export const ja = {
   unlockThemeConfirmationTitle: '解除の確認',
   unlockThemeConfirmationDescription: '{{cost}}コインを使用して{{theme}}テーマを解除しますか？この操作は永続的です。',
 };
-
-    

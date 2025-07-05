@@ -388,7 +388,7 @@ export const zh = {
   passwordMinLength: '密码必须至少为6个字符。',
   usernamePermanentInfo: '这将是您的永久名称，以后无法更改。',
   loginSuccessTitle: '登录成功',
-  loginSuccessDescription: '欢迎回来，{{email}}！',
+  loginSuccessDescription: '欢迎回来，{{username}}！',
   loginErrorTitle: '登录失败',
   registerSuccessTitle: '注册成功',
   registerSuccessDescription: '您现在可以用您的新账户登录了。',
@@ -451,5 +451,3 @@ export const zh = {
   unlockThemeConfirmationTitle: '确认解锁',
   unlockThemeConfirmationDescription: '您确定要花费{{cost}}金币来解锁{{theme}}主题吗？此操作是永久性的。',
 };
-
-    

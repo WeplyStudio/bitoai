@@ -388,7 +388,7 @@ export const id = {
   passwordMinLength: 'Kata sandi minimal 6 karakter.',
   usernamePermanentInfo: 'Ini akan menjadi nama permanen Anda dan tidak dapat diubah nanti.',
   loginSuccessTitle: 'Berhasil Masuk',
-  loginSuccessDescription: 'Selamat datang kembali, {{email}}!',
+  loginSuccessDescription: 'Selamat datang kembali, {{username}}!',
   loginErrorTitle: 'Gagal Masuk',
   registerSuccessTitle: 'Pendaftaran Berhasil',
   registerSuccessDescription: 'Anda sekarang dapat masuk dengan akun baru Anda.',
@@ -451,5 +451,3 @@ export const id = {
   unlockThemeConfirmationTitle: 'Konfirmasi Pembukaan Tema',
   unlockThemeConfirmationDescription: 'Apakah Anda yakin ingin menghabiskan {{cost}} koin untuk membuka tema {{theme}}? Tindakan ini permanen.',
 };
-
-    
