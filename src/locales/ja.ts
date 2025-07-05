@@ -145,6 +145,8 @@ export const ja = {
   deleteAccountDescription: 'アカウントと関連するすべてのデータを永久に削除します。',
   deleteAccountConfirmationTitle: '本当によろしいですか？',
   deleteAccountConfirmationMessage: 'この操作は元に戻せません。これにより、アカウント、すべてのプロジェクト、チャット履歴が永久に削除されます。アカウントはすぐにログアウトされます。',
+  deleteAccountConfirmationExtra: '続行するには、下のボックスに<strong>delete my account</strong>と入力してください。',
+  deleteAccountInputPlaceholder: 'delete my account',
   deleteAccountSuccessTitle: 'アカウントが削除されました',
   deleteAccountSuccessDescription: 'アカウントが正常に削除されました。ご利用いただきありがとうございました。',
   deleteAccountError: 'アカウントの削除に失敗しました。もう一度お試しください。',

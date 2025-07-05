@@ -145,6 +145,8 @@ export const zh = {
   deleteAccountDescription: '永久删除您的账户和所有相关数据。',
   deleteAccountConfirmationTitle: '您确定吗？',
   deleteAccountConfirmationMessage: '此操作无法撤销。这将永久删除您的账户，包括所有项目和聊天记录。您的账户将立即登出。',
+  deleteAccountConfirmationExtra: '要继续，请在下方的框中输入<strong>delete my account</strong>。',
+  deleteAccountInputPlaceholder: 'delete my account',
   deleteAccountSuccessTitle: '账户已删除',
   deleteAccountSuccessDescription: '您的账户已成功删除。很遗憾看到您离开。',
   deleteAccountError: '删除账户失败。请重试。',

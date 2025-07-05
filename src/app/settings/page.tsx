@@ -10,7 +10,7 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { useToast } from '@/hooks/use-toast';
 import { Download, Mail, MessageCircle, Trash2, Palette, Lock, CheckCircle2, Gem } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
-import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
+import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
 import { ChangePasswordForm } from '@/components/settings/change-password-form';
 import { AchievementsDisplay } from '@/components/settings/achievements-display';
@@ -18,6 +18,7 @@ import { Footer } from '@/components/layout/footer';
 import { useUiTheme } from '@/contexts/UiThemeProvider';
 import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { Input } from '@/components/ui/input';
 
 const AI_MODE_KEY = 'bito-ai-mode';
 const THEME_UNLOCK_COST = 150; // In Coins
@@ -39,6 +40,7 @@ export default function SettingsPage() {
   const [aiMode, setAiMode] = useState('default');
   const [isMounted, setIsMounted] = useState(false);
   const [themeToUnlock, setThemeToUnlock] = useState<string | null>(null);
+  const [deleteConfirmation, setDeleteConfirmation] = useState('');
 
   useEffect(() => {
     setIsMounted(true);
@@ -167,6 +169,51 @@ export default function SettingsPage() {
               </Card>
 
               <AchievementsDisplay />
+
+              <Card className="border-destructive">
+                <CardHeader>
+                    <CardTitle className="text-destructive">{t('deleteAccount')}</CardTitle>
+                    <CardDescription>{t('deleteAccountDescription')}</CardDescription>
+                </CardHeader>
+                <CardFooter className="flex justify-end">
+                    <AlertDialog onOpenChange={(isOpen) => !isOpen && setDeleteConfirmation('')}>
+                        <AlertDialogTrigger asChild>
+                            <Button variant="destructive">
+                                <Trash2 className="mr-2 h-4 w-4" /> {t('deleteAccount')}
+                            </Button>
+                        </AlertDialogTrigger>
+                        <AlertDialogContent>
+                            <AlertDialogHeader>
+                                <AlertDialogTitle>{t('deleteAccountConfirmationTitle')}</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                    {t('deleteAccountConfirmationMessage')}
+                                    <br/><br/>
+                                    <span dangerouslySetInnerHTML={{ __html: t('deleteAccountConfirmationExtra') }} />
+                                </AlertDialogDescription>
+                            </AlertDialogHeader>
+                             <div className="py-2">
+                                <Input
+                                    id="delete-confirm"
+                                    value={deleteConfirmation}
+                                    onChange={(e) => setDeleteConfirmation(e.target.value)}
+                                    placeholder={t('deleteAccountInputPlaceholder')}
+                                    autoComplete="off"
+                                />
+                            </div>
+                            <AlertDialogFooter>
+                                <AlertDialogCancel onClick={() => setDeleteConfirmation('')}>{t('cancel')}</AlertDialogCancel>
+                                <AlertDialogAction 
+                                    className="bg-destructive hover:bg-destructive/90"
+                                    onClick={deleteAccount}
+                                    disabled={deleteConfirmation !== 'delete my account'}
+                                >
+                                    {t('delete')}
+                                </AlertDialogAction>
+                            </AlertDialogFooter>
+                        </AlertDialogContent>
+                    </AlertDialog>
+                </CardFooter>
+              </Card>
             </div>
           )}
 

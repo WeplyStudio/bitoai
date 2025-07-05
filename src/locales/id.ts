@@ -145,6 +145,8 @@ export const id = {
   deleteAccountDescription: 'Hapus akun Anda dan semua data terkait secara permanen.',
   deleteAccountConfirmationTitle: 'Apakah Anda benar-benar yakin?',
   deleteAccountConfirmationMessage: 'Tindakan ini tidak dapat dibatalkan. Ini akan menghapus akun Anda secara permanen, termasuk semua proyek dan riwayat obrolan Anda. Akun Anda akan segera keluar.',
+  deleteAccountConfirmationExtra: 'Untuk melanjutkan, silakan ketik <strong>delete my account</strong> di dalam kotak di bawah ini.',
+  deleteAccountInputPlaceholder: 'delete my account',
   deleteAccountSuccessTitle: 'Akun Dihapus',
   deleteAccountSuccessDescription: 'Akun Anda telah berhasil dihapus. Kami sedih melihat Anda pergi.',
   deleteAccountError: 'Gagal menghapus akun. Silakan coba lagi.',

@@ -145,6 +145,8 @@ export const en = {
   deleteAccountDescription: 'Permanently delete your account and all associated data.',
   deleteAccountConfirmationTitle: 'Are you absolutely sure?',
   deleteAccountConfirmationMessage: 'This action cannot be undone. This will permanently delete your account, including all your projects and chat histories. Your account will be logged out immediately.',
+  deleteAccountConfirmationExtra: 'To proceed, please type <strong>delete my account</strong> in the box below.',
+  deleteAccountInputPlaceholder: 'delete my account',
   deleteAccountSuccessTitle: 'Account Deleted',
   deleteAccountSuccessDescription: 'Your account has been successfully deleted. We are sorry to see you go.',
   deleteAccountError: 'Failed to delete account. Please try again.',
