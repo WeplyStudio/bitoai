@@ -67,6 +67,8 @@ export async function POST(request: Request) {
         // Safety net for gamification fields
         if (typeof user.coins !== 'number') user.coins = 0;
         if (typeof user.exp !== 'number') user.exp = 0;
+        if (typeof user.level !== 'number') user.level = 1;
+        if (typeof user.nextLevelExp !== 'number') user.nextLevelExp = 50;
 
         if (user.coins < GACHA_COST) {
             return NextResponse.json({ error: 'Insufficient coins' }, { status: 403 });
@@ -78,15 +80,16 @@ export async function POST(request: Request) {
 
         if (prizeWon.type === 'exp') {
             user.exp += prizeWon.value;
-            // Check for level up after winning EXP
-            if (user.exp >= user.nextLevelExp) {
-                leveledUp = true;
-                user.level += 1;
-                user.exp -= user.nextLevelExp;
-                user.nextLevelExp = Math.floor(50 * Math.pow(1.85, user.level - 1));
-            }
         } else if (prizeWon.type === 'coins') {
             user.coins += prizeWon.value;
+        }
+
+        // Handle level ups after any EXP gain
+        while (user.exp >= user.nextLevelExp) {
+            leveledUp = true;
+            user.exp -= user.nextLevelExp;
+            user.level += 1;
+            user.nextLevelExp = 50 + (user.level - 1) * 85;
         }
 
         await user.save();
