@@ -1,4 +1,3 @@
-
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react';
@@ -163,29 +162,28 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const updateUserInContext = useCallback((updates: Partial<User>) => {
     setUser(prevUser => {
         // If there is no previous user, we cannot perform an update.
-        // This prevents errors when an update is triggered for a logged-out user.
         if (!prevUser) {
             return null;
         }
 
-        // Create a new user object to avoid direct state mutation.
+        // Create a new state object from the previous state and apply updates.
         const newUserState = { ...prevUser, ...updates };
 
-        // If the updates include achievements, merge them correctly.
+        // Safely merge achievements array.
         if (updates.achievements) {
-            const combinedAchievements = new Set([
-                ...(prevUser.achievements || []),
-                ...updates.achievements,
-            ]);
+            // Ensure both old and new achievements are arrays before spreading.
+            const oldAchievements = Array.isArray(prevUser.achievements) ? prevUser.achievements : [];
+            const newAchievements = Array.isArray(updates.achievements) ? updates.achievements : [];
+            const combinedAchievements = new Set([...oldAchievements, ...newAchievements]);
             newUserState.achievements = Array.from(combinedAchievements);
         }
 
-        // If the updates include unlocked themes, merge them correctly.
+        // Safely merge unlockedThemes array.
         if (updates.unlockedThemes) {
-            const combinedThemes = new Set([
-                ...(prevUser.unlockedThemes || []),
-                ...updates.unlockedThemes,
-            ]);
+            // Ensure both old and new themes are arrays before spreading.
+            const oldThemes = Array.isArray(prevUser.unlockedThemes) ? prevUser.unlockedThemes : [];
+            const newThemes = Array.isArray(updates.unlockedThemes) ? updates.unlockedThemes : [];
+            const combinedThemes = new Set([...oldThemes, ...newThemes]);
             newUserState.unlockedThemes = Array.from(combinedThemes);
         }
 
