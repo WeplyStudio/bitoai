@@ -8,9 +8,9 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const THEME_COST = 150;
+const THEME_COST = 150; // Cost in Coins
 
-const validThemes = ['kawaii', 'hacker', 'retro', 'cyberpunk'];
+const validThemes = ['kawaii', 'hacker', 'retro', 'cyberpunk', 'anime', 'cartoon'];
 
 async function getUserIdFromToken(): Promise<string | null> {
     if (!JWT_SECRET) throw new Error('JWT_SECRET is not defined.');
@@ -47,11 +47,13 @@ export async function POST(request: Request) {
             return NextResponse.json({ error: 'Theme already unlocked.' }, { status: 400 });
         }
 
-        if (user.credits < THEME_COST) {
-            return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
+        if (typeof user.coins !== 'number') user.coins = 0;
+
+        if (user.coins < THEME_COST) {
+            return NextResponse.json({ error: 'Insufficient coins' }, { status: 403 });
         }
 
-        user.credits -= THEME_COST;
+        user.coins -= THEME_COST;
         user.unlockedThemes.push(themeName);
 
         await user.save();
@@ -59,7 +61,7 @@ export async function POST(request: Request) {
         return NextResponse.json({ 
             message: 'Theme unlocked successfully!',
             unlockedThemes: user.unlockedThemes,
-            newBalance: user.credits
+            newBalance: user.coins
         });
 
     } catch (error) {
@@ -67,3 +69,5 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });
     }
 }
+
+    
