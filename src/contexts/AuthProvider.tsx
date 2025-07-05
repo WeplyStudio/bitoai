@@ -29,7 +29,7 @@ interface AuthContextType {
   verifyOtp: (email: string, otp: string) => Promise<boolean>;
   logout: () => void;
   deleteAccount: () => Promise<void>;
-  updateUserInContext: (updates: Partial<User>) => void;
+  updateUserInContext: (updates?: Partial<User>) => void;
   isAuthDialogOpen: boolean;
   setAuthDialogOpen: (isOpen: boolean) => void;
 }
@@ -160,9 +160,14 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
   };
   
-  const updateUserInContext = useCallback((updates: Partial<User>) => {
+  const updateUserInContext = useCallback((updates?: Partial<User>) => {
+    // Robustness check: if no updates are provided, do nothing.
+    if (!updates) {
+      return;
+    }
+
     setUser(prevUser => {
-      // THE ABSOLUTE MOST IMPORTANT GUARD: If no user is logged in, do nothing.
+      // Robustness check: if no user is logged in, we can't update anything.
       if (!prevUser) {
         return null;
       }
@@ -170,22 +175,22 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       // Create a new user object by merging the old state and the new updates.
       const newUser = { ...prevUser, ...updates };
 
-      // The spread operator above overwrites arrays. We need to merge them manually and safely.
-      if (updates.hasOwnProperty('achievements')) {
+      // Safely merge `achievements` array if it exists in the updates.
+      if (Array.isArray(updates.achievements)) {
         const previousAchievements = prevUser.achievements || [];
-        const newAchievements = updates.achievements || [];
-        newUser.achievements = Array.from(new Set([...previousAchievements, ...newAchievements]));
+        newUser.achievements = Array.from(new Set([...previousAchievements, ...updates.achievements]));
       }
 
-      if (updates.hasOwnProperty('unlockedThemes')) {
+      // Safely merge `unlockedThemes` array if it exists in the updates.
+      if (Array.isArray(updates.unlockedThemes)) {
         const previousThemes = prevUser.unlockedThemes || [];
-        const newThemes = updates.unlockedThemes || [];
-        newUser.unlockedThemes = Array.from(new Set([...previousThemes, ...newThemes]));
+        newUser.unlockedThemes = Array.from(new Set([...previousThemes, ...updates.unlockedThemes]));
       }
-
+      
       return newUser;
     });
   }, []);
+
 
   const value = { user, isLoading, login, register, logout, verifyOtp, deleteAccount, updateUserInContext, isAuthDialogOpen, setAuthDialogOpen };
 
