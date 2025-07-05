@@ -171,16 +171,16 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       const newUser = { ...prevUser, ...updates };
 
       // The spread operator above overwrites arrays. We need to merge them manually and safely.
-      if (updates.achievements) {
-        newUser.achievements = Array.from(
-          new Set([...(prevUser.achievements || []), ...updates.achievements])
-        );
+      if (updates.hasOwnProperty('achievements')) {
+        const previousAchievements = prevUser.achievements || [];
+        const newAchievements = updates.achievements || [];
+        newUser.achievements = Array.from(new Set([...previousAchievements, ...newAchievements]));
       }
 
-      if (updates.unlockedThemes) {
-        newUser.unlockedThemes = Array.from(
-          new Set([...(prevUser.unlockedThemes || []), ...updates.unlockedThemes])
-        );
+      if (updates.hasOwnProperty('unlockedThemes')) {
+        const previousThemes = prevUser.unlockedThemes || [];
+        const newThemes = updates.unlockedThemes || [];
+        newUser.unlockedThemes = Array.from(new Set([...previousThemes, ...newThemes]));
       }
 
       return newUser;
