@@ -52,6 +52,14 @@ export const LeftSidebarContent = () => {
             createProject();
         }
     };
+    
+    // Function to format numbers with "K" for thousands
+    const formatNumberWithK = (num: number) => {
+      if (num >= 1000) {
+        return `${Math.floor(num / 1000)}K`;
+      }
+      return num;
+    };
 
     return (
         <TooltipProvider>
@@ -107,6 +115,10 @@ export const LeftSidebarContent = () => {
                                 <div className="flex items-center gap-1 font-semibold text-amber-500" title={`${user.coins} Coins`}>
                                     <Gem className="h-4 w-4" />
                                     {user.coins || 0}
+                                </div>
+                                <div className="flex items-center gap-1 font-semibold text-sky-500" title={`${user.credits} Credits`}>
+                                    <CreditCard className="h-4 w-4" />
+                                    {formatNumberWithK(user.credits || 0)}
                                 </div>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
                                     <LogOut className="h-4 w-4" />
