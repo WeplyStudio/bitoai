@@ -1,3 +1,4 @@
+
 'use client';
 import { useState, useRef, type KeyboardEvent, useEffect, ChangeEvent } from 'react';
 import { Textarea } from '@/components/ui/textarea';
@@ -89,7 +90,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
   }, [onChange, toast, value, language]);
 
   const handleSendClick = () => {
-    if (value.trim() || file) {
+    if (value.trim()) {
       onSend(value, file ?? undefined);
       onChange('');
       setFile(null);
@@ -208,7 +209,7 @@ export function ChatInput({ onSend, isLoading, value, onChange, onBrowsePrompts,
                 type="submit"
                 size="icon"
                 className='h-8 w-8 absolute top-3 right-3 bg-accent hover:bg-accent/90'
-                disabled={isLoading || (!value.trim() && !file)}
+                disabled={isLoading || !value.trim()}
             >
               <SendHorizonal className="h-4 w-4" />
               <span className="sr-only">{t('send')}</span>
