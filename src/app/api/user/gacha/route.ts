@@ -8,7 +8,7 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const GACHA_COST = 100;
+const GACHA_COST = 10;
 
 const prizes = [
   { prize: 250, probability: 0.0001 }, // 0.01%

@@ -422,7 +422,7 @@ export const en = {
   // Gacha Page
   gachaTitle: 'Gacha Zone',
   gachaDescription: "Test your luck! Spend credits for a chance to win big.",
-  pullGacha: 'Pull (100 Credits)',
+  pullGacha: 'Pull ({{cost}} Credits)',
   pulling: 'Pulling',
   spinning: 'Spinning...',
   notEnoughCredits: 'Not enough credits.',

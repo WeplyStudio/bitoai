@@ -422,7 +422,7 @@ export const id = {
   // Gacha Page
   gachaTitle: 'Zona Gacha',
   gachaDescription: "Uji keberuntunganmu! Habiskan kredit untuk kesempatan memenangkan hadiah besar.",
-  pullGacha: 'Tarik (100 Kredit)',
+  pullGacha: 'Tarik ({{cost}} Kredit)',
   pulling: 'Menarik',
   spinning: 'Memutar...',
   notEnoughCredits: 'Kredit tidak cukup.',

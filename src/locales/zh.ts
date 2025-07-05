@@ -422,7 +422,7 @@ export const zh = {
   // Gacha Page
   gachaTitle: '扭蛋区',
   gachaDescription: '测试您的运气！花费积分，有机会赢取大奖。',
-  pullGacha: '抽奖（100积分）',
+  pullGacha: '抽奖（{{cost}}积分）',
   pulling: '抽奖中',
   spinning: '旋转中...',
   notEnoughCredits: '积分不足。',

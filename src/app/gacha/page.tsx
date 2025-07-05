@@ -11,7 +11,7 @@ import { useToast } from '@/hooks/use-toast';
 import { AlertDialog, AlertDialogContent, AlertDialogHeader, AlertDialogTitle, AlertDialogDescription, AlertDialogFooter, AlertDialogAction } from '@/components/ui/alert-dialog';
 import { cn } from '@/lib/utils';
 
-const GACHA_COST = 100;
+const GACHA_COST = 10;
 
 export default function GachaPage() {
     const { user, isLoading: isAuthLoading, updateUserInContext } = useAuth();
@@ -99,7 +99,7 @@ export default function GachaPage() {
                                         {isSpinning ? t('spinning') : t('pulling')}
                                     </>
                                 ) : (
-                                    t('pullGacha')
+                                    t('pullGacha', { cost: GACHA_COST })
                                 )}
                             </Button>
                         </CardContent>
