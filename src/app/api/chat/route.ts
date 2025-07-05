@@ -63,10 +63,10 @@ export async function POST(request: Request) {
         user.coins += COINS_PER_MESSAGE;
 
         let leveledUp = false;
-        if (user.exp >= user.nextLevelExp) {
+        while (user.exp >= user.nextLevelExp) {
             leveledUp = true;
-            user.level += 1;
             user.exp -= user.nextLevelExp;
+            user.level += 1;
             // Exponential scaling for next level's EXP requirement
             user.nextLevelExp = Math.floor(50 * Math.pow(1.85, user.level - 1));
         }

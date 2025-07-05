@@ -8,17 +8,22 @@ import connectDB from '@/lib/mongodb';
 import User from '@/models/User';
 
 const JWT_SECRET = process.env.JWT_SECRET;
-const GACHA_COST = 10;
+const GACHA_COST = 50; // Cost in Coins
 
+// Prizes: EXP or Coins
 const prizes = [
-  { prize: 250, probability: 0.0001 }, // 0.01%
-  { prize: 100, probability: 0.0009 }, // 0.09%
-  { prize: 50,  probability: 0.004 },  // 0.4%
-  { prize: 25,  probability: 0.015 },  // 1.5%
-  { prize: 10,  probability: 0.03 },   // 3%
-  { prize: 5,   probability: 0.05 },   // 5%
-  { prize: 3,   probability: 0.15 },   // 15%
-  { prize: 1,   probability: 0.75 },   // 75%
+  // EXP Prizes
+  { type: 'exp', value: 250, probability: 0.005 }, // 0.5%
+  { type: 'exp', value: 100, probability: 0.02 },  // 2%
+  { type: 'exp', value: 50,  probability: 0.05 },  // 5%
+  { type: 'exp', value: 25,  probability: 0.10 },  // 10%
+  { type: 'exp', value: 5,   probability: 0.225 }, // 22.5%
+  
+  // Coin Prizes
+  { type: 'coins', value: 100, probability: 0.01 },  // 1%
+  { type: 'coins', value: 75,  probability: 0.04 },  // 4%
+  { type: 'coins', value: 15,  probability: 0.15 },  // 15%
+  { type: 'coins', value: 5,   probability: 0.40 },  // 40%
 ];
 
 function determinePrize() {
@@ -27,10 +32,10 @@ function determinePrize() {
     for (const item of prizes) {
         cumulativeProbability += item.probability;
         if (random < cumulativeProbability) {
-            return item.prize;
+            return item;
         }
     }
-    return 1; // Fallback prize
+    return { type: 'coins', value: 5 }; // Fallback prize
 }
 
 async function getUserIdFromToken(): Promise<string | null> {
@@ -58,21 +63,46 @@ export async function POST(request: Request) {
         if (!user) {
             return NextResponse.json({ error: 'User not found' }, { status: 404 });
         }
+        
+        // Safety net for gamification fields
+        if (typeof user.coins !== 'number') user.coins = 0;
+        if (typeof user.exp !== 'number') user.exp = 0;
+        if (typeof user.level !== 'number') user.level = 1;
+        if (typeof user.nextLevelExp !== 'number') user.nextLevelExp = 50;
 
-        if (user.credits < GACHA_COST) {
-            return NextResponse.json({ error: 'Insufficient credits' }, { status: 403 });
+        if (user.coins < GACHA_COST) {
+            return NextResponse.json({ error: 'Insufficient coins' }, { status: 403 });
         }
 
-        // Deduct cost and determine prize
-        user.credits -= GACHA_COST;
+        user.coins -= GACHA_COST;
         const prizeWon = determinePrize();
-        user.credits += prizeWon;
+        let leveledUp = false;
+
+        if (prizeWon.type === 'exp') {
+            user.exp += prizeWon.value;
+        } else if (prizeWon.type === 'coins') {
+            user.coins += prizeWon.value;
+        }
+
+        // Handle level ups after any EXP gain
+        while (user.exp >= user.nextLevelExp) {
+            leveledUp = true;
+            user.exp -= user.nextLevelExp;
+            user.level += 1;
+            user.nextLevelExp = Math.floor(50 * Math.pow(1.85, user.level - 1));
+        }
 
         await user.save();
         
         return NextResponse.json({ 
             prize: prizeWon, 
-            newBalance: user.credits 
+            leveledUp: leveledUp,
+            updatedUser: {
+                level: user.level,
+                exp: user.exp,
+                nextLevelExp: user.nextLevelExp,
+                coins: user.coins,
+            }
         });
 
     } catch (error) {
