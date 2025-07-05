@@ -10,7 +10,7 @@ import User from '@/models/User';
 const JWT_SECRET = process.env.JWT_SECRET;
 const THEME_COST = 150; // Cost in Coins
 
-const validThemes = ['kawaii', 'hacker', 'retro', 'cyberpunk'];
+const validThemes = ['kawaii', 'hacker', 'retro', 'cyberpunk', 'anime', 'cartoon'];
 
 async function getUserIdFromToken(): Promise<string | null> {
     if (!JWT_SECRET) throw new Error('JWT_SECRET is not defined.');
@@ -69,3 +69,5 @@ export async function POST(request: Request) {
         return NextResponse.json({ error: 'An internal server error occurred' }, { status: 500 });
     }
 }
+
+    

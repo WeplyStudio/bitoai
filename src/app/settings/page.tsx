@@ -29,6 +29,8 @@ const availableThemes = [
   { id: 'hacker', nameKey: 'themeHacker', isFree: false },
   { id: 'retro', nameKey: 'themeRetro', isFree: false },
   { id: 'cyberpunk', nameKey: 'themeCyberpunk', isFree: false },
+  { id: 'anime', nameKey: 'themeAnime', isFree: false },
+  { id: 'cartoon', nameKey: 'themeCartoon', isFree: false },
 ];
 
 export default function SettingsPage() {
@@ -315,3 +317,5 @@ export default function SettingsPage() {
     </>
   );
 }
+
+    

@@ -360,6 +360,8 @@ export const en = {
   themeHacker: 'Hacker',
   themeRetro: 'Retro',
   themeCyberpunk: 'Cyberpunk',
+  themeAnime: 'Anime',
+  themeCartoon: 'Cartoon',
   lang_id: 'Indonesian',
   lang_en: 'English',
   lang_zh: 'Mandarin',
@@ -449,3 +451,5 @@ export const en = {
   unlockThemeConfirmationTitle: 'Confirm Unlock',
   unlockThemeConfirmationDescription: 'Are you sure you want to spend {{cost}} coins to unlock the {{theme}} theme? This action is permanent.',
 };
+
+    

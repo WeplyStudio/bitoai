@@ -360,6 +360,8 @@ export const id = {
   themeHacker: 'Peretas',
   themeRetro: 'Retro',
   themeCyberpunk: 'Cyberpunk',
+  themeAnime: 'Anime',
+  themeCartoon: 'Kartun',
   lang_id: 'Bahasa Indonesia',
   lang_en: 'Inggris',
   lang_zh: 'Mandarin',
@@ -449,3 +451,5 @@ export const id = {
   unlockThemeConfirmationTitle: 'Konfirmasi Pembukaan Tema',
   unlockThemeConfirmationDescription: 'Apakah Anda yakin ingin menghabiskan {{cost}} koin untuk membuka tema {{theme}}? Tindakan ini permanen.',
 };
+
+    

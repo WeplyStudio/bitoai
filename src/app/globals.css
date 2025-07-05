@@ -1,3 +1,4 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -187,6 +188,109 @@
     --font-body: 'Orbitron', sans-serif;
     --font-headline: 'Orbitron', sans-serif;
   }
+
+  /* Anime Theme (Light) */
+  :root[data-theme='anime'] {
+    --background: 210 100% 98%;
+    --foreground: 220 20% 25%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 20% 25%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 20% 25%;
+    --primary: 340 90% 65%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 210 100% 95%;
+    --secondary-foreground: 220 20% 25%;
+    --muted: 210 100% 95%;
+    --muted-foreground: 220 15% 55%;
+    --accent: 200 90% 60%;
+    --accent-foreground: 220 20% 15%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 210 50% 90%;
+    --input: 210 50% 92%;
+    --ring: 200 90% 60%;
+    --radius: 0.75rem;
+    --font-body: 'M PLUS Rounded 1c', sans-serif;
+    --font-headline: 'M PLUS Rounded 1c', sans-serif;
+  }
+  /* Anime Theme (Dark) */
+  .dark:root[data-theme='anime'] {
+    --background: 225 25% 12%;
+    --foreground: 210 50% 95%;
+    --card: 225 25% 15%;
+    --card-foreground: 210 50% 95%;
+    --popover: 225 25% 15%;
+    --popover-foreground: 210 50% 95%;
+    --primary: 340 90% 70%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 225 25% 20%;
+    --secondary-foreground: 210 50% 95%;
+    --muted: 225 25% 20%;
+    --muted-foreground: 210 30% 70%;
+    --accent: 200 90% 65%;
+    --accent-foreground: 220 20% 15%;
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 225 25% 25%;
+    --input: 225 25% 18%;
+    --ring: 200 90% 65%;
+    --radius: 0.75rem;
+    --font-body: 'M PLUS Rounded 1c', sans-serif;
+    --font-headline: 'M PLUS Rounded 1c', sans-serif;
+  }
+
+  /* Cartoon Theme (Light) */
+  :root[data-theme='cartoon'] {
+    --background: 45 100% 95%;
+    --foreground: 10 60% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 10 60% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 10 60% 20%;
+    --primary: 355 85% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 45 90% 88%;
+    --secondary-foreground: 10 60% 20%;
+    --muted: 45 90% 92%;
+    --muted-foreground: 10 50% 40%;
+    --accent: 210 90% 55%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 10 60% 80%;
+    --input: 10 60% 85%;
+    --ring: 210 90% 55%;
+    --radius: 1rem;
+    --font-body: 'Comic Neue', cursive;
+    --font-headline: 'Bangers', cursive;
+  }
+
+  /* Cartoon Theme (Dark) */
+  .dark:root[data-theme='cartoon'] {
+    --background: 230 30% 10%;
+    --foreground: 45 100% 90%;
+    --card: 230 30% 14%;
+    --card-foreground: 45 100% 90%;
+    --popover: 230 30% 14%;
+    --popover-foreground: 45 100% 90%;
+    --primary: 50 100% 60%;
+    --primary-foreground: 230 60% 10%;
+    --secondary: 230 30% 20%;
+    --secondary-foreground: 45 100% 90%;
+    --muted: 230 30% 20%;
+    --muted-foreground: 45 80% 70%;
+    --accent: 355 85% 65%;
+    --accent-foreground: 0 0% 100%;
+    --destructive: 0 70% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 230 30% 25%;
+    --input: 230 30% 18%;
+    --ring: 50 100% 60%;
+    --radius: 1rem;
+    --font-body: 'Comic Neue', cursive;
+    --font-headline: 'Bangers', cursive;
+  }
 }
 
 @layer base {
@@ -201,3 +305,5 @@
     font-family: var(--font-headline);
   }
 }
+
+    

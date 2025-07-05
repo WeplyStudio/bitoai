@@ -360,6 +360,8 @@ export const zh = {
   themeHacker: '黑客',
   themeRetro: '复古',
   themeCyberpunk: '赛博朋克',
+  themeAnime: '动漫',
+  themeCartoon: '卡通',
   lang_id: '印度尼西亚语',
   lang_en: '英语',
   lang_zh: '普通话',
@@ -449,3 +451,5 @@ export const zh = {
   unlockThemeConfirmationTitle: '确认解锁',
   unlockThemeConfirmationDescription: '您确定要花费{{cost}}金币来解锁{{theme}}主题吗？此操作是永久性的。',
 };
+
+    

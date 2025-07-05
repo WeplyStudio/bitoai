@@ -360,6 +360,8 @@ export const ja = {
   themeHacker: 'ハッカー',
   themeRetro: 'レトロ',
   themeCyberpunk: 'サイバーパンク',
+  themeAnime: 'アニメ',
+  themeCartoon: 'カートゥーン',
   lang_id: 'インドネシア語',
   lang_en: '英語',
   lang_zh: '中国語',
@@ -449,3 +451,5 @@ export const ja = {
   unlockThemeConfirmationTitle: '解除の確認',
   unlockThemeConfirmationDescription: '{{cost}}コインを使用して{{theme}}テーマを解除しますか？この操作は永続的です。',
 };
+
+    
