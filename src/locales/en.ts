@@ -415,6 +415,9 @@ export const en = {
   otpVerifiedTitle: 'Code Verified',
   enterNewPasswordPrompt: 'Your code is correct. Please enter your new password.',
   verifyOtp: 'Verify Code',
+  resendOtp: 'Resend OTP',
+  resendOtpIn: 'Resend OTP in {{seconds}}s',
+  resendingOtp: 'Resending...',
   
   // Admin
   manageUsersAndCredits: 'Manage users and their credits.',

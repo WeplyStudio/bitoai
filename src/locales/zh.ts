@@ -415,6 +415,9 @@ export const zh = {
   otpVerifiedTitle: '代码已验证',
   enterNewPasswordPrompt: '您的代码正确。请输入您的新密码。',
   verifyOtp: '验证代码',
+  resendOtp: '重新发送OTP',
+  resendOtpIn: '{{seconds}}秒后重新发送OTP',
+  resendingOtp: '正在重新发送...',
   
   // Admin
   manageUsersAndCredits: '管理用户及其积分。',

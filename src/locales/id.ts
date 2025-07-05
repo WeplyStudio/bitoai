@@ -415,6 +415,9 @@ export const id = {
   otpVerifiedTitle: 'Kode Terverifikasi',
   enterNewPasswordPrompt: 'Kode Anda benar. Silakan masukkan kata sandi baru Anda.',
   verifyOtp: 'Verifikasi Kode',
+  resendOtp: 'Kirim Ulang OTP',
+  resendOtpIn: 'Kirim ulang OTP dalam {{seconds}} detik',
+  resendingOtp: 'Mengirim ulang...',
 
   // Admin
   manageUsersAndCredits: 'Kelola pengguna dan kredit mereka.',

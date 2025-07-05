@@ -415,6 +415,9 @@ export const ja = {
   otpVerifiedTitle: 'コード認証済み',
   enterNewPasswordPrompt: 'コードは正しいです。新しいパスワードを入力してください。',
   verifyOtp: 'コードを認証',
+  resendOtp: 'OTPを再送',
+  resendOtpIn: '{{seconds}}秒後にOTPを再送',
+  resendingOtp: '再送中...',
   
   // Admin
   manageUsersAndCredits: 'ユーザーとそのクレジットを管理します。',
