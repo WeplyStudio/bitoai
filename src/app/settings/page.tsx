@@ -8,7 +8,7 @@ import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { useToast } from '@/hooks/use-toast';
-import { Download, Mail, MessageCircle, Trash2, Palette, Lock, CheckCircle2 } from 'lucide-react';
+import { Download, Mail, MessageCircle, Trash2, Palette, Lock, CheckCircle2, Gem } from 'lucide-react';
 import { useAuth } from '@/contexts/AuthProvider';
 import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle } from '@/components/ui/alert-dialog';
 import { UsernameForm } from '@/components/settings/username-form';
@@ -20,7 +20,7 @@ import { cn } from '@/lib/utils';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const AI_MODE_KEY = 'bito-ai-mode';
-const THEME_UNLOCK_COST = 150;
+const THEME_UNLOCK_COST = 150; // In Coins
 
 const availableThemes = [
   { id: 'minimalist', nameKey: 'themeMinimalist', isFree: true },
@@ -67,7 +67,7 @@ export default function SettingsPage() {
         }
         updateUserInContext({ 
             unlockedThemes: data.unlockedThemes, 
-            credits: data.newBalance 
+            coins: data.newBalance 
         });
         toast({
             title: t('themeUnlocked'),
@@ -118,8 +118,10 @@ export default function SettingsPage() {
                                             {isActive ? <><CheckCircle2 className="mr-2 h-4 w-4" />{t('activeTheme')}</> : t('setTheme')}
                                         </Button>
                                     ) : (
-                                        <Button className="w-full" variant="outline" onClick={() => setThemeToUnlock(theme.id)} disabled={(user?.credits ?? 0) < THEME_UNLOCK_COST}>
-                                            <Lock className="mr-2 h-4 w-4" /> {t('unlockTheme', { cost: THEME_UNLOCK_COST })}
+                                        <Button className="w-full" variant="outline" onClick={() => setThemeToUnlock(theme.id)} disabled={(user?.coins ?? 0) < THEME_UNLOCK_COST}>
+                                            <div className='flex items-center'>
+                                                <Lock className="mr-2 h-4 w-4" /> {t('unlockTheme', { cost: THEME_UNLOCK_COST })} <Gem className="ml-1 h-3 w-3"/>
+                                            </div>
                                         </Button>
                                     )}
                                 </CardFooter>
@@ -263,7 +265,6 @@ export default function SettingsPage() {
             </AlertDialogFooter>
         </AlertDialogContent>
     </AlertDialog>
-
     </>
   );
 }

@@ -9,7 +9,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { BitoIcon } from '@/components/icons';
-import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, CreditCard, Shield, Gift } from 'lucide-react';
+import { Search, Settings, FileText, Folder, Moon, Sun, MessageSquare, Plus, LogIn, LogOut, CreditCard, Shield, Star, Gem } from 'lucide-react';
 import { cn } from "@/lib/utils";
 import { useProjects } from "@/contexts/ProjectProvider";
 import { useLanguage } from "@/contexts/LanguageProvider";
@@ -38,39 +38,12 @@ export const LeftSidebarContent = () => {
     const [mounted, setMounted] = useState(false);
     const { createProject } = useProjects();
     const { t } = useLanguage();
-    const { user, isLoading, logout, setAuthDialogOpen, updateUserInContext } = useAuth();
+    const { user, isLoading, logout, setAuthDialogOpen } = useAuth();
     const { toast } = useToast();
 
     useEffect(() => {
         setMounted(true);
     }, []);
-
-    const grantDarkHunterAchievement = useCallback(async () => {
-        if (user && !user.achievements.includes('dark_hunter')) {
-            try {
-                const response = await fetch('/api/user/grant-achievement', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ achievementId: 'dark_hunter' }),
-                });
-                const data = await response.json();
-                if (response.ok) {
-                    updateUserInContext({ achievements: data.newAchievements });
-                    toast({ title: t('achDarkHunterTitle'), description: t('achDarkHunterDesc') });
-                }
-            } catch (error) {
-                // Fail silently
-                console.error("Failed to grant Dark Hunter achievement", error);
-            }
-        }
-    }, [user, updateUserInContext, toast, t]);
-
-    useEffect(() => {
-        if (mounted && theme === 'dark') {
-            grantDarkHunterAchievement();
-        }
-    }, [theme, mounted, grantDarkHunterAchievement]);
-
 
     const handleNewProject = () => {
         if (!user) {
@@ -114,7 +87,7 @@ export const LeftSidebarContent = () => {
                     )}
                     <NavItem icon={Folder} text={t('chats')} href="/projects" />
                     <NavItem icon={FileText} text={t('templates')} href="/templates" />
-                    <NavItem icon={Gift} text={t('gacha')} href="/gacha" />
+                    <NavItem icon={Star} text={t('exp')} href="/exp" />
                     <NavItem icon={CreditCard} text={t('topUp')} href="/pricing" />
                 </div>
                 
@@ -126,11 +99,14 @@ export const LeftSidebarContent = () => {
                         </div>
                     ) : user ? (
                         <div className="flex items-center justify-between text-sm p-2">
-                            <span className="font-medium text-foreground truncate" title={user.username}>{user.username}</span>
+                            <div className="font-medium text-foreground truncate flex flex-col" title={user.username}>
+                                <span>{user.username}</span>
+                                <span className="text-xs text-muted-foreground">Level {user.level || 1}</span>
+                            </div>
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1 font-semibold text-amber-500" title={`${user.credits} ${t('creditsRemaining')}`}>
-                                    <CreditCard className="h-4 w-4" />
-                                    {user.credits}
+                                <div className="flex items-center gap-1 font-semibold text-amber-500" title={`${user.coins} Coins`}>
+                                    <Gem className="h-4 w-4" />
+                                    {user.coins || 0}
                                 </div>
                                 <Button variant="ghost" size="icon" className="h-8 w-8" onClick={logout}>
                                     <LogOut className="h-4 w-4" />

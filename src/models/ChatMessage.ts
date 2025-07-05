@@ -7,6 +7,8 @@ export interface IChatMessage extends Document {
   content: string;
   imageUrl?: string;
   createdAt: Date;
+  expEarned?: number;
+  coinsEarned?: number;
 }
 
 const ChatMessageSchema: Schema = new Schema({
@@ -16,6 +18,8 @@ const ChatMessageSchema: Schema = new Schema({
   content: { type: String, required: true },
   imageUrl: { type: String },
   createdAt: { type: Date, default: Date.now },
+  expEarned: { type: Number, default: 0 },
+  coinsEarned: { type: Number, default: 0 },
 });
 
 // Index to efficiently query messages by project

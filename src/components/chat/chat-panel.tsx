@@ -20,6 +20,8 @@ export interface Message {
   role: 'user' | 'model';
   content: string;
   imageUrl?: string;
+  expEarned?: number;
+  coinsEarned?: number;
 }
 
 const AI_MODE_KEY = 'bito-ai-mode';
@@ -79,23 +81,32 @@ export function ChatPanel() {
                 setIsFetchingHistory(false);
             }
         } else {
-            // No active project means it's a guest, or a logged-in user with no chats.
-            // In both cases, the chat history should be empty.
             setMessages([]);
             setIsFetchingHistory(false);
         }
     };
 
     if (isProjectsLoading && user) {
-        // Wait for projects to load before deciding
         setIsFetchingHistory(true);
     } else {
         fetchMessages();
     }
   }, [activeProject, isProjectsLoading, user, toast, t]);
 
-  const handleUserSend = async (text: string, file?: File) => {
+  const handleSend = async (text: string, file?: File) => {
+    if (isLoading || regeneratingMessageId || editingMessageId || (!text.trim() && !file)) return;
+    
+    if (!user) {
+        if (file) {
+            toast({ variant: 'destructive', title: t('loginRequired'), description: t('loginToUpload') });
+            return;
+        }
+        await handleGuestSend(text);
+        return;
+    }
+    
     if (!activeProject) return;
+    
     setIsLoading(true);
 
     let imageUrl: string | undefined = undefined;
@@ -114,10 +125,10 @@ export function ChatPanel() {
         }
     }
 
-    const tempId = `user-${Date.now()}`;
+    const tempUserMessageId = `user-${Date.now()}`;
     const newUserMessage: Message = { 
-      _id: tempId,
-      id: tempId, 
+      _id: tempUserMessageId,
+      id: tempUserMessageId, 
       role: 'user', 
       content: text,
       imageUrl: imageUrl,
@@ -135,27 +146,32 @@ export function ChatPanel() {
                 mode: aiMode 
             }),
         });
+        const data = await response.json();
 
         if (!response.ok) {
-            const errorData = await response.json();
-            setMessages(prev => prev.filter(m => m.id !== tempId));
-            throw new Error(errorData.error || 'Failed to get a response from the server.');
+            throw new Error(data.error || 'Failed to get a response from the server.');
         }
 
-        const data = await response.json();
-        
-        const historyResponse = await fetch(`/api/projects/${activeProject.id}/messages`);
-        const freshMessages = await historyResponse.json();
-        setMessages(freshMessages);
+        const finalUserMessage = { ...data.userMessage, id: data.userMessage._id.toString() };
+        const finalAiMessage = { ...data.aiMessage, id: data.aiMessage._id.toString() };
+
+        setMessages(prev => {
+            const newMessages = prev.filter(m => m.id !== tempUserMessageId);
+            return [...newMessages, finalUserMessage, finalAiMessage];
+        });
         
         if (data.updatedProjectName) {
             refreshProjects();
         }
-        if (data.userCredits !== undefined) {
-            updateUserInContext({ credits: data.userCredits, achievements: data.achievements });
+        if (data.updatedUser) {
+            updateUserInContext(data.updatedUser);
         }
+        if(data.leveledUp){
+            toast({ title: "Level Up!", description: `You have reached level ${data.updatedUser.level}!` });
+        }
+
     } catch (error: any) {
-        setMessages(prev => prev.filter(m => m.id !== tempId));
+        setMessages(prev => prev.filter(m => m.id !== tempUserMessageId));
         toast({ variant: 'destructive', title: t('error'), description: error.message || 'Failed to get a response from Bito AI.' });
     } finally {
         setIsLoading(false);
@@ -195,20 +211,6 @@ export function ChatPanel() {
         setIsLoading(false);
     }
   };
-
-  const handleSend = async (text: string, file?: File) => {
-    if (isLoading || regeneratingMessageId || editingMessageId || (!text.trim() && !file)) return;
-    
-    if (user) {
-        await handleUserSend(text, file);
-    } else {
-        if (file) {
-            toast({ variant: 'destructive', title: t('loginRequired'), description: t('loginToUpload') });
-            return;
-        }
-        await handleGuestSend(text);
-    }
-  };
   
   const handleRegenerate = useCallback(async (messageId: string) => {
     if (!user || !activeProject || regeneratingMessageId || isLoading) return;
@@ -229,7 +231,7 @@ export function ChatPanel() {
       const data = await response.json();
       const updatedMessage = data.message;
       if (data.userCredits !== undefined) {
-          updateUserInContext({ credits: data.userCredits, achievements: data.achievements });
+          updateUserInContext({ credits: data.userCredits });
       }
 
       setMessages(prev => prev.map(msg => msg.id === messageId ? { ...msg, content: updatedMessage.content } : msg));

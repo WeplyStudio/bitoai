@@ -9,15 +9,18 @@ export interface IUser extends Document {
   otpExpires?: Date;
   isVerified: boolean;
   credits: number;
-  creditsSpent: number;
-  messagesToday: number;
-  lastMessageDate?: Date;
   role: 'user' | 'admin';
   blocked: boolean;
   achievements: string[];
   unlockedThemes: string[];
   apiRequestCount: number;
   createdAt: Date;
+  
+  // Gamification fields
+  level: number;
+  exp: number;
+  nextLevelExp: number;
+  coins: number;
 }
 
 const UserSchema: Schema = new Schema({
@@ -57,17 +60,6 @@ const UserSchema: Schema = new Schema({
     type: Number,
     default: 5,
   },
-  creditsSpent: {
-    type: Number,
-    default: 0,
-  },
-  messagesToday: {
-    type: Number,
-    default: 0,
-  },
-  lastMessageDate: {
-    type: Date,
-  },
   role: {
     type: String,
     enum: ['user', 'admin'],
@@ -92,6 +84,23 @@ const UserSchema: Schema = new Schema({
   createdAt: { 
     type: Date, 
     default: Date.now 
+  },
+  // Gamification fields
+  level: {
+    type: Number,
+    default: 1,
+  },
+  exp: {
+    type: Number,
+    default: 0,
+  },
+  nextLevelExp: {
+    type: Number,
+    default: 50,
+  },
+  coins: {
+    type: Number,
+    default: 0,
   },
 });
 

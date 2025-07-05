@@ -14,6 +14,11 @@ interface User {
   role: 'user' | 'admin';
   achievements: string[];
   unlockedThemes: string[];
+  // Gamification
+  level: number;
+  exp: number;
+  nextLevelExp: number;
+  coins: number;
 }
 
 interface AuthContextType {

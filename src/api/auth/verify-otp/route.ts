@@ -22,8 +22,7 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Email and OTP are required' }, { status: 400 });
     }
 
-    // Explicitly select all fields needed for patching and the response.
-    const user = await User.findOne({ email }).select('+otp +otpExpires +isVerified username credits role achievements');
+    const user = await User.findOne({ email }).select('+otp +otpExpires +isVerified username credits role achievements unlockedThemes level exp nextLevelExp coins');
 
     if (!user || !user.otp || !user.otpExpires) {
       return NextResponse.json({ error: 'Invalid request. Please try logging in again.' }, { status: 400 });
@@ -38,30 +37,27 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: 'Invalid OTP.' }, { status: 400 });
     }
 
-    // Check if user was already verified before this action.
     const wasAlreadyVerified = user.isVerified;
 
-    // OTP is correct, clear it and mark user as verified
     user.otp = undefined;
     user.otpExpires = undefined;
     user.isVerified = true;
 
-    // *** GUARANTEED PATCH FOR EXISTING ACCOUNTS ***
-    if (typeof user.credits !== 'number') {
-      user.credits = 5;
-    }
-    if (!Array.isArray(user.achievements)) {
-      user.achievements = [];
-    }
+    // *** GUARANTEED PATCH FOR EXISTING/NEW ACCOUNTS ***
+    if (typeof user.credits !== 'number') user.credits = 5;
+    if (!Array.isArray(user.achievements)) user.achievements = [];
+    if (!Array.isArray(user.unlockedThemes) || user.unlockedThemes.length === 0) user.unlockedThemes = ['minimalist'];
+    if (typeof user.level !== 'number') user.level = 1;
+    if (typeof user.exp !== 'number') user.exp = 0;
+    if (typeof user.nextLevelExp !== 'number') user.nextLevelExp = 50;
+    if (typeof user.coins !== 'number') user.coins = 0;
     
     await user.save();
     
-    // Only send welcome email on the very first verification
     if (!wasAlreadyVerified) {
       await sendWelcomeEmail(user.email, user.username);
     }
     
-    // Generate JWT and log the user in
     const tokenPayload = {
       id: user._id,
       email: user.email,
@@ -77,7 +73,6 @@ export async function POST(request: Request) {
       maxAge: 60 * 60 * 24 * 7, // 1 week
     });
 
-    // Return the fresh, patched user data
     return NextResponse.json({ 
       id: user._id,
       email: user.email,
@@ -85,6 +80,11 @@ export async function POST(request: Request) {
       credits: user.credits,
       role: user.role,
       achievements: user.achievements,
+      unlockedThemes: user.unlockedThemes,
+      level: user.level,
+      exp: user.exp,
+      nextLevelExp: user.nextLevelExp,
+      coins: user.coins,
     });
   } catch (error) {
     console.error('OTP Verification error:', error);
