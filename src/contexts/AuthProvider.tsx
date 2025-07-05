@@ -168,19 +168,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       }
 
       // Create a new user object by merging the old state and the new updates.
-      // This is safe because we've already confirmed prevUser is not null.
       const newUser = { ...prevUser, ...updates };
 
-      // The spread operator above overwrites arrays. We need to merge them manually.
-      // We check if the 'achievements' key exists in the updates object.
+      // The spread operator above overwrites arrays. We need to merge them manually and safely.
       if (updates.achievements) {
-        // We use Set to automatically handle duplicates.
         newUser.achievements = Array.from(
           new Set([...(prevUser.achievements || []), ...updates.achievements])
         );
       }
 
-      // We do the same for unlocked themes.
       if (updates.unlockedThemes) {
         newUser.unlockedThemes = Array.from(
           new Set([...(prevUser.unlockedThemes || []), ...updates.unlockedThemes])
