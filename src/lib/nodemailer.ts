@@ -83,25 +83,6 @@ export const sendOtpEmail = async (to: string, otp: string) => {
               </td>
             </tr>
 
-            <!-- CTA Button -->
-            <tr>
-              <td align="center" style="padding-top: 40px;">
-                <a href="https://bito.ai" style="
-                  display: inline-block;
-                  background-color: #2563eb;
-                  color: #ffffff;
-                  text-decoration: none;
-                  padding: 14px 28px;
-                  font-size: 16px;
-                  font-weight: 600;
-                  border-radius: 10px;
-                  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-                ">
-                  Masuk ke Bito AI
-                </a>
-              </td>
-            </tr>
-
             <!-- Divider -->
             <tr>
               <td style="padding-top: 48px;">
