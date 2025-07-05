@@ -162,22 +162,34 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   
   const updateUserInContext = useCallback((updates: Partial<User>) => {
     setUser(prevUser => {
-        if (!prevUser) return null;
-        
-        const newAchievements = updates.achievements 
-            ? [...new Set([...(prevUser.achievements || []), ...updates.achievements])]
-            : prevUser.achievements;
-        
-        const newUnlockedThemes = updates.unlockedThemes
-            ? [...new Set([...(prevUser.unlockedThemes || []), ...updates.unlockedThemes])]
-            : prevUser.unlockedThemes;
-            
-        return { 
-            ...prevUser, 
-            ...updates,
-            achievements: newAchievements,
-            unlockedThemes: newUnlockedThemes,
-        };
+        // If there is no previous user, we cannot perform an update.
+        // This prevents errors when an update is triggered for a logged-out user.
+        if (!prevUser) {
+            return null;
+        }
+
+        // Create a new user object to avoid direct state mutation.
+        const newUserState = { ...prevUser, ...updates };
+
+        // If the updates include achievements, merge them correctly.
+        if (updates.achievements) {
+            const combinedAchievements = new Set([
+                ...(prevUser.achievements || []),
+                ...updates.achievements,
+            ]);
+            newUserState.achievements = Array.from(combinedAchievements);
+        }
+
+        // If the updates include unlocked themes, merge them correctly.
+        if (updates.unlockedThemes) {
+            const combinedThemes = new Set([
+                ...(prevUser.unlockedThemes || []),
+                ...updates.unlockedThemes,
+            ]);
+            newUserState.unlockedThemes = Array.from(combinedThemes);
+        }
+
+        return newUserState;
     });
   }, []);
 
