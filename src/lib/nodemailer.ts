@@ -28,15 +28,102 @@ export const sendOtpEmail = async (to: string, otp: string) => {
     from: `"Bito AI" <${ZOHO_EMAIL}>`,
     to: to,
     subject: 'Your Bito AI Verification Code',
-    html: `
-      <div style="font-family: Arial, sans-serif; color: #333;">
-        <h2>Bito AI Verification</h2>
-        <p>Your one-time password (OTP) is:</p>
-        <p style="font-size: 24px; font-weight: bold; letter-spacing: 2px; background: #f0f0f0; padding: 10px 20px; border-radius: 5px; display: inline-block;">${otp}</p>
-        <p>This code will expire in 10 minutes.</p>
-        <p>If you did not request this, please ignore this email.</p>
-      </div>
-    `,
+    html: `<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <title>Kode OTP Anda – Bito AI</title>
+  </head>
+  <body style="margin:0; padding:0; background-color:#f9fafb; font-family:'Segoe UI', Roboto, Helvetica, Arial, sans-serif;">
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="padding: 40px 0;">
+      <tr>
+        <td align="center">
+
+          <!-- Card Container -->
+          <table width="100%" style="max-width: 600px; background-color: #ffffff; border-radius: 16px; padding: 48px; box-shadow: 0 10px 35px rgba(0,0,0,0.08); border: 1px solid #e5e7eb;">
+            <tr>
+              <td align="center" style="padding-bottom: 24px;">
+                                  
+                <h1 style="font-size: 24px; font-weight: 700; color: #111827; margin: 0;">Verifikasi Email Anda</h1>
+              </td>
+            </tr>
+
+            <tr>
+              <td style="font-size: 16px; color: #374151; padding-bottom: 32px; text-align: center;">
+                Hai 👋, kamu sedang mencoba masuk atau membuat akun di <span style="color:#2563eb; font-weight:600;">Bito AI</span>.<br/>
+                Masukkan kode berikut untuk melanjutkan:
+              </td>
+            </tr>
+
+            <!-- OTP Code -->
+            <tr>
+              <td align="center">
+                <div style="
+                  display: inline-block;
+                  font-size: 40px;
+                  font-weight: 700;
+                  letter-spacing: 18px;
+                  color: #111827;
+                  background-color: #f3f4f6;
+                  padding: 20px 32px;
+                  border-radius: 14px;
+                  border: 1px solid #d1d5db;
+                  width: fit-content;
+                ">
+                  ${otp}
+                </div>
+              </td>
+            </tr>
+
+            <!-- Validity Notice -->
+            <tr>
+              <td style="font-size: 14px; color: #6b7280; padding-top: 24px; text-align: center;">
+                Kode ini akan kadaluarsa dalam <strong>10 menit</strong>. Demi keamanan akun Anda, jangan bagikan kode ini kepada siapa pun.
+              </td>
+            </tr>
+
+            <!-- CTA Button -->
+            <tr>
+              <td align="center" style="padding-top: 40px;">
+                <a href="https://bito.ai" style="
+                  display: inline-block;
+                  background-color: #2563eb;
+                  color: #ffffff;
+                  text-decoration: none;
+                  padding: 14px 28px;
+                  font-size: 16px;
+                  font-weight: 600;
+                  border-radius: 10px;
+                  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+                ">
+                  Masuk ke Bito AI
+                </a>
+              </td>
+            </tr>
+
+            <!-- Divider -->
+            <tr>
+              <td style="padding-top: 48px;">
+                <hr style="border: none; border-top: 1px solid #e5e7eb; margin: 0 auto; width: 100%;" />
+              </td>
+            </tr>
+
+            <!-- Footer -->
+            <tr>
+              <td style="font-size: 12px; color: #9ca3af; text-align: center; padding-top: 32px;">
+                Tidak merasa melakukan permintaan ini? Abaikan saja email ini.<br/>
+                &copy; 2025 Bito AI. Dibuat dengan 💡 dan kopi di Indonesia.
+              </td>
+            </tr>
+          </table>
+
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>`,
   };
 
   try {
